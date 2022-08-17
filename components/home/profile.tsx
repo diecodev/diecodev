@@ -6,8 +6,9 @@ import { ButtonLink } from '../button-link';
 export const Profile = ({reference}: {reference: any}) => {
   return (
     <section className='mb-16'>
+      {/* social media links */}
       <div ref={reference} className='flex w-full items-center mb-10'>
-        <div className='text-xl flex flex-col gap-5 text-gray-400'>
+        <div className='text-xl flex flex-col gap-5 text-gray-500 dark:text-gray-400'>
           <a href='http://github.com/diecodev' target='_blank' rel='noopener noreferrer' title='My GitHub Profile.' >
             <GhFilled />
           </a>
@@ -15,16 +16,18 @@ export const Profile = ({reference}: {reference: any}) => {
             <InFilled />
           </a>
         </div>
+        {/* Image */}
         <div className='w-60 md:w-72 lg:96 flex mx-auto'>
           <Image src={me} alt='diecodev profile picture' priority placeholder='blur' objectFit='contain' />
         </div>
       </div>
 
+      {/* hero */}
       <section className='h-fit'>
-        <h2 className='text-gray-200 text-4xl font-bold mb-1'>Hi, I am Diego</h2>
-        <h3 className='text-2xl text-gray-400 mb-6 font-semibold'>Frontend developer</h3>
+        <h2 className='dark:text-gray-200 text-black text-4xl font-bold mb-1'>Hi, I am Diego</h2>
+        <h3 className='text-2xl text-gray-500 dark:text-gray-400 mb-6 font-semibold'>Frontend developer</h3>
 
-        <p className='text-gray-400 text-lg mb-6'>This is my personal space, where I share what I’m learning about shipping great products and where you, stranger, can contact me.</p>
+        <p className='text-gray-500 dark:text-gray-400 text-lg mb-6'>This is my personal space, where I share what I’m learning about shipping great products and where you, stranger, can contact me.</p>
 
         <ButtonLink url='/'>
           <span className='flex gap-2 place-items-center text-black'>

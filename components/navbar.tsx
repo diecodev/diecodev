@@ -1,6 +1,7 @@
-import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
-import { Moon, Sun } from "./svg/icons";
+import { useTheme } from 'next-themes';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { Moon, Sun } from './svg/icons';
 
 export const NavBar = ({isVisible} : {isVisible: boolean})=>{
   const [mounted, setMounted] = useState(false);
@@ -8,8 +9,6 @@ export const NavBar = ({isVisible} : {isVisible: boolean})=>{
   const { systemTheme, theme, setTheme } = useTheme();
 
   const currentTheme = theme === 'system' ? systemTheme : theme;
-
-  const handleClick = () => setTheme(currentTheme === 'dark' ? 'ligth' : 'dark');
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -26,19 +25,27 @@ export const NavBar = ({isVisible} : {isVisible: boolean})=>{
 
   return (
     <div className={`fixed bottom-4 grid w-full grid-cols-[1fr,min(640px,100%),1fr] px-4 z-10 transition-opacity duration-200 ${(isVisible && mounted) ? 'opacity-100': 'opacity-0'}`}>
-      <header className="flex justify-between items-center px-4 py-4 bg-gray-500/40 dark:bg-gray-400/20 rounded-lg backdrop-blur-lg col-start-2 shadow-glass">
-        <h1 className="text-xl font-bold">Diecodev</h1>
-        <div className="flex gap-2">
-          <button onClick={handleClick} className="text-2xl text-gray-500 dark:text-gray-400">
+      <header className='flex justify-between items-center px-4 py-4 bg-gray-400/30 dark:bg-gray-50/30 rounded-lg backdrop-blur-md col-start-2 shadow-glass dark:text-gray-200'>
+        <Link href='/'>
+          <a>
+            <h1 className='text-xl font-bold'>Diecodev</h1>
+          </a>
+        </Link>
+        <div className='flex gap-3 items-center text-gray-600 text-2xl dark:text-gray-200'>
+          <Link href='/contact'>
+            <a className='text-lg font-semibold dark:font-medium'>Contact</a>
+          </Link>
+          <Link href='/blog'>
+            <a className='text-lg font-semibold dark:font-medium'>Blog</a>
+          </Link>
+
+          <button className='p-1 bg-gray-50/80 dark:bg-gray-400 rounded-md' onClick={() => setTheme(currentTheme === 'dark' ? 'ligth' : 'dark')}>
             {
               currentTheme === 'dark'
                 ? <Sun />
                 : <Moon />
             }
           </button>
-          <nav>
-          menu
-          </nav>
         </div>
       </header>
     </div>

@@ -42,7 +42,7 @@ const Logos = [
 export const Tech = ()=>{
   return (
     <div className="mb-16">
-      <h2 className="text-[22px] text-black dark:text-gray-200 mb-5 font-bold">Tech skills</h2>
+      <h2 className="text-[22px] dark:text-gray-200 mb-5 font-bold">Tech skills</h2>
       <section>
         <ul className="flex gap-3 flex-wrap justify-around">
           {

@@ -24,13 +24,13 @@ export const Profile = ({reference}: {reference: any}) => {
 
       {/* hero */}
       <section className='h-fit'>
-        <h2 className='dark:text-gray-200 text-black text-4xl font-bold mb-1'>Hi, I am Diego</h2>
+        <h2 className='dark:text-gray-200 text-4xl font-bold mb-1'>Hi, I am Diego</h2>
         <h3 className='text-[22px] text-gray-500 dark:text-gray-400 mb-6 font-semibold'>Frontend developer</h3>
 
-        <p className='text-gray-500 dark:text-gray-400 text-lg mb-6'>This is my personal space, where I share what I’m learning about shipping great products and where you, stranger, can contact me.</p>
+        <p className='dark:text-gray-400 text-lg mb-6'>This is my personal space, where I share what I’m learning about shipping great products and where you, stranger, can contact me.</p>
 
         <ButtonLink url='/'>
-          <span className='flex gap-2 place-items-center text-black'>
+          <span className='flex gap-2 place-items-center'>
             <p className='text-lg font-bold'>Contact me</p>
             <Send />
           </span>

@@ -1,4 +1,7 @@
-/** @type {import('tailwindcss').Config} */ 
+/** @type {import('tailwindcss').Config} */
+
+const defaultTheme = require('tailwindcss/defaultTheme');
+
 module.exports = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx}',
@@ -14,6 +17,9 @@ module.exports = {
       },
       boxShadow: {
         glass: 'var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)'
+      },
+      fontFamily: {
+        sans: ['Inter var', ...defaultTheme.fontFamily.sans]
       }
     }
   },

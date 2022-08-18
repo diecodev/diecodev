@@ -1,4 +1,5 @@
 import { JsLogo, TsLogo, DenoLogo, NextLogo, NodeLogo, ReactLogo, FigmaLogo, TailwindLogo } from "../svg/icons";
+import { Tooltip } from "../tooltip";
 
 const Logos = [
   {
@@ -41,13 +42,15 @@ const Logos = [
 export const Tech = ()=>{
   return (
     <div className="mb-16">
-      <h2 className="text-2xl text-black dark:text-gray-200 mb-5 font-semibold">Tech skills</h2>
+      <h2 className="text-[22px] text-black dark:text-gray-200 mb-5 font-bold">Tech skills</h2>
       <section>
         <ul className="flex gap-3 flex-wrap justify-around">
           {
             Logos.map(({id, title, Logo})=>(
-              <li title={title} key={id} className='text-4xl' >
-                <Logo />
+              <li key={id} className='text-4xl' >
+                <Tooltip message={title} >
+                  <Logo />
+                </Tooltip>
               </li>
             ))
           }

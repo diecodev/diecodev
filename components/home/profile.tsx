@@ -3,11 +3,11 @@ import { GhFilled, InFilled, Send } from '../svg/icons';
 import me from '../../public/assets/me.webp';
 import { ButtonLink } from '../button-link';
 
-export const Profile = ({reference}: {reference: any}) => {
+export const Profile = () => {
   return (
     <section className='mb-16'>
       {/* social media links */}
-      <div ref={reference} className='flex w-full items-center mb-10'>
+      <div className='flex w-full items-center mb-10'>
         <div className='text-xl flex flex-col gap-5 text-gray-500 dark:text-gray-400'>
           <a href='http://github.com/diecodev' target='_blank' rel='noopener noreferrer' title='My GitHub Profile.' >
             <GhFilled />

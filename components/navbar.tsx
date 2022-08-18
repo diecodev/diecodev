@@ -1,30 +1,14 @@
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 import { Moon, Sun } from './svg/icons';
 
-export const NavBar = ({isVisible} : {isVisible: boolean})=>{
-  const [mounted, setMounted] = useState(false);
-
+export const NavBar = ()=>{
   const { systemTheme, theme, setTheme } = useTheme();
 
   const currentTheme = theme === 'system' ? systemTheme : theme;
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setMounted(isVisible);
-    }, 210);
-  
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [isVisible]);
-  
-
-  if (!mounted && !isVisible) return null;
-
   return (
-    <div className={`fixed bottom-4 grid w-full grid-cols-[1fr,min(640px,100%),1fr] px-4 z-10 transition-opacity duration-200 ${(isVisible && mounted) ? 'opacity-100': 'opacity-0'}`}>
+    <div className='fixed bottom-4 grid w-full grid-cols-[1fr,min(640px,100%),1fr] px-4 z-10 transition-opacity duration-200 '>
       <header className='flex justify-between items-center px-4 py-4 bg-gray-400/30 dark:bg-gray-50/30 rounded-lg backdrop-blur-md col-start-2 shadow-glass dark:text-gray-200'>
         <Link href='/'>
           <a>

@@ -29,7 +29,7 @@ export const Profile = () => {
 
         <p className='dark:text-gray-400 text-lg mb-6'>This is my personal space, where I share what I’m learning about shipping great products and where you, stranger, can contact me.</p>
 
-        <ButtonLink url='/'>
+        <ButtonLink url='/contact'>
           <span className='flex gap-2 place-items-center'>
             <p className='text-lg font-bold'>Contact me</p>
             <Send />

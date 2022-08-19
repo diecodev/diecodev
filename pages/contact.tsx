@@ -2,6 +2,7 @@ import type { NextPage } from 'next';
 import { FormEvent, useState } from 'react';
 import { NavBar } from '../components/navbar';
 import { send } from '@emailjs/browser';
+import { SubmitButton } from '../components/submit-button';
 
 const Home: NextPage = () => {
   const [isDirty, setIsDirty] = useState({
@@ -10,23 +11,28 @@ const Home: NextPage = () => {
     color: ''
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDone, setIsDone] = useState(false);
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    type ITarget = {
+    interface ITarget extends EventTarget {
       name: HTMLInputElement;
       email: HTMLInputElement;
       message: HTMLTextAreaElement;
+      reset: () => void;
     }
   
     e.preventDefault();
     e.stopPropagation();
+    
+    const {name, email, message} = e.target as ITarget;
 
-    const {name, email, message} = e.currentTarget as unknown as ITarget;
-
+    setIsDone(false);
     if (!name.value || !email.value || !message.value || !email.value.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g) ) {
       return setIsDirty({
         show: true,
         message: 'Please fill out all fields correctly.',
-        color: 'bg-red-200 dark: bg-red-300/50'
+        color: 'bg-red-200 dark:bg-red-300/50'
       });
     }
 
@@ -35,10 +41,29 @@ const Home: NextPage = () => {
       email: email.value,
       message: message.value
     };
-  
+
+    setIsLoading(true);
+
     const res = await send(process.env.NEXT_PUBLIC_SERVICE_ID as string, process.env.NEXT_PUBLIC_TEMPLATE_ID as string, data, process.env.NEXT_PUBLIC_USER_ID as string);
   
-    console.log(res);
+    if (res.status === 200) {
+      setIsLoading(false);
+      setIsDone(true);
+      setIsDirty({
+        show: true,
+        message: 'Thanks for message me. I will reply as soon as possible.',
+        color: 'bg-green-200 dark:bg-green-300/50'
+      });
+
+      (e.target as ITarget).reset();
+      return;
+    };
+
+    setIsDirty({
+      show: true,
+      message: 'Something went wrong. Please try again later.',
+      color: 'bg-red-200 dark:bg-red-300/50'
+    });
   };
 
   return (
@@ -63,7 +88,10 @@ const Home: NextPage = () => {
           <p className={`text-sm rounded-md ${isDirty.color} ${isDirty.show ? 'opacity-100 px-4 py-4' : 'opacity-0'} transition-all text-black dark:text-white`}>
             {isDirty.message}
           </p>
-          <input className='flex place-items-center min-w-[150px] bg-yllw text-black font-semibold max-w-fit rounded-md px-8 py-2' type='submit' value='Send Message' />
+
+          <SubmitButton value='Send Message' type='submit' loading={isLoading} done={isDone} />
+          
+          {/* <input className='flex place-items-center min-w-[150px] bg-yllw text-black font-semibold max-w-fit rounded-md px-8 py-2' type='submit' value='Send Message' /> */}
         </form>
       </main>
     </>

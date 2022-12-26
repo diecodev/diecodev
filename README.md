@@ -5,7 +5,7 @@
 
 - 🔭 I’m currently working on **code unico delivery app**
 
-- 🌱 I’m currently learning **Goland**
+- 🌱 I’m currently learning **Golang**
 
 - 👯 I’m collaborating on [React Native Neat Date Picker](https://github.com/roto93/react-native-neat-date-picker)
 

@@ -2,11 +2,11 @@ import Link from 'next/link'
 
 export const Header = () => {
   return (
-    <header className="flex justify-between px-10 py-3">
+    <header className="flex justify-between px-5 md:px-10 py-3 w-full flex-wrap">
       <Link href='/'>
-        <h1 className="text-lg font-semibold">Diecodev</h1>
+        <h1 className="text-lg font-semibold ">Diecodev</h1>
       </Link>
-      <ul className='flex gap-4'>
+      <ul className='flex gap-4 flex-wrap'>
       <Link href='/#about'>
         <li className="flex items-center px-2" >About</li>
       </Link>

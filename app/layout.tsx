@@ -21,7 +21,7 @@ export default function RootLayout({ children }: Props) {
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
       */}
       <head />
-      <body className='overflow-x-hidden max-w-screen min-h-screem px-4 lg:px-0' >{children}</body>
+      <body className='overflow-x-hidden max-w-screen min-h-screem px-4 lg:px-0 text-black' >{children}</body>
     </html>
   )
 }

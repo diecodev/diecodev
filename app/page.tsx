@@ -1,6 +1,6 @@
-import { Cursor, Arrow } from "./components/icons"
-import { Header } from "./components/header"
-import { Hero } from "./components/hero"
+import { Cursor, Arrow } from './components/icons'
+import { Header } from './components/header'
+import { Hero } from './components/hero'
 import Link from 'next/link'
 
 export default function Home() {

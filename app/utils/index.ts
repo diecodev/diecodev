@@ -1,4 +1,5 @@
 import { send } from '@emailjs/browser'
+import { Github, Linkedin, Instagram } from '../components/icons'
 
 interface IExperience {
   id: string
@@ -6,6 +7,13 @@ interface IExperience {
   company: string
   date: string
   requirements: string[]
+}
+
+interface ISocial {
+  id: string
+  url: string
+  icon: Function
+  title: string
 }
 
 export const experienceArray: IExperience[] = [
@@ -63,3 +71,24 @@ export const sendEmail = async (name: string, email: string, message: string) =>
 
   return data
 }
+
+export const socialArray: ISocial[] = [
+  {
+    id: '0',
+    url: 'https://github.com/diecodev',
+    icon: Github,
+    title: '/diecodev',
+  },
+  {
+    id: '1',
+    url: 'https://www.linkedin.com/in/diecodev/',
+    icon: Linkedin,
+    title: '/diecodev',
+  },
+  {
+    id: '2',
+    url: 'https://www.instagram.com/diegodiazcol/',
+    icon: Instagram,
+    title: '/diegodiazcol',
+  }
+]

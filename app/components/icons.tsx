@@ -17,6 +17,21 @@ export const Plane = (props: SVGProps<SVGSVGElement>) => (
   </svg>
 )
 
+export const ListItem = (props: SVGProps<SVGSVGElement>) => (
+  <svg
+    width='1em'
+    height='1em'
+    viewBox='0 0 6 8'
+    fill='none'
+    xmlns='http://www.w3.org/2000/svg'
+    {...props}
+  >
+    <path
+      d='M5.293 4.707a1 1 0 0 0 0-1.414L2.672.672c-.779-.779-2.06.089-1.627 1.1l.786 1.834a1 1 0 0 1 0 .788l-.786 1.833c-.433 1.012.848 1.88 1.627 1.101l2.62-2.62Z'
+      fill='currentColor'
+    />
+  </svg>
+)
 export const Cursor = (props: SVGProps<SVGSVGElement>) => (
   <svg
     width='1em'

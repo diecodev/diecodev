@@ -19,6 +19,9 @@ module.exports = {
         wheel: 'wheel 1s infinite',
         borders: 'borders 20s infinite',
       },
+      dropShadow: {
+        custom: '0 0 100px #BCF2C1'
+      },
       keyframes: {
         wheel: {
           '0%, 100%': {

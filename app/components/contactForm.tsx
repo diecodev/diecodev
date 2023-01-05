@@ -47,7 +47,7 @@ export const ContactForm = () => {
       <p className={`text-sm rounded ${popUpMessage.type === 'error' ? 'bg-red-300' : 'bg-green-200'} ${popUpMessage.show ? 'opacity-100 px-4 py-2' : 'opacity-0'} transition-all text-zinc-600`}>
         {popUpMessage.message}
       </p>
-      <input className='w-[14rem] bg-indigo-500 rounded text-white font-semibold px-4 py-1 mx-auto mt-auto' disabled={isLoading} type="submit" value={isLoading ? 'Sending...' : 'Send Email'} />
+      <input className='w-60 bg-indigo-500 rounded text-white font-semibold px-4 py-[5px] mx-auto mt-auto' disabled={isLoading} type="submit" value={isLoading ? 'Sending...' : 'Send Email'} />
     </form>
   )
 }

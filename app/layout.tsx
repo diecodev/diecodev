@@ -7,7 +7,7 @@ interface Props {
 
 const poppins = Poppins({
   display: 'fallback',
-  weight: ['400', '500', '600', '700', '800'],
+  weight: ['300', '400', '600', '700'],
   preload: true,
   subsets: ['latin-ext'],
   variable: '--poppins'
@@ -15,7 +15,7 @@ const poppins = Poppins({
 
 export default function RootLayout({ children }: Props) {
   return (
-    <html lang='es'  className={poppins.variable}>
+    <html lang='es'  className={`${poppins.variable} scroll-smooth`}>
       {/*
         <head /> will contain the components returned by the nearest parent
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head

@@ -1,3 +1,5 @@
+import { send } from '@emailjs/browser'
+
 interface IExperience {
   id: string
   position: string
@@ -29,4 +31,35 @@ export const experienceArray: IExperience[] = [
       'Deploy git project in Vercel platform, configure domain and DNS.',
     ]
   }
-] 
+]
+
+export const sendEmail = async (name: string, email: string, message: string) => {
+
+  // if (!name || !email || !message) {
+  return {
+    show: true,
+    type: 'error',
+    message: 'Please fill all the fields',
+  }
+  // }
+
+  const SERVICE_ID = process.env.NEXT_PUBLIC_SERVICE_ID as string
+  const TEMPLATE_ID = process.env.NEXT_PUBLIC_TEMPLATE_ID as string
+  const USER_ID = process.env.NEXT_PUBLIC_USER_ID as string
+
+  const response = await send(SERVICE_ID, TEMPLATE_ID, { name, email, message }, USER_ID)
+
+  const data = response.status === 200
+    ? {
+      show: true,
+      type: 'success',
+      message: 'Email sent successfully',
+    }
+    : {
+      show: true,
+      type: 'error',
+      message: 'Something went wrong. Please try again later',
+    }
+
+  return data
+}

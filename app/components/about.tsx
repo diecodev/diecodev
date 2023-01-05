@@ -7,7 +7,7 @@ const secondColumnSkills = ['Next.js', 'Deno', 'Tailwindcss', 'PostgreSQL']
 
 export const About = () => {
   return (
-    <div className='flex w-full flex-wrap md:flex-nowrap lg:w-[70%] lg:mx-auto xl:max-w-screen-lg mt-20 gap-10 justify-center' id='about'>
+    <div className='flex w-full flex-wrap md:flex-nowrap lg:w-[65%] lg:mx-auto xl:max-w-screen-lg mt-20 gap-10 justify-center' id='about'>
       <section>
         <div className='mb-8'>
           <h3 className='text-2xl font-semibold tracking-wide text-center leading-5'>About Me</h3>

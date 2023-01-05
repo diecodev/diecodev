@@ -7,13 +7,13 @@ export const Header = () => {
         <h1 className='text-lg font-semibold '>Diecodev</h1>
       </Link>
       <ul className='flex gap-4 flex-wrap'>
-      <Link href='/#about'>
+      <Link href='/#about' scroll={false}>
         <li className='flex items-center px-2' >About</li>
       </Link>
-      <Link href='/#experience'>
+      <Link href='/#experience' scroll={false}>
         <li className='flex items-center px-2' >Experience</li>
       </Link>
-      <Link href='/#contact'>
+      <Link href='/#contact' scroll={false}>
         <li className='flex items-center px-2' >Contact</li>
       </Link>
       <Link href='/resume.pdf'>

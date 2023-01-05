@@ -11,14 +11,14 @@ export const Experience = () => {
         </div>
         {
           experienceArray.map((exp)=>(
-            <article key={exp.id} className={`text-zinc-600 ${exp.id !== '0' && 'mt-12'}`}>
+            <article key={exp.id} className={`text-zinc-600 first-of-type:pt-0 py-10 ${exp.id !== '0' && 'border-t-2 border-t-zinc-300'}`}>
               <header className='mb-4'>
                 <h3 className='font-semibold text-lg leading-tight'>{exp.position} <span className='text-indigo-500'>@{exp.company}</span></h3>
                 <p className='text-sm'>{exp.date}</p>
               </header>
               <ul>
                 {exp.requirements.map((req, index) => (
-                  <li key={index} className='flex gap-2 items-start my-3'>
+                  <li key={index} className='flex gap-2 items-start mt-4'>
                     <span className='text-[.6rem] flex-none p-2'><ListItem /></span>
                     <p>{req}</p>
                   </li>

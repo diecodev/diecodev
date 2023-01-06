@@ -19,6 +19,9 @@ module.exports = {
         wheel: 'wheel 1s infinite',
         borders: 'borders 20s infinite',
       },
+      height:{
+        custom: 'calc(100vh - 52px)',
+      },
       dropShadow: {
         custom: '0 0 100px #BCF2C1'
       },

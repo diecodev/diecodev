@@ -1,23 +1,19 @@
+'use client'
+
+import { Link } from "react-scroll"
+import { HeaderLinks } from "./headerLinks"
+import { MobileNav } from "./mobileNav"
+
 export const Header = () => {
   return (
-    <header className='flex justify-between px-5 md:px-10 py-3 w-full flex-wrap'>
-      <a href='/'>
+    <header className='flex justify-between px-5 md:px-10 py-3 w-full flex-wrap bg-white lg:bg-white/40 lg:backdrop-blur lg:backdrop-saturate-50 sticky top-0 left-0 border-b border-b-zinc-200 z-10'>
+      <Link to='index' className="cursor-pointer">
         <h1 className='text-lg font-semibold '>Diecodev</h1>
-      </a>
-      <ul className='flex gap-4 flex-wrap'>
-      <a href='#about'>
-        <li className='flex items-center px-2' >About</li>
-      </a>
-      <a href='#experience'>
-        <li className='flex items-center px-2' >Experience</li>
-      </a>
-      <a href='#contact'>
-        <li className='flex items-center px-2' >Contact</li>
-      </a>
-      <a  href='/resume' target="_blank" rel="noopener noreferrer">
-        <li className='flex items-center px-2 border-2 border-indigo-500 rounded text-indigo-500 hover:bg-indigo-500/20 transition ease-in-out duration-300' >Resume</li>
-      </a>
+      </Link>
+      <ul className='gap-4 flex-wrap hidden lg:flex'>
+        <HeaderLinks />
       </ul>
+      <MobileNav />
     </header>
   )
 }

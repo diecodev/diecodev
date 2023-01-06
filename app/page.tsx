@@ -1,3 +1,4 @@
+import { ClientWrapper } from './components/clientWrapper'
 import { Experience } from './components/experience'
 import { Cursor, Arrow } from './components/icons'
 import { Contact } from './components/contact'
@@ -9,8 +10,8 @@ import { Hero } from './components/hero'
 export default function Home() {
   return (
     <>
-      <div className='px-4 lg:px-0'>
-        <Header />
+      <Header />
+      <ClientWrapper name='index' className='px-4 lg:px-0'>
         <Hero />
         <div className='lg:w-[70%] lg:mx-auto xl:max-w-screen-lg'>
           <a href='/#about' >
@@ -25,10 +26,16 @@ export default function Home() {
             </div>
           </a>
         </div>
-        <About />
-        <Experience />
-        <Contact />
-      </div>
+        <ClientWrapper name='about'>
+          <About />
+        </ClientWrapper>
+        <ClientWrapper name='experience'>
+          <Experience />
+        </ClientWrapper>
+        <ClientWrapper name='contact'>
+          <Contact />
+        </ClientWrapper>
+      </ClientWrapper>
       <Footer />
     </>
   )

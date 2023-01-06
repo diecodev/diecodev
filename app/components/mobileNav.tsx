@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useState } from "react"
-import { HeaderLinks } from "./headerLinks"
+import { useEffect, useState } from 'react'
+import { HeaderLinks } from './headerLinks'
 
 export const MobileNav = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -24,9 +24,9 @@ export const MobileNav = () => {
 
   return (
     <>
-      <button className="relative group lg:hidden" onClick={() => setIsOpen(prev => !prev)}>
-        <div className="relative flex overflow-hidden items-center justify-center transform transition-all duration-200">
-          <div className="flex flex-col justify-between w-5 h-5 transform transition-all duration-300 origin-center overflow-hidden">
+      <button className='relative group lg:hidden' onClick={() => setIsOpen(prev => !prev)}>
+        <div className='relative flex overflow-hidden items-center justify-center transform transition-all duration-200'>
+          <div className='flex flex-col justify-between w-5 h-5 transform transition-all duration-300 origin-center overflow-hidden'>
             <div className={`bg-black h-[2px] w-7 transform transition-all duration-300 origin-left ${hamburguer}`}></div>
             <div className={`bg-black h-[2px] w-7 rounded transform transition-all duration-300 delay-75 ${hamburguer}`}></div>
             <div className={`bg-black h-[2px] w-7 transform transition-all duration-300 origin-left delay-150 ${hamburguer}`}></div>
@@ -39,8 +39,8 @@ export const MobileNav = () => {
         </div>
       </button>
       {isOpen && (
-        <nav className="absolute top-[53px] w-full h-custom left-0 bg-white/40 backdrop-blur backdrop-saturate-50 flex justify-center items-center">
-          <ul className="flex gap-6 flex-col items-center">
+        <nav className='absolute top-[53px] w-full h-custom left-0 bg-white/40 backdrop-blur backdrop-saturate-50 flex justify-center items-center'>
+          <ul className='flex gap-6 flex-col items-center'>
             <HeaderLinks />
           </ul>
         </nav>

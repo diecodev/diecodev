@@ -1,6 +1,6 @@
 'use client'
 
-import { Element, Link } from 'react-scroll'
+import { Element, scroller } from 'react-scroll'
 
 interface Props {
   name: string
@@ -17,9 +17,23 @@ export const ClientWrapper = ({ children, name, className = '' }: Props) => {
 }
 
 export const CustomLink = ({ children, className = '', name }: Props) => {
+
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    scroller.scrollTo(name, {
+      spy: true,
+      smooth: 'easeOutQuart',
+      duration: 600,
+      offset: -100
+    })
+    return false
+  }
+
   return (
-    <Link to={name} spy={true} smooth={true} duration={500} offset={-100} alt={`go to ${name} section`} className={`${className} cursor-pointer`}>
+    <a href='/' onClick={handleClick} aria-label={`go to ${name} section`} className={`${className} cursor-pointer`}>
       {children}
-    </Link>
+    </a>
   )
 }

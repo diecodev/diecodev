@@ -1,4 +1,4 @@
-import { ClientWrapper } from './components/clientWrapper'
+import { ClientWrapper, CustomLink as Link } from './components/clientWrapper'
 import { Experience } from './components/experience'
 import { Cursor, Arrow } from './components/icons'
 import { Contact } from './components/contact'
@@ -14,7 +14,7 @@ export default function Home() {
       <ClientWrapper name='index' className='px-4 lg:px-0'>
         <Hero />
         <div className='lg:w-[70%] lg:mx-auto xl:max-w-screen-lg'>
-          <a href='/#about' >
+          <Link name='about' >
             <div className='text-zinc-600 gap-2 inline-flex'>
               <Cursor className='w-6 h-auto' />
               <div className='flex gap-1 items-center'>
@@ -24,7 +24,7 @@ export default function Home() {
                 </span>
               </div>
             </div>
-          </a>
+          </Link>
         </div>
         <ClientWrapper name='about'>
           <About />

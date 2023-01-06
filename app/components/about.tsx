@@ -22,24 +22,24 @@ export const About = () => {
         <p className='mb-4 text-zinc-600'>
           I love front end, so here are a few technologies I’ve been working with recently.
         </p>
-        <ul className='flex flex-wrap md:gap-x-20 gap-10 text-zinc-600'>
-          <div className='px-3'>
+        <div className='flex flex-wrap md:gap-x-20 gap-10 text-zinc-600'>
+          <ul className='px-3'>
             {firstColumnSkills.map((skill, index)=>(
               <li key={index} className='flex gap-2 items-center'>
               <span className='text-[.6rem]'><ListItem /></span>
               <span>{skill}</span>
             </li>
             ))}
-          </div>
-          <div className='px-3'>
+          </ul>
+          <ul className='px-3'>
             {secondColumnSkills.map((skill, index)=>(
               <li key={index} className='flex gap-2 items-center'>
               <span className='text-[.6rem]'><ListItem /></span>
               <span>{skill}</span>
             </li>
             ))}
-          </div>
-        </ul>
+          </ul>
+        </div>
       </section>
       <Image src={source} alt='diego diaz picture developer' priority className='animate-borders object-contain h-60 w-60 md:w-64 md:h-64 ease-in-out drop-shadow-custom' />
     </div>

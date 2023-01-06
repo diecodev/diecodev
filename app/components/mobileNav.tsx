@@ -24,7 +24,7 @@ export const MobileNav = () => {
 
   return (
     <>
-      <button className='relative group lg:hidden' onClick={() => setIsOpen(prev => !prev)}>
+      <button className='relative group lg:hidden' aria-label='menu button' onClick={() => setIsOpen(prev => !prev)}>
         <div className='relative flex overflow-hidden items-center justify-center transform transition-all duration-200'>
           <div className='flex flex-col justify-between w-5 h-5 transform transition-all duration-300 origin-center overflow-hidden'>
             <div className={`bg-black h-[2px] w-7 transform transition-all duration-300 origin-left ${hamburguer}`}></div>

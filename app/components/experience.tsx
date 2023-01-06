@@ -13,7 +13,7 @@ export const Experience = () => {
           experienceArray.map((exp)=>(
             <article key={exp.id} className={`text-zinc-600 first-of-type:pt-0 py-10 last-of-type:pb-0 ${exp.id !== '0' && 'border-t-2 border-t-zinc-300'}`}>
               <header className='mb-4'>
-                <h3 className='font-semibold text-lg leading-tight'>{exp.position} <span className='text-indigo-500'>@{exp.company}</span></h3>
+                <h3 className='font-semibold text-lg leading-tight'>{exp.position} <span className='text-indigo-600'>@{exp.company}</span></h3>
                 <p className='text-sm'>{exp.date}</p>
               </header>
               <ul>

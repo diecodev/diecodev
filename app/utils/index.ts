@@ -43,13 +43,13 @@ export const experienceArray: IExperience[] = [
 
 export const sendEmail = async (name: string, email: string, message: string) => {
 
-  // if (!name || !email || !message) {
-  return {
-    show: true,
-    type: 'error',
-    message: 'Please fill all the fields',
+  if (!name || !email || !message) {
+    return {
+      show: true,
+      type: 'error',
+      message: 'Please fill all the fields',
+    }
   }
-  // }
 
   const SERVICE_ID = process.env.NEXT_PUBLIC_SERVICE_ID as string
   const TEMPLATE_ID = process.env.NEXT_PUBLIC_TEMPLATE_ID as string

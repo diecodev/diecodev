@@ -26,9 +26,11 @@ export const experienceArray: IExperience[] = [
     url: "https://solarvolt.energiasnaturales.com/",
     date: "February 2023 - Present. [Santiago de Chile, Chile]",
     requirements: [
-      "Design all the screens that appear in the application, applying knowledge of UX and UI.",
-      "Develop API for client-server communication. implement password encrypt, database management (MongoDB) and error handler (HTTP status code).",
-      "Create a mobile app using React Native to automate the processes that are carried out internally in the company.",
+      "Develop an MPA with different functionalities such as session management, cookies and permissions for different user roles",
+      "Create a solar calculator that allows the user to know all the (estimated) costs that the project may take.",
+      "Create functionality needed to implement 3 different payment methods without using payment gateways. Generate payment links, redirections and payment validations.",
+      "Create a user-friendly interface that allows administrators to create, edit, delete and update everything related to user data.",
+      "Create a serverless API to improve server response times and user performance. Implement optimized DB queries",
     ],
   },
   {

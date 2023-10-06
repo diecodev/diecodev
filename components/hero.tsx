@@ -26,6 +26,7 @@ export const Hero = () => {
           development, customization and web techs.
         </p>
         <CustomLink
+          label="Say Hello"
           name="contact"
           className="gap-3 bg-indigo-600 rounded inline-flex max-w-[150px] px-3 py-2 items-center justify-center mt-3"
         >

@@ -16,11 +16,13 @@ export const ClientWrapper = ({ children, name, className = "" }: Props) => {
   );
 };
 
-export const CustomLink = ({ children, className = "", name }: Props) => {
+export const CustomLink = (
+  { children, className = "", name, label }: Props & { label: string },
+) => {
   return (
     <a
       href={name === "/" ? "/#" : `#${name}`}
-      aria-label={`go to ${name} section`}
+      aria-label={label}
       class={`${className} cursor-pointer`}
     >
       {children}

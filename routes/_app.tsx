@@ -3,7 +3,7 @@ import { AppProps } from "$fresh/server.ts";
 
 export default function App({ Component }: AppProps) {
   return (
-    <html class="scroll-smooth">
+    <html class="scroll-smooth" land="en">
       <head>
         <meta charSet="UTF-8" />
         <title>Diecodev</title>

@@ -28,7 +28,7 @@ export default function Home() {
       <ClientWrapper name="/" className="px-4 lg:px-0">
         <Hero />
         <div class="lg:w-[70%] lg:mx-auto xl:max-w-screen-lg">
-          <CustomLink name="about">
+          <CustomLink label="Scroll down" name="about">
             <div class="text-zinc-600 gap-2 inline-flex">
               <Cursor class="w-6 h-auto" />
               <div class="flex gap-1 items-center">

@@ -24,19 +24,19 @@ export const Experience = () => {
             >
               <article class="text-zinc-600">
                 <header class="mb-4">
-                  <h3 class="font-semibold text-lg leading-tight">
+                  <h3 class="font-semibold text-lg text-gray-800 leading-tight">
                     {exp.position} {exp?.url
                       ? (
                         <a
                           href={exp.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          class="text-indigo-600"
+                          class="text-indigo-700"
                         >
                           @{exp.company}
                         </a>
                       )
-                      : <span class="text-indigo-600">@{exp.company}</span>}
+                      : <span class="text-indigo-700">@{exp.company}</span>}
                   </h3>
                   <p class="text-sm">{exp.date}</p>
                 </header>

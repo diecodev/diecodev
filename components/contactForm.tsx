@@ -2,7 +2,7 @@ import { ContactFormWrapper } from "../islands/contactForm.tsx";
 
 export const ContactForm = () => {
   return (
-    <ContactFormWrapper>
+    <>
       <input
         type="text"
         name="customerName"
@@ -30,6 +30,6 @@ export const ContactForm = () => {
         type="submit"
         value={"Send Email"}
       />
-    </ContactFormWrapper>
+    </>
   );
 };

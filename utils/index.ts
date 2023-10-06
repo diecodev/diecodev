@@ -60,11 +60,12 @@ export const sendEmail = async (
   name: string,
   email: string,
   message: string,
+  { SERVICE_ID, TEMPLATE_ID, USER_ID }: {
+    SERVICE_ID: string;
+    TEMPLATE_ID: string;
+    USER_ID: string;
+  },
 ) => {
-  const SERVICE_ID = Deno.env.get("SERVICE_ID")?.toString()!;
-  const TEMPLATE_ID = Deno.env.get("TEMPLATE_ID")?.toString()!;
-  const USER_ID = Deno.env.get("USER_ID")?.toString()!;
-
   const response = await send(
     SERVICE_ID,
     TEMPLATE_ID,

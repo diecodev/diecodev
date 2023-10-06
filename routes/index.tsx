@@ -1,6 +1,3 @@
-import { useSignal } from "@preact/signals";
-import { Handlers } from "$fresh/server.ts";
-import { sendEmail } from "../utils/index.ts";
 import { Header } from "../components/header.tsx";
 import { ClientWrapper, CustomLink } from "../components/clientWrapper.tsx";
 import { Hero } from "../components/hero.tsx";
@@ -10,31 +7,21 @@ import { Experience } from "../components/experience.tsx";
 import { Contact } from "../components/contact.tsx";
 import { Footer } from "../components/footer.tsx";
 
-export const handler: Handlers = {
-  POST: async (req, ctx) => {
-    const form = await req.formData();
+const loader = () => {
+  const SERVICE_ID = Deno.env.get("SERVICE_ID")!;
+  const TEMPLATE_ID = Deno.env.get("TEMPLATE_ID")!;
+  const USER_ID = Deno.env.get("USER_ID")!;
 
-    const name = form.get("customerName")?.toString();
-    const email = form.get("customerEmail")?.toString();
-    const message = form.get("customerMessage")?.toString();
-
-    if (!name || !email || !message) {
-      return ctx.render({
-        ok: false,
-        message: "Please fill all the fields.",
-      });
-    }
-
-    const messageData = await sendEmail(name, email, message);
-    return ctx.render({
-      ok: false,
-      message: messageData,
-    });
-  },
+  return {
+    SERVICE_ID,
+    TEMPLATE_ID,
+    USER_ID,
+  };
 };
 
 export default function Home() {
-  const count = useSignal(3);
+  const envVars = loader();
+
   return (
     <>
       <Header />
@@ -60,7 +47,11 @@ export default function Home() {
           <About />
         </ClientWrapper>
         <ClientWrapper name="contact">
-          <Contact />
+          <Contact
+            SERVICE_ID={envVars.SERVICE_ID}
+            TEMPLATE_ID={envVars.TEMPLATE_ID}
+            USER_ID={envVars.USER_ID}
+          />
         </ClientWrapper>
       </ClientWrapper>
       <Footer />

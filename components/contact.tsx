@@ -1,7 +1,12 @@
 import { ContactForm } from "./contactForm.tsx";
 import { socialArray } from "../utils/index.ts";
+import { ContactFormWrapper } from "../islands/contactForm.tsx";
 
-export const Contact = () => {
+export const Contact = (props: {
+  TEMPLATE_ID: string;
+  USER_ID: string;
+  SERVICE_ID: string;
+}) => {
   return (
     <div
       class="flex w-full flex-wrap md:flex-nowrap md:max-w-lg md:mx-auto pt-20 gap-10 justify-center"
@@ -17,7 +22,9 @@ export const Contact = () => {
           </p>
         </div>
         <div class="flex flex-col lg:flex-row gap-10">
-          <ContactForm />
+          <ContactFormWrapper {...props}>
+            <ContactForm />
+          </ContactFormWrapper>
           <ul class="flex lg:flex-col md:gap-5 justify-center gap-3 mt-10 lg:mt-0">
             {socialArray.map((social) => (
               <li key={social.id}>

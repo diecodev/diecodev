@@ -1,0 +1,58 @@
+---
+import HeaderSocialLink from "./HeaderSocialLink.astro";
+import Github from "./icons/Github.astro";
+import LinkedIn from "./icons/LinkedIn.astro";
+
+type TLinks = {
+  name: string;
+  href: string;
+};
+
+const LINKS: TLinks[] = [
+  {
+    name: "Home",
+    href: "/",
+  },
+  {
+    name: "Work",
+    href: "#work",
+  },
+  {
+    name: "Projects",
+    href: "#projects",
+  },
+  {
+    name: "Stack",
+    href: "#stack",
+  },
+];
+---
+
+<header class="sticky top-0 w-fit mx-auto pb-4 pt-6 z-[1] flex gap-4">
+  <HeaderSocialLink
+    href="https://github.com/diecodev"
+    title="Go to Github"
+    srOnly="go to github profile"
+  >
+    <Github class="w-5 h-5 text-gray-300" />
+  </HeaderSocialLink>
+  <nav class="flex p-1 rounded-full text-sm bg-neutral-700 items-center w-fit">
+    {
+      LINKS.map((link) => (
+        <a
+          class="px-3 py-1 text-gray-300 relative before:absolute before:inset-0 before:bg-white/20 z-[2] before:rounded-full before:scale-0 before:transition-transform before:hover:scale-100 hover:text-white transition-colors"
+          href={link.href}
+        >
+          {link.name}
+        </a>
+      ))
+    }
+  </nav>
+  <HeaderSocialLink
+    href="https://www.linkedin.com/in/diecodev"
+    title="Visit LinkedIn"
+    srOnly="go to linkedin profile"
+  >
+    <LinkedIn class="w-5 h-5 text-gray-300" />
+  </HeaderSocialLink>
+</header>

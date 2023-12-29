@@ -1,0 +1,107 @@
+---
+import "@fontsource-variable/onest";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html class="scroll-smooth" lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta content="en" http-equiv="Content-Language" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Diecodev - {title}</title>
+    <meta name="apple-mobile-web-app-title" content={`Diecodev - ${title}`} />
+    <meta name="robots" content="index, follow" />
+    <link href="https://diecodev.deno.dev/" rel="canonical" />
+
+    {/* theme color */}
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: light)"
+      content="rgb(22 22 22)"
+    />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: dark)"
+      content="#242424"
+    />
+    <meta
+      name="msapplication-TileColor"
+      media="(prefers-color-scheme: light)"
+      content="rgb(22 22 22)"
+    />
+    <meta
+      name="msapplication-TileColor"
+      media="(prefers-color-scheme: dark)"
+      content="rgb(22 22 22)"
+    />
+
+    {/* social media cards */}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@diecodev" />
+    <meta
+      name="twitter:image"
+      content="https://diecodev.deno.dev/diecodev.png"
+    />
+    <meta property="og:url" content="https://diecodev.deno.dev/" />
+    <meta property="og:title" content="Diecodev" />
+    <meta
+      property="og:image"
+      content="https://diecodev.deno.dev/diecodev.png"
+    />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+  </head>
+  <body class="text-white bg-black overflow-x-hidden">
+    <div class="fixed left-0 top-0 -z-10 h-full w-full">
+      <div class="relative h-full w-full bg-black">
+        <div
+          class="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"
+        >
+        </div><div
+          class="absolute left-0 right-0 top-[-10%] h-[1000px] w-[1000px] rounded-full bg-[radial-gradient(circle_400px_at_50%_300px,#fbfbfb36,#000)]"
+        >
+        </div>
+      </div>
+    </div>
+    <Header />
+    <div class="max-w-3xl mx-auto px-4">
+      <slot />
+    </div>
+    <Footer />
+  </body>
+</html>
+<style is:global>
+  :root {
+    --background: 22 22 22;
+    --foreground: 33 33 33;
+    --accent: 0 0% 100%;
+    color-scheme: light dark;
+  }
+
+  body {
+    font-family: "Onest Variable", ui-sans-serif, system-ui, sans-serif,
+      "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+      "Noto Color Emoji";
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+</style>

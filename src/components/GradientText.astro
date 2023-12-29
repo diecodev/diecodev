@@ -1,0 +1,12 @@
+---
+type Props = {
+  text: string;
+};
+
+const { text } = Astro.props;
+---
+
+<span
+  class="bg-gradient-to-r from-purple-400 leading-snug to-orange-400 via-pink-500 via-40% bg-clip-text text-transparent"
+  >{text}</span
+>

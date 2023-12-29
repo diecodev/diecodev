@@ -1,0 +1,59 @@
+---
+import Link from "./icons/Link.astro";
+import Github from "./icons/Github.astro";
+
+type Props = {
+  title: string;
+  description: string;
+  type: "App" | "Library";
+  url: string;
+  gh: string;
+  tags: string[];
+};
+
+const { description, tags, title, type, gh, url } = Astro.props;
+---
+
+<article
+  class="flex flex-col rounded-md border border-accent/20 p-4 bg-background/20 backdrop-blur-md"
+>
+  <header class="mb-2 flex items-center justify-between">
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Open in new tab"
+      title="Visit Website"
+      class="group text-xl font-medium"
+    >
+      <div class="flex items-center space-x-2 transition hover:text-gray-400">
+        <h3>{title}</h3>
+        <span>
+          <Link
+            class="inline-block text-gray-400 transition-transform duration-300 group-hover:-translate-y-[1px] group-hover:translate-x-[1px] w-3 h-3"
+          />
+        </span>
+      </div>
+    </a>
+    <div class="flex items-center space-x-3">
+      <a href={gh} target="_blank" title="Visit Repository">
+        <Github
+          class="text-gray-400 transition-colors duration-150 hover:text-white w-5 h-5"
+        />
+        <span class="sr-only">Visit Repository</span>
+      </a>
+    </div>
+  </header>
+  <p class="text-gray-400">{description}</p>
+  <div class="mt-3 flex items-center justify-between">
+    <div class="flex items-center space-x-2">
+      {
+        tags.map((tag) => (
+          <span class="truncate rounded-md border border-accent/20 bg-background px-2 py-1 font-mono text-xs">
+            {tag}
+          </span>
+        ))
+      }
+    </div>
+  </div>
+</article>

@@ -1,0 +1,23 @@
+---
+import GradientText from "./GradientText.astro";
+
+type Props = {
+  title: string;
+  subtitle: string;
+  id: string;
+};
+
+const { id, subtitle, title } = Astro.props;
+---
+
+<section id={id} class="pt-24">
+  <header class="text-center lg:mb-12 mb-9">
+    <h2 class="text-3xl lg:text-4xl font-bold text-balance leading-snug">
+      <GradientText text={title} />
+    </h2>
+    <p class="text-balance text-2xl font-semibold">
+      {subtitle}
+    </p>
+  </header>
+  <slot />
+</section>

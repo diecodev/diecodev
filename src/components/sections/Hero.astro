@@ -1,0 +1,41 @@
+---
+import { Picture } from "astro:assets";
+import Profile from "../../images/me.webp";
+import GradientText from "../GradientText.astro";
+---
+
+<main class="pt-6 lg:pt-12 flex flex-col gap-6">
+  <Picture
+    src={Profile}
+    alt="diecodev profile"
+    quality={100}
+    formats={["avif", "webp"]}
+    width={180}
+    height={180}
+    class="rounded-full mx-auto size-36 lg:size-[11.25rem] aspect-square"
+  />
+  <h1
+    class="font-bold text-3xl lg:text-5xl text-balance text-center leading-snug"
+  >
+    <GradientText text="Full-Stack Maestro:" /> Crafting Digital Experiences
+  </h1>
+  <p class="text-center text-pretty text-gray-400">
+    I'm an experienced full-stack web developer with +3 years of expertise,
+    focusing on frontend development. I excel in crafting dynamic web
+    applications using advanced technologies such as Next.js and Docker.
+  </p>
+  <nav
+    class="text-sm flex-wrap font-medium flex items-center justify-center gap-x-10 gap-y-6 mt-8"
+  >
+    <a
+      class="py-3 px-5 bg-white min-w-[9.6rem] text-center hover:bg-gray-200 transition-colors rounded-full text-background"
+      href="https://www.linkedin.com/in/diecodev"
+      target="_blank">GET IN TOUCH</a
+    >
+    <a
+      target="_blank"
+      class="py-3 px-5 border-2 rounded-full min-w-[9.6rem] text-center hover:border-gray-300 transition-colors hover:text-gray-300"
+      href="/resume.pdf">DOWNLOAD CV</a
+    >
+  </nav>
+</main>

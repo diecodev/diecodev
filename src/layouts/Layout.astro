@@ -16,10 +16,54 @@ const { title, description } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
-    <meta name="viewport" content="width=device-width" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta content="en" http-equiv="Content-Language" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>Diecodev - {title}</title>
+    <meta name="apple-mobile-web-app-title" content={`Diecodev - ${title}`} />
+    <meta name="robots" content="index, follow" />
+    <link href="https://diecodev.deno.dev/" rel="canonical" />
+
+    {/* theme color */}
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: light)"
+      content="rgb(22 22 22)"
+    />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: dark)"
+      content="#242424"
+    />
+    <meta
+      name="msapplication-TileColor"
+      media="(prefers-color-scheme: light)"
+      content="rgb(22 22 22)"
+    />
+    <meta
+      name="msapplication-TileColor"
+      media="(prefers-color-scheme: dark)"
+      content="rgb(22 22 22)"
+    />
+
+    {/* social media cards */}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@diecodev" />
+    <meta
+      name="twitter:image"
+      content="https://diecodev.deno.dev/diecodev.png"
+    />
+    <meta property="og:url" content="https://diecodev.deno.dev/" />
+    <meta property="og:title" content="Diecodev" />
+    <meta
+      property="og:image"
+      content="https://diecodev.deno.dev/diecodev.png"
+    />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
   </head>
   <body class="text-white bg-black overflow-x-hidden">
     <div class="fixed left-0 top-0 -z-10 h-full w-full">

@@ -33,5 +33,5 @@ jobs:
         uses: denoland/deployctl@v1
         with:
           project: "diecodev"
-          entrypoint: "server/entry.mjs" # 📝 Update the entrypoint if necessary
+          entrypoint: "https://deno.land/std@0.188.0/http/file_server.ts" # 📝 Update the entrypoint if necessary
           root: "dist" # 📝 Update the root if necessary

@@ -8,6 +8,9 @@ dependencies:
   '@astrojs/check':
     specifier: ^0.3.4
     version: 0.3.4(typescript@5.3.3)
+  '@astrojs/deno':
+    specifier: ^5.0.1
+    version: 5.0.1(astro@4.0.8)
   '@astrojs/sitemap':
     specifier: ^3.0.4
     version: 3.0.4
@@ -61,6 +64,15 @@ packages:
 
   /@astrojs/compiler@2.3.4:
     resolution: {integrity: sha512-33/YtWoBCE0cBUNy1kh78FCDXBoBANX87ShgATlAHECYbG2+buNTAgq4Xgz4t5NgnEHPN21GIBC2Mvvwisoutw==}
+    dev: false
+
+  /@astrojs/deno@5.0.1(astro@4.0.8):
+    resolution: {integrity: sha512-nYztGqHqC+q3A9ynjj3gblAkO/ZylDwahjVTx+2DvZgX4U+BJU/gL5BZkNtL+P10opCKJi29NvvVFvk6jwZHmA==}
+    peerDependencies:
+      astro: ^3.1.4
+    dependencies:
+      astro: 4.0.8(typescript@5.3.3)
+      esbuild: 0.19.10
     dev: false
 
   /@astrojs/internal-helpers@0.2.1:

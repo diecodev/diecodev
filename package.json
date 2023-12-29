@@ -1,16 +1,17 @@
 {
-  "name": "",
+  "name": "diecodev",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro check && astro build",
-    "preview": "astro preview",
+    "preview": "deno run --allow-net --allow-read --allow-env ./dist/server/entry.mjs",
     "astro": "astro"
   },
   "dependencies": {
     "@astrojs/check": "^0.3.4",
+    "@astrojs/deno": "^5.0.1",
     "@astrojs/sitemap": "^3.0.4",
     "@astrojs/tailwind": "^5.1.0",
     "@fontsource-variable/onest": "5.0.2",

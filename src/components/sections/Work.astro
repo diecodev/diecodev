@@ -1,0 +1,127 @@
+---
+import Unico from "../../images/projects/unico.png";
+import Estuarg from "../../images/projects/estuarg.png";
+import Solarvolt from "../../images/projects/solarvolt.png";
+import Card from "../Card.astro";
+import Plus from "../icons/Plus.astro";
+import Deno from "../icons/Deno.astro";
+import Nextjs from "../icons/Nextjs.astro";
+import Tailwind from "../icons/Tailwind.astro";
+import Typescript from "../icons/TypeScript.astro";
+import Mongo from "../icons/Mongo.astro";
+import Strapi from "../icons/Strapi.astro";
+import Fresh from "../icons/Fresh.astro";
+import React from "../icons/React.astro";
+import Node from "../icons/Node.astro";
+import SectionWrapper from "../SectionWrapper.astro";
+
+const TAGS = {
+  NEXT: {
+    name: "Next.js",
+    class: "bg-black text-white",
+    icon: Nextjs,
+  },
+  TAILWIND: {
+    name: "Tailwind CSS",
+    class: "bg-[#003159] text-white",
+    icon: Tailwind,
+  },
+  DENO: {
+    name: "Deno",
+    class: "bg-[#27272a] text-white",
+    icon: Deno,
+  },
+  TYPSECRIPT: {
+    name: "TypeScript",
+    class: "bg-[#003159] text-white",
+    icon: Typescript,
+  },
+  MONGO: {
+    name: "MongoDB",
+    class: "bg-[#023430] text-white",
+    icon: Mongo,
+  },
+  STRAPI: {
+    name: "Strapi",
+    class: "bg-[#040a44] text-white",
+    icon: Strapi,
+  },
+  FRESH: {
+    name: "Fresh",
+    class: "bg-[#373204] text-white",
+    icon: Fresh,
+  },
+  REACT: {
+    name: "React",
+    class: "bg-[#20232a] white",
+    icon: React,
+  },
+  NATIVE: {
+    name: "React Native",
+    class: "bg-[#20232a] white",
+    icon: React,
+  },
+  NODE: {
+    name: "NodeJS",
+    class: "bg-[#090c15] text-white",
+    icon: Node,
+  },
+};
+
+const experieinces = [
+  {
+    title: "Full-Stack Developer - Energías Naturales SpA",
+    description:
+      "Develop an MPA with session management, create a serverless API using Oak for enhanced performance, and design a solar calculator for project cost estimation. Configure a monorepository with pnpm workspaces, connect the frontend (Vercel) and backend (Deno Deploy, Cloudflare). Integrate three payment methods without gateways, and design an admin-friendly interface for user data management.",
+    image: Solarvolt,
+    date: "December 2023",
+    tags: [
+      TAGS.NEXT,
+      TAGS.TAILWIND,
+      TAGS.MONGO,
+      TAGS.STRAPI,
+      TAGS.FRESH,
+      TAGS.TYPSECRIPT,
+    ],
+  },
+  {
+    title: "Mobile App Developer - Único Logística",
+    description:
+      "Designed a secure API with MongoDB, JWT tokens, and password encryption. Automated internal processes with a React Native app, configured Deno deploy, and utilized Expo EAS for updates. Implemented websockets and a robust security layer for real-time communication and user role permissions.",
+    image: Unico,
+    date: "December 2022",
+    tags: [TAGS.NATIVE, TAGS.MONGO, TAGS.NODE, TAGS.DENO, TAGS.TYPSECRIPT],
+  },
+  {
+    title: "Front-end Developer - Estuarg.com",
+    description:
+      "Design the web page using Figma, create necessary pdf files, and assets for customer sharing. Develop the web page using Next.js and TypeScript, and deploy the Git project on the Vercel platform while configuring the domain and DNS settings.",
+    image: Estuarg,
+    date: "December 20221",
+    tags: [TAGS.NEXT, TAGS.TYPSECRIPT],
+  },
+];
+---
+
+<SectionWrapper id="work" title="Work:" subtitle="A Chronicle of Achievements">
+  <div
+    class="flex flex-col gap-9 lg:border-l lg:border-transparent relative lg:before:absolute lg:before:w-[1px] lg:before:h-full lg:before:top-0 lg:before:left-0 lg:before:bg-gradient-to-b lg:before:from-accent/20 lg:before:to-transparent lg:before:via-accent/20 lg:before:via-70%"
+  >
+    {
+      experieinces.map((project) => (
+        <div class="lg:pl-10 relative lg:pb-14 pb-8 pt-3 lg:pt-0 border-b border-accent/20 lg:border-b-0 lg:border-transparent last:border-b-0 last:border-transparent">
+          <div class="lg:flex items-center w-6 h-6 bg-white justify-center text-background absolute hidden top-0 -left-3 rounded-full">
+            <Plus />
+          </div>
+          <Card
+            date={project.date}
+            title={project.title}
+            description={project.description}
+            image={project.image}
+            tags={project.tags}
+          />
+        </div>
+      ))
+    }
+  </div>
+</SectionWrapper>

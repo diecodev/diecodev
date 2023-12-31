@@ -12,7 +12,7 @@ const { href, srOnly, title } = Astro.props;
   href={href}
   target={href.startsWith("#") ? "_self" : "_blank"}
   rel="noopener noreferrer"
-  class="p-2 flex bg-neutral-700 rounded-full relative before:absolute before:inset-0 before:bg-white/20 z-[2] before:rounded-full before:scale-0 before:transition-transform before:hover:scale-100 text-sm hover:text-white transition-colors"
+  class="p-2 flex bg-neutral-200 dark:bg-neutral-700 rounded-full relative before:absolute before:inset-0 dark:before:bg-white/20 before:bg-neutral-400/20 z-[2] before:rounded-full before:scale-0 before:transition-transform before:hover:scale-100 text-sm hover:text-white transition-colors"
   title={title}
 >
   {srOnly && <span class="sr-only">{srOnly}</span>}

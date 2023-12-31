@@ -15,7 +15,7 @@ const { description, tags, title, type, gh, url } = Astro.props;
 ---
 
 <article
-  class="flex flex-col rounded-md border border-accent/20 p-4 bg-background/20 backdrop-blur-md"
+  class="flex flex-col rounded-md border border-neutral-200 dark:border-neutral-700 p-4 bg-neutral-300/20 dark:bg-neutral-800/20 backdrop-blur-md"
 >
   <header class="mb-2 flex items-center justify-between">
     <a
@@ -26,7 +26,9 @@ const { description, tags, title, type, gh, url } = Astro.props;
       title="Visit Website"
       class="group text-xl font-medium"
     >
-      <div class="flex items-center space-x-2 transition hover:text-gray-400">
+      <div
+        class="flex items-center space-x-2 transition dark:hover:text-neutral-400 hover:text-neutral-600 dark:text-white text-neutral-800"
+      >
         <h3>{title}</h3>
         <span>
           <Link
@@ -38,18 +40,18 @@ const { description, tags, title, type, gh, url } = Astro.props;
     <div class="flex items-center space-x-3">
       <a href={gh} target="_blank" title="Visit Repository">
         <Github
-          class="text-gray-400 transition-colors duration-150 hover:text-white w-5 h-5"
+          class="dark:text-gray-400 text-gray-600 transition-colors duration-150 dark:hover:text-white hover:text-neutral-800 w-5 h-5"
         />
         <span class="sr-only">Visit Repository</span>
       </a>
     </div>
   </header>
-  <p class="text-gray-400">{description}</p>
+  <p class="dark:text-gray-400 text-gray-600">{description}</p>
   <div class="mt-3 flex items-center justify-between">
     <div class="flex items-center space-x-2">
       {
         tags.map((tag) => (
-          <span class="truncate rounded-md border border-accent/20 bg-background px-2 py-1 font-mono text-xs">
+          <span class="truncate rounded-md border border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900 dark:text-white text-black px-2 py-1 font-mono text-xs">
             {tag}
           </span>
         ))

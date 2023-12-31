@@ -1,19 +1,30 @@
 ---
-import { Picture } from "astro:assets";
 import Profile from "../../images/me.webp";
 import GradientText from "../GradientText.astro";
 ---
 
 <main class="pt-6 lg:pt-12 flex flex-col gap-6">
-  <Picture
-    src={Profile}
-    alt="diecodev profile"
-    quality={100}
-    formats={["avif", "webp"]}
-    width={180}
-    height={180}
-    class="rounded-full mx-auto size-36 lg:size-[11.25rem] aspect-square"
-  />
+  <div class="relative mx-auto size-36 lg:size-[11.25rem]">
+    <img
+      src={Profile.src}
+      alt="diecodev profile"
+      width={180}
+      height={180}
+      class="rounded-full mx-auto size-36 lg:size-[11.25rem] aspect-square"
+    />
+    <a
+      href="http://www.linkedin.com/in/diecodev"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="absolute bottom-4 -right-16 bg-green-400 rounded-full font-medium text-black text-xs py-1 px-2 flex items-center gap-[6px] leading-none
+      hover:bg-green-900/80 hover:text-gray-300 transition-colors group"
+    >
+      <span
+        class="w-2 h-2 inline-block rounded-full bg-green-900/90 group-hover:bg-green-400"
+      ></span>
+      <span> OPEN TO WORK</span>
+    </a>
+  </div>
   <h1
     class="font-bold text-3xl lg:text-5xl text-balance text-center leading-snug"
   >

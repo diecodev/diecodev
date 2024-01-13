@@ -9,20 +9,11 @@ interface iProject {
 
 export const PROJECTS: iProject[] = [
   {
-    title: "moick",
-    description:
-      "🔔 A versatile multi-package library for Toast notifications.",
+    title: "qwik-sonner",
+    description: "🔔 An opinionated toast component for Qwik Framework.",
     type: "Library",
-    url: "https://www.npmjs.com/package/@moick/qwik",
-    gh: "https://github.com/diecodev/moick",
+    url: "https://www.npmjs.com/package/qwik-sonner",
+    gh: "https://github.com/diecodev/qwik-sonner",
     tags: ["Typescript", "Vite", "Qwik", "GitHub Actions"],
-  },
-  {
-    title: "portfolio",
-    description: "👨‍💻 My personal website.",
-    type: "App",
-    url: "https://diecodev.deno.dev",
-    gh: "https://github.com/diecodev/diecodev",
-    tags: ["Astro", "Tailwind CSS", "Typescript"],
   },
 ];

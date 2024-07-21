@@ -6,10 +6,7 @@ I've created [qwik-sonner](https://github.com/diecodev/qwik-sonner) for handling
 
 When I’m not coding, I’m either diving into new tech trends or just hanging out with friends. Always excited about the next big thing in tech! 😄
 
-Feel free to drop me a line:
-- 📧 [Email me](mailto:diegoddiaz05@gmail.com)
-- 🐦 [Twitter](https://twitter.com/diecodev)
-- 💼 [LinkedIn](https://www.linkedin.com/in/diecodev)
+Feel free to drop me a line at [𝕏](https://twitter.com/diecodev)
 
 If you like what I do, you can support me on [Polar](https://polar.sh/diecodev/). I'm also open for consulting or freelancing if you need help with web solutions. 🤝
 

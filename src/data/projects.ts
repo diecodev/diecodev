@@ -12,8 +12,17 @@ export const PROJECTS: iProject[] = [
     title: "qwik-sonner",
     description: "🔔 An opinionated toast component for Qwik Framework.",
     type: "Library",
-    url: "https://www.npmjs.com/package/qwik-sonner",
+    url: "https://qwik-sonner.deno.dev",
     gh: "https://github.com/diecodev/qwik-sonner",
+    tags: ["Typescript", "Vite", "Qwik", "GitHub Actions"],
+  },
+  {
+    title: "qwik-date",
+    description:
+      "📆 An opinionated date picker component for Qwik Framework. (Inline and Popup modes)",
+    type: "Library",
+    url: "https://qwik-date.deno.dev",
+    gh: "https://github.com/diecodev/qwik-date",
     tags: ["Typescript", "Vite", "Qwik", "GitHub Actions"],
   },
 ];

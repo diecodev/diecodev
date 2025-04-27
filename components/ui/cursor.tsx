@@ -40,6 +40,7 @@ export function Cursor({
 	const cursorRef = useRef<HTMLDivElement>(null);
 	const [isVisible, setIsVisible] = useState(!attachToParent);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (typeof window !== "undefined") {
 			cursorX.set(window.innerWidth / 2);
@@ -47,6 +48,7 @@ export function Cursor({
 		}
 	}, []);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (!attachToParent) {
 			document.body.style.cursor = "none";

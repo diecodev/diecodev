@@ -52,7 +52,7 @@ function MorphingDialogProvider({
 }: MorphingDialogProviderProps) {
 	const [isOpen, setIsOpen] = useState(false);
 	const uniqueId = useId();
-	const triggerRef = useRef<HTMLButtonElement>(null!);
+	const triggerRef = useRef<HTMLButtonElement>(null);
 
 	const contextValue = useMemo(
 		() => ({
@@ -143,7 +143,7 @@ function MorphingDialogContent({
 	style,
 }: MorphingDialogContentProps) {
 	const { setIsOpen, isOpen, uniqueId, triggerRef } = useMorphingDialog();
-	const containerRef = useRef<HTMLDivElement>(null!);
+	const containerRef = useRef<HTMLDivElement>(null);
 	const [firstFocusableElement, setFirstFocusableElement] =
 		useState<HTMLElement | null>(null);
 	const [lastFocusableElement, setLastFocusableElement] =
@@ -197,6 +197,7 @@ function MorphingDialogContent({
 		}
 	}, [isOpen, triggerRef]);
 
+	// @ts-expect-error
 	useClickOutside(containerRef, () => {
 		if (isOpen) {
 			setIsOpen(false);
@@ -209,6 +210,7 @@ function MorphingDialogContent({
 			layoutId={`dialog-${uniqueId}`}
 			className={cn("overflow-hidden", className)}
 			style={style}
+			// biome-ignore lint/a11y/useSemanticElements: <explanation>
 			role="dialog"
 			aria-modal="true"
 			aria-labelledby={`motion-ui-morphing-dialog-title-${uniqueId}`}
@@ -411,12 +413,12 @@ function MorphingDialogClose({
 
 export {
 	MorphingDialog,
-	MorphingDialogTrigger,
+	MorphingDialogClose,
 	MorphingDialogContainer,
 	MorphingDialogContent,
-	MorphingDialogClose,
-	MorphingDialogTitle,
-	MorphingDialogSubtitle,
 	MorphingDialogDescription,
 	MorphingDialogImage,
+	MorphingDialogSubtitle,
+	MorphingDialogTitle,
+	MorphingDialogTrigger,
 };

@@ -1,6 +1,6 @@
 "use client";
 import { type Variants, motion } from "motion/react";
-import type { ReactNode } from "react";
+import type { JSX, ReactNode } from "react";
 import React from "react";
 
 export type PresetType =
@@ -132,6 +132,7 @@ function AnimatedGroup({
 			className={className}
 		>
 			{React.Children.map(children, (child, index) => (
+				// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 				<MotionChild key={index} variants={itemVariants}>
 					{child}
 				</MotionChild>

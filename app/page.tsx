@@ -7,7 +7,7 @@ import { Header } from "../components/chore/header";
 
 export default function Home() {
 	return (
-		<div className="min-h-svh">
+		<div className="min-h-svh px-6">
 			<Header />
 			<div className="relative max-h-[35rem] aspect-square h-auto w-full flex flex-col items-center justify-center">
 				<m.div

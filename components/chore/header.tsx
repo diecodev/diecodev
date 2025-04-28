@@ -4,7 +4,7 @@ import Linkedin from "~/svg/linkedin.svg";
 import X from "~/svg/x.svg";
 import { Button } from "../ui/button";
 
-const links = [
+export const links = [
 	{
 		label: "Diecodev github",
 		href: "https://github.com/diecodev",

@@ -1,0 +1,51 @@
+## Standard Markdown Features
+
+### Text Formatting
+
+Regular paragraph with **bold text**, *italic text*, and `inline code`. You can also use [links](https://example.com) and ~~strikethrough~~ text.
+
+### Lists
+
+Ordered list:
+
+1. First item
+2. Second item
+   1. Nested item
+   2. Another nested item
+3. Third item
+
+Unordered list:
+
+- Documentation
+- Components
+  - Buttons
+  - Cards
+  - Navigation
+- Styling
+
+### Blockquotes
+
+> This is a blockquote. It can contain *formatting* and multiple paragraphs.
+>
+> Second paragraph in the same blockquote.
+
+### Code Blocks
+
+```python
+weights, biases = init_random_parameters()
+
+epochs = 10
+learning_rate = 0.01 # See ⁴
+
+for epoch in range(epochs):
+  for input_data, target in training_dataset:
+    predictions = forward_pass(input_data, weights, biases)
+    loss = loss_function(predictions, target)
+    gradients = backpropagation(loss, weights, biases)
+
+    # Step 4: Gradient Descent (Parameter Update)
+    weights -= learning_rate * gradients["weights"]
+    biases -= learning_rate * gradients["biases"]
+
+  print(f"Epoch {epoch + 1}/{epochs}, Loss: {loss}")
+```

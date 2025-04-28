@@ -7,6 +7,7 @@ import Expo from "~/svg/expo.svg";
 import External from "~/svg/external.svg";
 import Firebase from "~/svg/firebase.svg";
 import Fresh from "~/svg/fresh.svg";
+import MongoDB from "~/svg/mongodb.svg";
 import Next from "~/svg/nextjs.svg";
 import Pw from "~/svg/playwright.svg";
 import Sass from "~/svg/sass.svg";
@@ -14,6 +15,7 @@ import Storybook from "~/svg/storybook.svg";
 import Strapi from "~/svg/strapi.svg";
 import Tailwind from "~/svg/tailwindcss.svg";
 import Turbopack from "~/svg/turbopack.svg";
+import Turborepo from "~/svg/turborepo.svg";
 
 const recentExperience = [
 	{
@@ -23,7 +25,6 @@ const recentExperience = [
 		startYear: 2024,
 		endYear: "Present",
 		url: "https://www.viewstats.com",
-		seeMore: "/viewstats",
 		description:
 			"Focused on improving development agility and code quality for public administration solutions, including robust mobile applications built with Expo and its comprehensive toolset. Key contributions included the creation of reusable TypeScript utility libraries shared across the organization, establishing robust documentation practices for maintainability, implementing modern development techniques and best practices, and strategically upgrading outdated projects to enhance system performance and ensure long-term maintainability.",
 		thecnologies: [
@@ -44,17 +45,17 @@ const recentExperience = [
 		startYear: 2023,
 		endYear: 2024,
 		url: "https://www.energiasnaturales.cl",
-		seeMore: "/energiasnaturales",
 		description:
 			"Developed a robust public website and an internal platform for data management, featuring advanced session and permission controls. Engineered a high-performance serverless API using Oak on Deno. Built a comprehensive solar calculator with complex project-specific calculations and successfully designed and implemented a custom payment gateway from scratch integrating three payment methods. Achieved significant SEO improvements and boosted page performance scores from 67 to 97 through semantic HTML and image optimization.",
 		thecnologies: [
 			{ label: "deno", icon: Deno },
 			{ label: "tailwindcss", icon: Tailwind },
 			{ label: "fresh", icon: Fresh },
-			{ label: "turbopack", icon: Turbopack },
 			{ label: "cloudflare", icon: Cloudflare },
 			{ label: "nextjs", icon: Next },
 			{ label: "strapi", icon: Strapi },
+			{ label: "mongodb", icon: MongoDB },
+			{ label: "turborepo", icon: Turborepo },
 		],
 	},
 ] as const;
@@ -129,14 +130,6 @@ export const RecentExperience = () => {
 								</div>
 							))}
 						</div>
-
-						{/* See more link */}
-						<Link
-							href={experience.seeMore}
-							className="inline-block mt-3 text-sm text-blue-400 hover:underline"
-						>
-							See project details →
-						</Link>
 					</m.div>
 				))}
 			</div>

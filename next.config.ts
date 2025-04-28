@@ -1,12 +1,26 @@
-import withMDX from "@next/mdx";
+import createMdx from "@next/mdx";
 import type { NextConfig } from "next";
 
+const withMDX = createMdx({});
+
 const nextConfig: NextConfig = {
+	images: {
+		remotePatterns: [
+			{
+				protocol: "https",
+				hostname: "placehold.co",
+				port: "",
+				pathname: "/**",
+			},
+		],
+	},
 	/* config options here */
 	pageExtensions: ["ts", "tsx", "mdx"],
 	experimental: {
 		reactCompiler: true,
-		mdxRs: true,
+		mdxRs: {
+			mdxType: "gfm",
+		},
 	},
 	turbopack: {
 		rules: {
@@ -25,4 +39,4 @@ const nextConfig: NextConfig = {
 	},
 };
 
-export default withMDX()(nextConfig);
+export default withMDX(nextConfig);

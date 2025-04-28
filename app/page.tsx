@@ -1,28 +1,23 @@
 import * as m from "motion/react-client";
 import Link from "next/link";
-import Scrible from "~/app/svg/scrible.svg";
+import { RecentExperience } from "~/components/chore/recent-experience";
 import { Spotlight } from "~/components/ui/spotlight";
-import { Header } from "./components/header";
+import Scrible from "~/svg/scrible.svg";
+import { Header } from "../components/chore/header";
 
 export default function Home() {
 	return (
 		<div className="min-h-svh">
 			<Header />
-			<div className="realtive min-h-svh w-full flex flex-col items-center justify-center">
+			<div className="relative max-h-[35rem] aspect-square h-auto w-full flex flex-col items-center justify-center">
 				<m.div
-					className="absolute top-0 bottom-0 max-w-[1100px] w-full opacity-35 overflow-clip"
-					initial={{
-						opacity: 0,
-						scale: 0.97,
-					}}
-					animate={{
-						opacity: 0.35,
-						scale: 1,
-					}}
+					className="absolute top-0 bottom-0 max-w-[35rem] w-full opacity-50 overflow-clip"
+					initial={{ opacity: 0, scale: 0.97 }}
+					animate={{ opacity: 0.5, scale: 1 }}
 					transition={{
 						duration: 0.8,
 						ease: [0.4, 0, 0.2, 1],
-						delay: 0.4, // Appears after title (0s) and description (0.1s)
+						delay: 0.4,
 					}}
 				>
 					<div className="absolute inset-0 mask-[linear-gradient(180deg,rgba(0,0,0,0)_20%,rgba(0,0,0,0.28)_30%,rgba(0,0,0,1)_80%)] mask-add">
@@ -33,36 +28,17 @@ export default function Home() {
 				</m.div>
 				<main className="relative flex flex-col items-center justify-center max-w-lg mx-auto z-[1]">
 					<m.h1
-						initial={{
-							opacity: 0,
-							y: 20,
-						}}
-						animate={{
-							opacity: 1,
-							y: 0,
-						}}
-						transition={{
-							duration: 0.5,
-							ease: [0.4, 0, 0.2, 1],
-						}}
-						className=" text-4xl md:text-6xl font-semibold text-white leading-[1.2]"
+						initial={{ opacity: 0, y: 20 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+						className=" text-4xl md:text-6xl font-semibold leading-[1.2]"
 					>
 						Diecodev
 					</m.h1>
 					<m.p
-						initial={{
-							opacity: 0,
-							y: 20,
-						}}
-						animate={{
-							opacity: 1,
-							y: 0,
-						}}
-						transition={{
-							duration: 0.5,
-							ease: [0.4, 0, 0.2, 1],
-							delay: 0.1,
-						}}
+						initial={{ opacity: 0, y: 20 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
 						className="text-center text-neutral-300 leading-relaxed md:text-balance text-pretty"
 					>
 						Full-stack developer crafting modern web experiences using
@@ -71,12 +47,8 @@ export default function Home() {
 					<m.div
 						initial={{ opacity: 0, y: 20 }}
 						animate={{ opacity: 1, y: 0 }}
-						transition={{
-							duration: 0.5,
-							ease: [0.4, 0, 0.2, 1],
-							delay: 0.2,
-						}}
-						className="mt-8 relative overflow-clip rounded-md border border-white/10 text-neutral-300 hover:text-white transition-colors bg-white/5 hover:bg-white/10 text-sm"
+						transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+						className="mt-8 relative overflow-clip rounded-md border border-white/20 text-white transition-colors bg-white/10 text-sm"
 					>
 						<Spotlight
 							className="bg-white/40 blur-2xl"
@@ -124,31 +96,9 @@ export default function Home() {
 							Download CV
 						</Link>
 					</m.div>
-
-					{/* Add the mask/highlight at the bottom */}
 				</main>
-				<m.div
-					className="absolute inset-x-0 bottom-0 h-56 pointer-events-none overflow-clip"
-					initial={{ opacity: 0 }}
-					animate={{ opacity: 1 }}
-					transition={{ delay: 0.6, duration: 0.8 }}
-				>
-					<m.div
-						className="absolute inset-0 bg-radial-[ellipse_at_50%_115%] from-input/30 from-10% to-transparent to-70%"
-						animate={{
-							scale: [1, 1.05, 1],
-							opacity: [0.7, 1, 0.7],
-						}}
-						transition={{
-							duration: 4,
-							ease: "easeInOut",
-							repeat: Number.POSITIVE_INFINITY,
-							repeatType: "reverse",
-							times: [0, 0.5, 1],
-						}}
-					/>
-				</m.div>
 			</div>
+			<RecentExperience />
 		</div>
 	);
 }

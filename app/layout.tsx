@@ -24,10 +24,8 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en">
-			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-svh px-4`}
-			>
+		<html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+			<body className="antialiased min-h-svh px-6">
 				{children}
 				<div className="w-full h-full bg-size-[200px] bg-repeat bg-[url(/bg-noise.png)] opacity-[0.05] rounded-none fixed inset-0 z-[-1]" />
 			</body>

@@ -66,7 +66,7 @@ export const RecentExperience = () => {
 			className="container max-w-4xl mx-auto mt-4 pb-8"
 			initial={{ opacity: 0, y: 20 }}
 			animate={{ opacity: 1, y: 0 }}
-			transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1], delay: 0.2 }}
+			transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1], delay: 0.15 }}
 		>
 			<h2 className="text-xl font-semibold text-white mb-4">
 				Recent Experience
@@ -74,14 +74,7 @@ export const RecentExperience = () => {
 
 			<div>
 				{recentExperience.map((experience, index) => (
-					<m.div
-						initial={{ opacity: 0, y: 20 }}
-						animate={{ opacity: 1, y: 0 }}
-						transition={{
-							duration: 0.5,
-							ease: [0.4, 0, 0.2, 1],
-							delay: index * 0.2,
-						}}
+					<div
 						key={experience.id}
 						className={cn(
 							"relative pl-6 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px]  before:bg-muted",
@@ -130,7 +123,7 @@ export const RecentExperience = () => {
 								</div>
 							))}
 						</div>
-					</m.div>
+					</div>
 				))}
 			</div>
 		</m.section>

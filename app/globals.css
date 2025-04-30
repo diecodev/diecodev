@@ -19,26 +19,26 @@
 :root {
 	color-scheme: light dark;
 
-	/* Dracula Theme */
-	--sh-class: #50fa7b; /* Green for class */
-	--sh-identifier: #f8f8f2; /* Foreground white for identifiers */
-	--sh-sign: #ff79c6; /* Pink for operators/signs */
-	--sh-property: #8be9fd; /* Cyan for properties */
-	--sh-entity: #50fa7b; /* Green for entities */
-	--sh-jsxliterals: #bd93f9; /* Purple for JSX literals */
-	--sh-string: #f1fa8c; /* Yellow for strings */
-	--sh-keyword: #ff79c6; /* Pink for keywords */
-	--sh-comment: #6272a4; /* Blue-gray for comments */
-	--sh-number: #bd93f9; /* Purple for numbers */
-	--sh-function: #50fa7b; /* Green for function names */
-	--sh-parameter: #ffb86c; /* Orange for parameters */
-	--sh-variable: #f8f8f2; /* White for variables */
-	--sh-type: #8be9fd; /* Cyan italic for types */
+	/* Ayu Mirage Theme */
+	--sh-class: #ffffff; /* Blue for class */
+	--sh-identifier: #cbccc6; /* Light gray for identifiers */
+	--sh-sign: #ffd173; /* Red for operators/signs */
+	--sh-property: #ffd173; /* Blue for properties */
+	--sh-entity: #73d0ff; /* Green for entities */
+	--sh-jsxliterals: #ffffff; /* Purple for JSX literals */
+	--sh-string: #d5ff80; /* Yellow for strings */
+	--sh-keyword: #ffad66; /* Red for keywords */
+	--sh-comment: #5c6773; /* Gray for comments */
+	--sh-number: #ffad66; /* Orange for numbers */
+	--sh-function: #bae67e; /* Green for function names */
+	--sh-parameter: #ffad66; /* Orange for parameters */
+	--sh-variable: #cbccc6; /* Light gray for variables */
+	--sh-type: #5ccfe6; /* Blue for types */
 
 	/* Base background and text colors for the editor */
-	--editor-bg: #282a36; /* Dark background */
-	--editor-fg: #f8f8f2; /* Light text */
-	--editor-selection: #44475a; /* Selection background */
+	--editor-bg: #1f2430; /* Ayu Mirage background */
+	--editor-fg: #cbccc6; /* Ayu Mirage foreground */
+	--editor-selection: #34455a; /* Selection background */
 
 	--radius: 0.625rem;
 	--background: oklch(0.145 0 0);

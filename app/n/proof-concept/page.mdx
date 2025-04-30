@@ -31,21 +31,66 @@ Unordered list:
 
 ### Code Blocks
 
-```python
-weights, biases = init_random_parameters()
+```tsx
+import React from 'react';
+import { Button } from 'your-component-library';
 
-epochs = 10
-learning_rate = 0.01 # See ⁴
+const App = () => {
+  return (
+    <div>
+      <h1>Hello, World!</h1>
+      <Button label="Click Me" />
+    </div>
+  );
+};
 
-for epoch in range(epochs):
-  for input_data, target in training_dataset:
-    predictions = forward_pass(input_data, weights, biases)
-    loss = loss_function(predictions, target)
-    gradients = backpropagation(loss, weights, biases)
+export default App;
+```
 
-    # Step 4: Gradient Descent (Parameter Update)
-    weights -= learning_rate * gradients["weights"]
-    biases -= learning_rate * gradients["biases"]
 
-  print(f"Epoch {epoch + 1}/{epochs}, Loss: {loss}")
+```typescript
+import { promises as fs } from "node:fs";
+import path from "node:path";
+import type { MetadataRoute } from "next";
+
+const regex = /\\/g
+
+// local fn
+async function getNoteSlugs(dir: string) {
+	const entries = await fs.readdir(dir, {
+		recursive: true,
+		withFileTypes: true,
+	});
+	return entries
+		.filter((entry) => entry.isFile() && entry.name === "page.mdx")
+		.map((entry) => {
+			const relativePath = path.relative(
+				dir,
+				path.join(entry.parentPath, entry.name),
+			);
+			return path.dirname(relativePath);
+		})
+		.map((slug) => slug.replace(regex, "/"));
+}
+
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+	const notesDirectory = path.join(process.cwd(), "app", "n");
+	const slugs = await getNoteSlugs(notesDirectory);
+
+	const notes: MetadataRoute.Sitemap = slugs.map((slug) => ({
+		url: `https://dieco.dev/n/${slug}`,
+		lastModified: new Date().toISOString(),
+		priority: 0.5,
+	}));
+
+	const routes: MetadataRoute.Sitemap = [""].map((route) => ({
+		url: `https://dieco.dev${route}`,
+		lastModified: new Date().toISOString(),
+		changeFrequency: "yearly",
+		priority: 1,
+	}));
+
+	return [...routes, ...notes];
+}
 ```

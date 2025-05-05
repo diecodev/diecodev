@@ -1,5 +1,7 @@
 import * as m from "motion/react-client";
 import Link from "next/link";
+import { Footer } from "~/components/chore/footer";
+import { Projects } from "~/components/chore/projects";
 import { RecentExperience } from "~/components/chore/recent-experience";
 import { Spotlight } from "~/components/ui/spotlight";
 import Scrible from "~/svg/scrible.svg";
@@ -99,6 +101,8 @@ export default function Home() {
 				</main>
 			</div>
 			<RecentExperience />
+			<Projects />
+			<Footer />
 		</div>
 	);
 }

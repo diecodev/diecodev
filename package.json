@@ -6,7 +6,8 @@
 		"dev": "next dev --turbopack",
 		"build": "next build --turbopack",
 		"start": "next start",
-		"lint": "next lint"
+		"lint": "next lint",
+		"blog:metadata": "node --experimental-strip-types generate-metadatas.ts"
 	},
 	"dependencies": {
 		"@radix-ui/react-slot": "^1.2.0",

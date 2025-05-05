@@ -5,7 +5,7 @@ import {
 	useSpring,
 	useTransform,
 } from "motion/react";
-import React, { useRef, useState, useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "~/lib/utils";
 
 export type SpotlightProps = {
@@ -74,8 +74,8 @@ export function Spotlight({
 		<motion.div
 			ref={containerRef}
 			className={cn(
-				"pointer-events-none absolute rounded-full bg-[radial-gradient(circle_at_center,var(--tw-gradient-stops),transparent_80%)] blur-xl transition-opacity duration-200",
-				"from-zinc-50 via-zinc-100 to-zinc-200",
+				"pointer-events-none absolute rounded-full bg-radial to-transparent to-80% blur-xl transition-opacity duration-200",
+				"from-foreground via-foreground/80 to-foreground/70",
 				isHovered ? "opacity-100" : "opacity-0",
 				className,
 			)}

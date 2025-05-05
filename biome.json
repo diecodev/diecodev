@@ -7,7 +7,11 @@
 	},
 	"files": {
 		"ignoreUnknown": true,
-		"ignore": ["node_modules", ".next"]
+		"ignore": [
+			"node_modules",
+			".next",
+			"app/n/**"
+		]
 	},
 	"formatter": {
 		"enabled": true,

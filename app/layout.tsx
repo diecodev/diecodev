@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
 	title: "Diecodev - Home",
 	description:
-		"Full Stack Web Developer with +3 years of experience in JavaScript/TypeScript. Specializing in user-centric web applications, I'm currently open to new opportunities. Let's build something great together!",
+		"Full Stack Web Developer with +5 years of experience in JavaScript/TypeScript. Specializing in user-centric web applications, I'm currently open to new opportunities. Let's build something great together!",
 };
 
 export default function RootLayout({

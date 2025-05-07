@@ -3,7 +3,7 @@ export const Footer = () => {
 
 	return (
 		<footer className="container max-w-4xl mx-auto py-8 border-t mt-4 border-border/50">
-			<div className="flex items-center justify-between text-muted-foreground text-sm tracking-wide">
+			<div className="flex items-center md:justify-between flex-col md:flex-row text-muted-foreground text-sm tracking-wide flex-wrap justify-center gap-2">
 				<div className="flex items-center gap-2">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"

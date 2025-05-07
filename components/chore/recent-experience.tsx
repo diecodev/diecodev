@@ -7,9 +7,11 @@ import Expo from "~/svg/expo.svg";
 import External from "~/svg/external.svg";
 import Firebase from "~/svg/firebase.svg";
 import Fresh from "~/svg/fresh.svg";
+import GH from "~/svg/gh-actions.svg";
 import MongoDB from "~/svg/mongodb.svg";
 import Next from "~/svg/nextjs.svg";
 import Pw from "~/svg/playwright.svg";
+import Sanity from "~/svg/sanity.svg";
 import Sass from "~/svg/sass.svg";
 import Storybook from "~/svg/storybook.svg";
 import Strapi from "~/svg/strapi.svg";
@@ -36,6 +38,7 @@ const recentExperience = [
 			{ label: "expo", icon: Expo },
 			{ label: "turbopack", icon: Turbopack },
 			{ label: "playwright", icon: Pw },
+			{ label: "GitHub Actions", icon: GH },
 		],
 	},
 	{
@@ -56,6 +59,7 @@ const recentExperience = [
 			{ label: "strapi", icon: Strapi },
 			{ label: "mongodb", icon: MongoDB },
 			{ label: "turborepo", icon: Turborepo },
+			{ label: "sanity", icon: Sanity },
 		],
 	},
 ] as const;

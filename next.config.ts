@@ -4,7 +4,6 @@ import type { NextConfig } from "next";
 const withMDX = createMdx({});
 
 const nextConfig: NextConfig = {
-	output: "standalone",
 	images: {
 		remotePatterns: [
 			{

@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -28,6 +29,7 @@ export default function RootLayout({
 			<body className="antialiased min-h-svh">
 				{children}
 				<div className="w-full h-full bg-size-[200px] bg-repeat bg-[url(/bg-noise.png)] opacity-[0.05] rounded-none fixed inset-0 z-[-1]" />
+				<Analytics />
 			</body>
 		</html>
 	);

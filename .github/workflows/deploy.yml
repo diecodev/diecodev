@@ -1,7 +1,9 @@
 name: Deploy
 on:
   push:
-    branches: main
+    branches: v3.0
+  pull_request:
+    branches: v3.0
 
 jobs:
   deploy:
@@ -14,24 +16,29 @@ jobs:
 
     steps:
       - name: Clone repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Deno
-        uses: denoland/setup-deno@v1
+        uses: denoland/setup-deno@v2
         with:
-          deno-version: v1.x
+          deno-version: v2.x
 
       - name: Install Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: lts/*
 
+      - name: Install step
+        run: "npm install"
+
       - name: Build step
-        run: "npm install && npm run build" # 📝 Update the build command(s) if necessary
+        run: "npm run build"
 
       - name: Upload to Deno Deploy
         uses: denoland/deployctl@v1
         with:
-          project: "diecodev"
-          entrypoint: "https://deno.land/std@0.188.0/http/file_server.ts" # 📝 Update the entrypoint if necessary
-          root: "dist" # 📝 Update the root if necessary
+          project: "diegodaz-diecodev-38"
+          entrypoint: "server/entry.mjs"
+          root: "dist"
+          
+          

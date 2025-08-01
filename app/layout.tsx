@@ -1,3 +1,4 @@
+import { Databuddy } from "@databuddy/sdk";
 import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -30,6 +31,20 @@ export default function RootLayout({
 				{children}
 				<div className="w-full h-full bg-size-[200px] bg-repeat bg-[url(/bg-noise.png)] opacity-[0.05] rounded-none fixed inset-0 z-[-1]" />
 				<Analytics />
+				<Databuddy
+					clientId="tZhMcXkjewbyniYKtIVBv"
+					trackHashChanges={true}
+					trackAttributes={true}
+					trackOutgoingLinks={true}
+					trackInteractions={true}
+					trackEngagement={true}
+					trackScrollDepth={true}
+					trackExitIntent={true}
+					trackBounceRate={true}
+					trackWebVitals={true}
+					trackErrors={true}
+					enableBatching={true}
+				/>
 			</body>
 		</html>
 	);

@@ -10,6 +10,7 @@
 		"blog:metadata": "node --experimental-strip-types generate-metadatas.ts"
 	},
 	"dependencies": {
+		"@databuddy/sdk": "^1.4.1",
 		"@radix-ui/react-slot": "^1.2.2",
 		"@vercel/analytics": "^1.5.0",
 		"class-variance-authority": "^0.7.1",

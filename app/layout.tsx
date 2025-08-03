@@ -1,9 +1,7 @@
 import { Databuddy } from "@databuddy/sdk";
 import { Analytics } from "@vercel/analytics/react";
-import { isbot } from "isbot";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { headers } from "next/headers";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -22,17 +20,11 @@ export const metadata: Metadata = {
 		"Full Stack Web Developer with +5 years of experience in JavaScript/TypeScript. Specializing in user-centric web applications, I'm currently open to new opportunities. Let's build something great together!",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
-	const _ = await headers();
-	const ua = _.get("user-agent") || _.get("User-Agent") || "unknown";
-
-	console.log("isBot: ", isbot(ua));
-	console.log("UA: ", ua);
-
 	return (
 		<html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
 			<body className="antialiased min-h-svh">

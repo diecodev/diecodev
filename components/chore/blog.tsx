@@ -26,6 +26,8 @@ export const Header = () => {
 									href={link.href}
 									className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors p-1"
 									title={link.label}
+									target="_blank"
+									rel="noopener noreferrer"
 								>
 									<link.icon className="size-4" />
 								</Link>
@@ -45,7 +47,7 @@ export const ContentWrapper = ({ children }: { children: React.ReactNode }) => {
 
 	return (
 		<m.div
-			className="container mx-auto max-w-3xl pb-8 px-6 flex flex-col"
+			className="container mx-auto max-w-3xl pb-8 px-6 flex flex-col typography"
 			initial={{ opacity: 0, y: 20 }}
 			animate={{ opacity: 1, y: 0 }}
 			transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}

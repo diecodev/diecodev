@@ -79,7 +79,6 @@ export default function Home() {
 										duration: 1,
 										ease: "easeInOut",
 										repeatType: "reverse",
-										paused: true,
 									},
 								}}
 								variants={{

@@ -14,7 +14,7 @@ const projects = [
     title: "qwik-sonner",
     description: "🔔 An opinionated toast component for Qwik Framework.",
     type: "Library",
-    url: "https://qwik-sonner.deno.dev",
+    url: "https://qwik-sonner.dieco.dev",
     gh: "https://github.com/diecodev/qwik-sonner",
     tags: [
       { label: "Typescript", icon: Typescript },

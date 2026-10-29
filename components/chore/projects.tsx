@@ -27,7 +27,7 @@ const projects = [
     title: "qwik-date",
     description: "📆 An opinionated date picker component for Qwik Framework",
     type: "Library",
-    url: "https://qwik-date.deno.dev",
+    url: "https://qwik-date.dieco.dev",
     gh: "https://github.com/diecodev/qwik-date",
     tags: [
       { label: "Typescript", icon: Typescript },

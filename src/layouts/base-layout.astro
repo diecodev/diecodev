@@ -1,0 +1,121 @@
+---
+import "@fontsource-variable/geist";
+import "lenis/dist/lenis.css";
+import "~/styles/global.css";
+import { ClientRouter } from "astro:transitions";
+import Analytics from "@vercel/analytics/astro";
+import Grain from "~/components/grain.astro";
+import Header from "~/components/header.astro";
+import SectionNav from "~/components/section-nav.astro";
+import { profile } from "~/data/profile";
+import type { PageSection } from "~/data/sections";
+import { homeSections } from "~/data/sections";
+
+interface Props {
+  description?: string;
+  sections: PageSection[];
+  title: string;
+}
+
+const { title, description = profile.description, sections } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL("/og.jpg", Astro.site);
+---
+
+<!doctype html>
+<html lang="en" transition:animate="none">
+  <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>{title}</title>
+    <meta content={description} name="description">
+    <link href={canonical} rel="canonical">
+    <link href="/favicon.ico" rel="icon" sizes="any">
+    <link href="/sitemap-index.xml" rel="sitemap">
+    <meta
+      content="#fdfdfc"
+      media="(prefers-color-scheme: light)"
+      name="theme-color"
+    >
+    <meta
+      content="#0b0b0c"
+      media="(prefers-color-scheme: dark)"
+      name="theme-color"
+    >
+    <meta content="website" property="og:type">
+    <meta content={profile.name} property="og:site_name">
+    <meta content={title} property="og:title">
+    <meta content={description} property="og:description">
+    <meta content={canonical} property="og:url">
+    <meta content={ogImage} property="og:image">
+    <meta content="1200" property="og:image:width">
+    <meta content="630" property="og:image:height">
+    <meta
+      content={`${profile.name}, ${profile.role}: ${profile.statement}`}
+      property="og:image:alt"
+    >
+    <meta content="summary_large_image" name="twitter:card">
+    <script is:inline>
+      (() => {
+        const root = document.documentElement;
+        root.classList.add("js");
+        const readStoredTheme = () => {
+          try {
+            return localStorage.getItem("theme");
+          } catch {
+            return "";
+          }
+        };
+        const stored = readStoredTheme();
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+        const systemTheme = prefersDark ? "dark" : "light";
+        const isExplicit = stored === "light" || stored === "dark";
+        root.dataset.themePref = isExplicit ? stored : "system";
+        root.dataset.theme = isExplicit ? stored : systemTheme;
+        // The router replaces <html> attributes with the next page's; carry the theme and state classes over.
+        document.addEventListener("astro:before-swap", (event) => {
+          const next = event.newDocument.documentElement;
+          for (const name of root.classList) {
+            if (name === "js" || name.startsWith("lenis")) {
+              next.classList.add(name);
+            }
+          }
+          next.dataset.theme = root.dataset.theme;
+          next.dataset.themePref = root.dataset.themePref;
+        });
+      })();
+    </script>
+    <ClientRouter />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <slot name="background" />
+    <div aria-hidden="true" class="page-texture">
+      <Grain id="page-grain" />
+    </div>
+    <Header sections={homeSections} />
+    <slot />
+    <SectionNav sections={sections} />
+    <Analytics />
+    <script>
+      import { startSmoothScroll } from "~/scripts/smooth-scroll";
+      import "~/scripts/reveal";
+      import "~/scripts/page-transition";
+      import "~/scripts/tab-title";
+      import "~/scripts/analytics";
+
+      startSmoothScroll();
+    </script>
+  </body>
+</html>
+
+<style>
+  .page-texture {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+</style>

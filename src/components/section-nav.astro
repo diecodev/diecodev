@@ -1,0 +1,776 @@
+---
+import type { PageSection } from "~/data/sections";
+
+interface Props {
+  sections: PageSection[];
+}
+
+const { sections } = Astro.props;
+const RING_CIRCUMFERENCE = 87.96;
+---
+
+<nav aria-label="Jump to section" class="dock" data-dock>
+  <span aria-hidden="true" class="dock-indicator" data-dock-indicator></span>
+  {sections.map((section) => (
+    <a class="dock-item" data-dock-item={section.id} href={`#${section.id}`}>
+      <span aria-hidden="true" class={`orb orb-${section.orb}`} data-dock-orb />
+      <span class="dock-label">{section.label}</span>
+    </a>
+  ))}
+</nav>
+
+<div class="pill" data-pill>
+  <ul class="sheet" data-sheet hidden id="section-sheet">
+    {sections.map((section, index) => (
+      <li>
+        <a class="option" data-sheet-item={section.id} href={`#${section.id}`}>
+          <span aria-hidden="true" class={`dot orb-${section.orb}`} />
+          {section.label}
+          <span aria-hidden="true" class="option-number num">
+            {String(index + 1).padStart(2, "0")}
+          </span>
+        </a>
+      </li>
+    ))}
+  </ul>
+  <button
+    aria-controls="section-sheet"
+    aria-expanded="false"
+    class="pill-button"
+    data-pill-button
+    type="button"
+  >
+    <span aria-hidden="true" class="ring">
+      <svg
+        aria-hidden="true"
+        fill="none"
+        height="32"
+        stroke-width="2"
+        viewBox="0 0 32 32"
+        width="32"
+      >
+        <circle class="ring-track" cx="16" cy="16" r="14"></circle>
+        <circle
+          class="ring-progress"
+          cx="16"
+          cy="16"
+          data-ring
+          r="14"
+          stroke-dasharray={RING_CIRCUMFERENCE}
+          stroke-dashoffset={RING_CIRCUMFERENCE}
+          stroke-linecap="round"
+        ></circle>
+      </svg>
+      <span
+        class={`ring-core orb-${sections[0]?.orb ?? "lavender"}`}
+        data-pill-core
+      ></span>
+    </span>
+    <span class="pill-label" data-pill-label>Sections</span>
+    <span class="pill-count num" data-pill-count></span>
+    <span class="sr-only">Show sections</span>
+    <svg
+      aria-hidden="true"
+      class="pill-chevron"
+      fill="none"
+      height="14"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      width="14"
+    >
+      <path d="M6 15l6-6 6 6"></path>
+    </svg>
+  </button>
+</div>
+<div class="scrim" data-scrim hidden></div>
+
+<style>
+  .dock {
+    --dock-item-height: 38px;
+    --dock-item-compact: 32px;
+    --dock-target-space: 8px;
+    --dock-pad: 7px;
+    --dock-pad-end: 12px;
+    --dock-gap: 10px;
+    --dock-label-size: 15px;
+    position: fixed;
+    top: 50%;
+    left: 28px;
+    z-index: 25;
+    display: none;
+    visibility: hidden;
+    flex-direction: column;
+    gap: 2px;
+    align-items: flex-start;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-14px, -50%);
+    transition:
+      opacity 0.45s ease,
+      transform 0.6s var(--ease-out),
+      visibility 0s linear 0.45s;
+  }
+
+  .dock.is-visible {
+    visibility: visible;
+    pointer-events: auto;
+    opacity: 1;
+    transform: translate(0, -50%);
+    transition-delay: 0s;
+  }
+
+  /* One shared surface that glides to the hovered, focused or active item. */
+  .dock-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    height: var(--dock-item-height);
+    pointer-events: none;
+    background: var(--raised);
+    border-radius: 10px;
+    box-shadow:
+      inset 0 0 0 1px var(--raised-edge),
+      var(--shadow);
+    opacity: 0;
+    transition:
+      transform 0.5s cubic-bezier(0.25, 1.15, 0.4, 1),
+      width 0.45s var(--ease-out),
+      height 0.45s var(--ease-out),
+      opacity 0.25s ease;
+  }
+
+  .dock-indicator.is-shown {
+    opacity: 1;
+  }
+
+  .dock-indicator.is-instant {
+    transition: opacity 0.25s ease;
+  }
+
+  /* The rest sit close together; the target (pointed, or else selected) takes a taller
+     row with room around it. The hover only changes when the pointer enters another
+     item, and the margins are dead space, so the rows never flicker under it. */
+  .dock-item {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    gap: 0;
+    align-items: center;
+    height: var(--dock-item-compact);
+    padding: 0 var(--dock-pad);
+    color: var(--fg);
+    text-decoration: none;
+    border-radius: 10px;
+    transition:
+      gap 0.45s var(--ease-out),
+      padding 0.45s var(--ease-out),
+      height 0.45s var(--ease-out),
+      margin 0.45s var(--ease-out);
+  }
+
+  .dock-item.is-target {
+    height: var(--dock-item-height);
+    margin-block: var(--dock-target-space);
+  }
+
+  .dock-label {
+    max-width: 0;
+    overflow: hidden;
+    font-size: var(--dock-label-size);
+    white-space: nowrap;
+    opacity: 0;
+    transition:
+      max-width 0.45s var(--ease-out),
+      opacity 0.3s ease;
+  }
+
+  .dock-item.is-labeled {
+    gap: var(--dock-gap);
+    padding-right: var(--dock-pad-end);
+  }
+
+  .dock-item.is-labeled .dock-label {
+    max-width: var(--label-width, 120px);
+    opacity: 1;
+  }
+
+  .pill {
+    position: fixed;
+    bottom: max(16px, env(safe-area-inset-bottom));
+    left: 50%;
+    z-index: 26;
+    display: flex;
+    visibility: hidden;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    width: max-content;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, 24px);
+    transition:
+      opacity 0.4s ease,
+      transform 0.55s var(--ease-out),
+      visibility 0s linear 0.4s;
+  }
+
+  .pill.is-visible {
+    visibility: visible;
+    pointer-events: auto;
+    opacity: 1;
+    transform: translate(-50%, 0);
+    transition-delay: 0s;
+  }
+
+  .pill-button {
+    display: inline-flex;
+    gap: 10px;
+    align-items: center;
+    height: 48px;
+    padding: 0 14px 0 8px;
+    font: inherit;
+    font-size: 14px;
+    color: var(--fg);
+    cursor: pointer;
+    background: var(--glass);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    transition: transform 0.15s ease;
+  }
+
+  .pill-button:active {
+    transform: scale(0.97);
+  }
+
+  .pill-label {
+    font-weight: 500;
+  }
+
+  .pill-count {
+    font-size: 13px;
+    color: var(--fg-2);
+  }
+
+  .pill-chevron {
+    color: var(--fg-2);
+    transition: transform 0.35s var(--ease-out);
+  }
+
+  .pill-button[aria-expanded="true"] .pill-chevron {
+    transform: rotate(180deg);
+  }
+
+  .ring {
+    position: relative;
+    flex: none;
+    width: 32px;
+    height: 32px;
+  }
+
+  .ring svg {
+    position: absolute;
+    inset: 0;
+    transform: rotate(-90deg);
+  }
+
+  .ring-track {
+    stroke: var(--line);
+  }
+
+  .ring-progress {
+    stroke: var(--fg);
+    transition: stroke-dashoffset 0.25s linear;
+  }
+
+  .ring-core {
+    position: absolute;
+    inset: 8px;
+    border-radius: 50%;
+  }
+
+  .sheet {
+    width: 236px;
+    padding: 6px;
+    list-style: none;
+    background: var(--glass);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    transform-origin: bottom center;
+  }
+
+  .sheet.is-open {
+    animation: sheet-in 0.38s cubic-bezier(0.2, 0.9, 0.25, 1) both;
+  }
+
+  .sheet.is-closing {
+    animation: sheet-out 0.2s ease both;
+  }
+
+  .sheet.is-open li {
+    animation: option-in 0.35s var(--ease-out) both;
+  }
+
+  .sheet.is-open li:nth-child(2) {
+    animation-delay: 0.04s;
+  }
+
+  .sheet.is-open li:nth-child(3) {
+    animation-delay: 0.08s;
+  }
+
+  .sheet.is-open li:nth-child(4) {
+    animation-delay: 0.12s;
+  }
+
+  .option {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    height: 44px;
+    padding: 0 10px;
+    font-size: 14px;
+    color: var(--fg);
+    text-decoration: none;
+    border-radius: 10px;
+  }
+
+  .option .dot {
+    width: 10px;
+    height: 10px;
+  }
+
+  .option.is-active {
+    background: var(--card);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 8%);
+  }
+
+  .option-number {
+    margin-left: auto;
+    font-size: 12px;
+    color: var(--fg-2);
+  }
+
+  .scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 24;
+    background: rgb(0 0 0 / 8%);
+    animation: fade-in 0.3s ease both;
+  }
+
+  :global(.is-closing-page) .dock.is-visible,
+  :global(.is-closing-page) .pill.is-visible,
+  :global(.is-leaving) .dock.is-visible,
+  :global(.is-leaving) .pill.is-visible,
+  :global(.is-arriving) .dock.is-visible,
+  :global(.is-arriving) .pill.is-visible {
+    visibility: hidden;
+    pointer-events: none;
+    opacity: 0;
+    transition:
+      opacity 0.35s ease,
+      visibility 0s linear 0.35s;
+  }
+
+  :global(.is-closing-page) .dock [data-dock-orb],
+  :global(.is-orbs-returning) .dock [data-dock-orb] {
+    visibility: hidden;
+  }
+
+  @media (min-width: 960px) {
+    .dock {
+      display: flex;
+    }
+
+    .pill,
+    .scrim {
+      display: none;
+    }
+  }
+
+  @keyframes sheet-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px) scale(0.96);
+    }
+
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes sheet-out {
+    to {
+      opacity: 0;
+      transform: translateY(6px) scale(0.97);
+    }
+  }
+
+  @keyframes option-in {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @supports (backdrop-filter: blur(1px)) {
+    .pill-button {
+      backdrop-filter: blur(16px) saturate(1.5);
+    }
+
+    .sheet {
+      backdrop-filter: blur(18px) saturate(1.5);
+    }
+  }
+</style>
+
+<script>
+  import { onPage } from "~/scripts/lifecycle";
+  import { subscribeToScroll } from "~/scripts/scroll-state";
+
+  const RING_CIRCUMFERENCE = 87.96;
+  const SHEET_CLOSE_MS = 200;
+  const ANNOUNCE_MS = 2500;
+
+  interface SectionSummary {
+    id: string;
+    label: string;
+    orb: string | undefined;
+  }
+
+  const measureContext = document.createElement("canvas").getContext("2d");
+
+  const textWidth = (text: string, font: string) => {
+    if (!measureContext) {
+      return 0;
+    }
+    measureContext.font = font;
+    return Math.ceil(measureContext.measureText(text).width);
+  };
+
+  const readPx = (styles: CSSStyleDeclaration, name: string) =>
+    Number.parseFloat(styles.getPropertyValue(name)) || 0;
+
+  interface DockState {
+    // The item that shows its label: the pointed one, or the selected one just after
+    // entering its section.
+    labeled: HTMLAnchorElement | null;
+    // Where the indicator sits: the pointed item, or else the selected one.
+    target: HTMLAnchorElement | null;
+  }
+
+  // Marks the target and the labeled item and sizes the label. Returns its width.
+  const labelDockItems = (
+    styles: CSSStyleDeclaration,
+    items: HTMLAnchorElement[],
+    { labeled, target }: DockState
+  ) => {
+    let labelWidth = 0;
+    for (const item of items) {
+      const isLabeled = item === labeled;
+      item.classList.toggle("is-target", item === target);
+      item.classList.toggle("is-labeled", isLabeled);
+      if (isLabeled) {
+        const text = item.querySelector(".dock-label")?.textContent ?? "";
+        labelWidth = textWidth(
+          text,
+          `${styles.fontWeight} ${styles.getPropertyValue("--dock-label-size")} ${styles.fontFamily}`
+        );
+        item.style.setProperty("--label-width", `${labelWidth}px`);
+      }
+    }
+    return labelWidth;
+  };
+
+  // The indicator heads straight for where the target ends up: past the compact rows
+  // above it and the space the target keeps around itself.
+  const moveIndicator = (
+    indicator: HTMLElement,
+    styles: CSSStyleDeclaration,
+    items: HTMLAnchorElement[],
+    { labeled, target }: DockState,
+    labelWidth: number
+  ) => {
+    if (!target) {
+      indicator.classList.remove("is-shown");
+      return;
+    }
+    const top =
+      items.indexOf(target) *
+        (readPx(styles, "--dock-item-compact") +
+          (Number.parseFloat(styles.rowGap) || 0)) +
+      readPx(styles, "--dock-target-space");
+    const pad = readPx(styles, "--dock-pad");
+    const orbSize =
+      target.querySelector<HTMLElement>("[data-dock-orb]")?.offsetWidth ?? 0;
+    const width =
+      target === labeled
+        ? pad +
+          orbSize +
+          readPx(styles, "--dock-gap") +
+          labelWidth +
+          readPx(styles, "--dock-pad-end")
+        : pad * 2 + orbSize;
+    const isFirstPlacement = !indicator.classList.contains("is-shown");
+    if (isFirstPlacement) {
+      indicator.classList.add("is-instant");
+    }
+    indicator.style.width = `${width}px`;
+    indicator.style.transform = `translateY(${top}px)`;
+    if (isFirstPlacement) {
+      // Commit the position before re-enabling the glide.
+      indicator.getBoundingClientRect();
+      indicator.classList.remove("is-instant");
+      indicator.classList.add("is-shown");
+    }
+  };
+
+  const markActive = (item: HTMLAnchorElement, isActive: boolean) => {
+    item.classList.toggle("is-active", isActive);
+    if (isActive) {
+      item.setAttribute("aria-current", "location");
+    } else {
+      item.removeAttribute("aria-current");
+    }
+  };
+
+  // The pill names the current section, counts it and fills its ring with reading progress.
+  const updatePill = (
+    sections: SectionSummary[],
+    active: string | null,
+    progress: number
+  ) => {
+    const index = sections.findIndex((section) => section.id === active);
+    const current = sections[index];
+    const label = document.querySelector<HTMLElement>("[data-pill-label]");
+    const count = document.querySelector<HTMLElement>("[data-pill-count]");
+    const core = document.querySelector<HTMLElement>("[data-pill-core]");
+    const ring = document.querySelector<SVGCircleElement>("[data-ring]");
+    if (label) {
+      label.textContent = current ? current.label : "Sections";
+    }
+    if (count) {
+      count.textContent = current ? `${index + 1} / ${sections.length}` : "";
+    }
+    if (core && current?.orb) {
+      core.className = `ring-core ${current.orb}`;
+    }
+    ring?.setAttribute(
+      "stroke-dashoffset",
+      (RING_CIRCUMFERENCE * (1 - progress)).toFixed(1)
+    );
+  };
+
+  onPage(() => {
+    const dock = document.querySelector<HTMLElement>("[data-dock]");
+    const pill = document.querySelector<HTMLElement>("[data-pill]");
+    const sheet = document.querySelector<HTMLElement>("[data-sheet]");
+    const scrim = document.querySelector<HTMLElement>("[data-scrim]");
+    const button =
+      document.querySelector<HTMLButtonElement>("[data-pill-button]");
+    const dockItems =
+      document.querySelectorAll<HTMLAnchorElement>("[data-dock-item]");
+    const sheetItems =
+      document.querySelectorAll<HTMLAnchorElement>("[data-sheet-item]");
+
+    const indicator = document.querySelector<HTMLElement>(
+      "[data-dock-indicator]"
+    );
+
+    const sections: SectionSummary[] = [...dockItems].map((item) => ({
+      id: item.dataset.dockItem ?? "",
+      label: item.querySelector(".dock-label")?.textContent ?? "",
+      orb: [...(item.querySelector("[data-dock-orb]")?.classList ?? [])].find(
+        (name) => name.startsWith("orb-")
+      ),
+    }));
+
+    let closeTimer = 0;
+    let announceTimer = 0;
+    let isAnnouncing = false;
+    let wasFar = false;
+    let activeId: string | null = null;
+    let hoveredItem: HTMLAnchorElement | null = null;
+    let focusedItem: HTMLAnchorElement | null = null;
+
+    const placeIndicator = () => {
+      if (!dock) {
+        return;
+      }
+      const items = [...dockItems];
+      const selected =
+        items.find((item) => item.dataset.dockItem === activeId) ?? null;
+      const pointed = hoveredItem ?? focusedItem;
+      const state: DockState = {
+        labeled: pointed ?? (isAnnouncing ? selected : null),
+        target: pointed ?? selected,
+      };
+      const styles = getComputedStyle(dock);
+      const labelWidth = labelDockItems(styles, items, state);
+      if (indicator) {
+        moveIndicator(indicator, styles, items, state, labelWidth);
+      }
+    };
+
+    const stopAnnouncing = () => {
+      window.clearTimeout(announceTimer);
+      isAnnouncing = false;
+    };
+
+    // Entering a section names it for a moment, then leaves only the selected square.
+    const announce = () => {
+      stopAnnouncing();
+      isAnnouncing = true;
+      announceTimer = window.setTimeout(() => {
+        isAnnouncing = false;
+        placeIndicator();
+      }, ANNOUNCE_MS);
+    };
+
+    const dockItemFrom = (target: EventTarget | null) =>
+      target instanceof Element
+        ? target.closest<HTMLAnchorElement>("[data-dock-item]")
+        : null;
+
+    dock?.addEventListener("pointerover", (event) => {
+      const item = dockItemFrom(event.target);
+      if (item && item !== hoveredItem) {
+        hoveredItem = item;
+        stopAnnouncing();
+        placeIndicator();
+      }
+    });
+
+    dock?.addEventListener("focusin", (event) => {
+      const item = dockItemFrom(event.target);
+      if (item?.matches(":focus-visible")) {
+        focusedItem = item;
+        stopAnnouncing();
+        placeIndicator();
+      }
+    });
+
+    dock?.addEventListener("focusout", () => {
+      if (focusedItem) {
+        focusedItem = null;
+        placeIndicator();
+      }
+    });
+
+    dock?.addEventListener("pointerleave", () => {
+      hoveredItem = null;
+      stopAnnouncing();
+      placeIndicator();
+    });
+
+    placeIndicator();
+    document.fonts.ready.then(placeIndicator);
+    window.addEventListener("resize", placeIndicator, { passive: true });
+
+    const isSheetOpen = () => button?.getAttribute("aria-expanded") === "true";
+
+    const openSheet = () => {
+      if (!(sheet && button && scrim)) {
+        return;
+      }
+      window.clearTimeout(closeTimer);
+      sheet.hidden = false;
+      scrim.hidden = false;
+      sheet.classList.remove("is-closing");
+      sheet.classList.add("is-open");
+      button.setAttribute("aria-expanded", "true");
+      sheet.querySelector<HTMLElement>(".option.is-active, .option")?.focus();
+    };
+
+    const closeSheet = (returnFocus: boolean) => {
+      if (!(sheet && button && scrim && isSheetOpen())) {
+        return;
+      }
+      button.setAttribute("aria-expanded", "false");
+      sheet.classList.remove("is-open");
+      sheet.classList.add("is-closing");
+      scrim.hidden = true;
+      closeTimer = window.setTimeout(() => {
+        sheet.hidden = true;
+        sheet.classList.remove("is-closing");
+      }, SHEET_CLOSE_MS);
+      if (returnFocus) {
+        button.focus();
+      }
+    };
+
+    button?.addEventListener("click", () => {
+      if (isSheetOpen()) {
+        closeSheet(false);
+      } else {
+        openSheet();
+      }
+    });
+
+    scrim?.addEventListener("click", () => closeSheet(false));
+
+    for (const item of sheetItems) {
+      item.addEventListener("click", () => closeSheet(false));
+    }
+
+    pill?.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeSheet(true);
+      }
+    });
+
+    const unsubscribe = subscribeToScroll(({ far, active, progress }) => {
+      dock?.classList.toggle("is-visible", far);
+      pill?.classList.toggle("is-visible", far);
+      if (!far) {
+        closeSheet(false);
+      }
+
+      for (const item of dockItems) {
+        markActive(item, item.dataset.dockItem === active);
+      }
+      const appeared = far && !wasFar;
+      wasFar = far;
+      if (active !== activeId || appeared) {
+        activeId = active;
+        if (active && far) {
+          announce();
+        }
+        placeIndicator();
+      }
+      for (const item of sheetItems) {
+        markActive(item, item.dataset.sheetItem === active);
+      }
+      updatePill(sections, active, progress);
+    });
+
+    return () => {
+      unsubscribe();
+      window.removeEventListener("resize", placeIndicator);
+      window.clearTimeout(closeTimer);
+      window.clearTimeout(announceTimer);
+    };
+  });
+</script>

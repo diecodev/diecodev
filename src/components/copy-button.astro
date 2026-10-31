@@ -1,0 +1,131 @@
+---
+interface Props {
+  accessibleLabel?: string;
+  doneLabel?: string;
+  label: string;
+  showIcon?: boolean;
+  size?: "default" | "small";
+  text: string;
+  variant?: "primary" | "default";
+}
+
+const {
+  text,
+  label,
+  doneLabel = "Copied",
+  accessibleLabel,
+  variant = "default",
+  size = "default",
+  showIcon = true,
+} = Astro.props;
+---
+
+<button
+  aria-label={accessibleLabel}
+  data-copy={text}
+  type="button"
+  class:list={[
+    "btn",
+    "press",
+    { "btn-primary": variant === "primary", "btn-small": size === "small" },
+  ]}
+>
+  {showIcon && (
+    <span aria-hidden="true" class="swap-icon">
+      <svg
+        aria-hidden="true"
+        class="icon-idle"
+        fill="none"
+        height="16"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="1.8"
+        viewBox="0 0 24 24"
+        width="16"
+      >
+        <rect height="12" rx="2.5" width="12" x="8" y="8" />
+        <path d="M16 8V6.5A2.5 2.5 0 0 0 13.5 4h-7A2.5 2.5 0 0 0 4 6.5v7A2.5 2.5 0 0 0 6.5 16H8" />
+      </svg>
+      <svg
+        aria-hidden="true"
+        class="icon-done"
+        fill="none"
+        height="16"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        width="16"
+      >
+        <path d="M5 12.5l4.5 4.5L19 7.5" />
+      </svg>
+    </span>
+  )}
+  <span class="swap-label">
+    <span>{label}</span>
+    <span aria-hidden="true" class="label-done">{doneLabel}</span>
+  </span>
+</button>
+<span class="sr-only" data-copy-status role="status"></span>
+
+<script>
+  import { onPage } from "~/scripts/lifecycle";
+
+  const RESET_AFTER_MS = 1800;
+
+  const copy = async (text: string): Promise<boolean> => {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const timers = new Set<number>();
+
+  onPage(() => {
+    for (const button of document.querySelectorAll<HTMLButtonElement>(
+      "[data-copy]"
+    )) {
+      let timer = 0;
+      const next = button.nextElementSibling;
+      const status =
+        next instanceof HTMLElement && next.matches("[data-copy-status]")
+          ? next
+          : null;
+      button.addEventListener("click", async () => {
+        const text = button.dataset.copy ?? "";
+        const copied = await copy(text);
+        if (!copied) {
+          window.location.href = `mailto:${text}`;
+          return;
+        }
+        window.clearTimeout(timer);
+        button.classList.remove("is-done");
+        // Restart the press animation when the button is clicked again before it resets.
+        button.getBoundingClientRect();
+        button.classList.add("is-done");
+        if (status) {
+          status.textContent = `${text} copied to clipboard`;
+        }
+        timers.delete(timer);
+        timer = window.setTimeout(() => {
+          button.classList.remove("is-done");
+          if (status) {
+            status.textContent = "";
+          }
+        }, RESET_AFTER_MS);
+        timers.add(timer);
+      });
+    }
+
+    return () => {
+      for (const timer of timers) {
+        window.clearTimeout(timer);
+      }
+    };
+  });
+</script>

@@ -1,0 +1,265 @@
+<div aria-hidden="true" class="cursor" data-cursor>
+  <div class="cursor-body">
+    <div class="cursor-shape">
+      <span class="cursor-label" data-cursor-label>
+        Visit
+        <svg
+          aria-hidden="true"
+          fill="none"
+          height="14"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="14"
+        >
+          <path d="M7 17L17 7M8 7h9v9"></path>
+        </svg>
+      </span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .cursor {
+    --cursor-fill: rgb(17 17 17 / 48%);
+    --cursor-ink: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 40;
+    display: none;
+    pointer-events: none;
+  }
+
+  :global([data-theme="dark"]) .cursor {
+    --cursor-fill: rgb(237 237 237 / 62%);
+    --cursor-ink: #111;
+  }
+
+  .cursor-body {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.3);
+    transition:
+      opacity 0.15s ease-in-out,
+      transform 0.15s ease-in-out;
+  }
+
+  .cursor.is-visible .cursor-body {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+
+  .cursor-shape {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    overflow: hidden;
+    background: var(--cursor-fill);
+    border-radius: 24px;
+    transition:
+      width 0.32s cubic-bezier(0.3, 1.25, 0.5, 1),
+      height 0.32s cubic-bezier(0.3, 1.25, 0.5, 1);
+  }
+
+  .cursor.is-over .cursor-shape {
+    width: var(--cursor-width, 84px);
+    height: 32px;
+  }
+
+  .cursor-label {
+    display: inline-flex;
+    flex: none;
+    gap: 4px;
+    align-items: center;
+    font-size: 14px;
+    color: var(--cursor-ink);
+    white-space: nowrap;
+    opacity: 0;
+    transform: scale(0.6);
+    transition:
+      opacity 0.15s ease,
+      transform 0.2s ease;
+  }
+
+  .cursor.is-over .cursor-label {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.05s;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .cursor {
+      display: block;
+    }
+  }
+
+  @supports (backdrop-filter: blur(1px)) {
+    .cursor-shape {
+      backdrop-filter: blur(12px);
+    }
+  }
+</style>
+
+<script>
+  import { type Cleanup, onPage } from "~/scripts/lifecycle";
+  import { prefersReducedMotion } from "~/scripts/motion";
+
+  // A critically damped spring: the cursor trails the pointer smoothly, no wobble.
+  const STIFFNESS = 150;
+  const DAMPING = 2 * Math.sqrt(STIFFNESS);
+  const MAX_STEP_S = 1 / 30;
+  const LABEL_PADDING = 24;
+
+  interface Axis {
+    position: number;
+    target: number;
+    velocity: number;
+  }
+
+  const stepAxis = (axis: Axis, dt: number) => {
+    const force =
+      STIFFNESS * (axis.target - axis.position) - DAMPING * axis.velocity;
+    axis.velocity += force * dt;
+    axis.position += axis.velocity * dt;
+  };
+
+  const isSettled = (axis: Axis) =>
+    Math.abs(axis.target - axis.position) < 0.2 &&
+    Math.abs(axis.velocity) < 0.2;
+
+  const snapAxis = (axis: Axis, value: number) => {
+    axis.position = value;
+    axis.target = value;
+    axis.velocity = 0;
+  };
+
+  // Inside a [data-cursor-area] the pointer becomes a small dot; over a [data-visit]
+  // row it stretches into a "Visit" pill. Other links keep the system cursor.
+  const setupCursor = (): Cleanup => {
+    const areas = [
+      ...document.querySelectorAll<HTMLElement>("[data-cursor-area]"),
+    ];
+    const cursor = document.querySelector<HTMLElement>("[data-cursor]");
+    const label = cursor?.querySelector<HTMLElement>("[data-cursor-label]");
+    if (!(areas.length > 0 && cursor && label)) {
+      return () => undefined;
+    }
+    const canHover = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const x: Axis = { position: 0, target: 0, velocity: 0 };
+    const y: Axis = { position: 0, target: 0, velocity: 0 };
+    let frame = 0;
+    let lastTime = 0;
+    let pointer: { x: number; y: number } | null = null;
+
+    const apply = () => {
+      cursor.style.transform = `translate3d(${x.position}px, ${y.position}px, 0)`;
+    };
+
+    const tick = (now: number) => {
+      const dt = Math.min((now - lastTime) / 1000, MAX_STEP_S);
+      lastTime = now;
+      stepAxis(x, dt);
+      stepAxis(y, dt);
+      apply();
+      frame =
+        isSettled(x) && isSettled(y) ? 0 : window.requestAnimationFrame(tick);
+    };
+
+    const hide = () => {
+      cursor.classList.remove("is-visible", "is-over");
+      for (const area of areas) {
+        area.classList.remove("has-cursor");
+      }
+    };
+
+    const show = (
+      area: HTMLElement,
+      clientX: number,
+      clientY: number,
+      isOverRow: boolean
+    ) => {
+      if (!cursor.classList.contains("is-visible") || prefersReducedMotion()) {
+        // Appear where the pointer is instead of gliding in from the last spot.
+        snapAxis(x, clientX);
+        snapAxis(y, clientY);
+        apply();
+      }
+      x.target = clientX;
+      y.target = clientY;
+      cursor.classList.add("is-visible");
+      cursor.classList.toggle("is-over", isOverRow);
+      area.classList.add("has-cursor");
+      if (frame === 0) {
+        lastTime = performance.now();
+        frame = window.requestAnimationFrame(tick);
+      }
+    };
+
+    // Decides what the pointer is over: a row to visit, another link, or open space.
+    const update = (clientX: number, clientY: number) => {
+      const element = document.elementFromPoint(clientX, clientY);
+      const area = element?.closest<HTMLElement>("[data-cursor-area]");
+      if (!(element && area)) {
+        hide();
+        return;
+      }
+      const isOverRow = element.closest("[data-visit]") !== null;
+      if (!isOverRow && element.closest("a, button")) {
+        hide();
+        return;
+      }
+      show(area, clientX, clientY, isOverRow);
+    };
+
+    const onMove = (event: PointerEvent) => {
+      if (!canHover.matches || event.pointerType !== "mouse") {
+        hide();
+        return;
+      }
+      pointer = { x: event.clientX, y: event.clientY };
+      update(event.clientX, event.clientY);
+    };
+
+    const onLeave = () => {
+      pointer = null;
+      hide();
+    };
+
+    // Content moves under a still pointer while scrolling, so re-check what it is over.
+    const onScroll = () => {
+      if (pointer) {
+        update(pointer.x, pointer.y);
+      }
+    };
+
+    const measure = () => {
+      cursor.style.setProperty(
+        "--cursor-width",
+        `${label.scrollWidth + LABEL_PADDING}px`
+      );
+    };
+
+    measure();
+    document.fonts.ready.then(measure);
+    for (const area of areas) {
+      area.addEventListener("pointermove", onMove);
+      area.addEventListener("pointerleave", onLeave);
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      for (const area of areas) {
+        area.removeEventListener("pointermove", onMove);
+        area.removeEventListener("pointerleave", onLeave);
+      }
+      window.removeEventListener("scroll", onScroll);
+      window.cancelAnimationFrame(frame);
+      hide();
+    };
+  };
+
+  onPage(setupCursor);
+</script>

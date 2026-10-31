@@ -1,0 +1,16 @@
+---
+import type { Orb } from "~/data/sections";
+
+interface Props {
+  id: string;
+  orb: Orb;
+  title: string;
+}
+
+const { id, orb, title } = Astro.props;
+---
+
+<h2 class="section-title" id={id}>
+  <span aria-hidden="true" class={`dot orb-${orb}`}></span>
+  {title}
+</h2>

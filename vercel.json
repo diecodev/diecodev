@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    {
+      "source": "/diecodev_resume.pdf",
+      "destination": "/diecodev_cv.pdf",
+      "permanent": true
+    }
+  ]
+}

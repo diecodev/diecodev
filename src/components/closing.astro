@@ -1,0 +1,617 @@
+---
+import { profile } from "~/data/profile";
+import type { Orb } from "~/data/sections";
+
+interface Props {
+  orbs: Orb[];
+}
+
+const { orbs } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="closing layer container" data-closing>
+  <div aria-hidden="true" class="orbs">
+    {orbs.map((orb, index) => (
+      <span class={`slot slot-${index}`}>
+        <span class="fly-x" data-fly-x>
+          <span class={`fly-y orb orb-${orb}`} data-fly-y />
+        </span>
+      </span>
+    ))}
+    <span class="ripple"></span>
+    <span class="merged"></span>
+  </div>
+  <p class="end-line" id="closing-title">That’s everything.</p>
+  <p class="end-sub muted">Thanks for scrolling all the way down.</p>
+  <div class="end-meta muted">
+    <span>
+      {`© ${year} ${profile.name} · Built with Astro · `}
+      <a href={profile.source} rel="noopener noreferrer" target="_blank"
+        >Source</a
+      >
+    </span>
+    <button class="to-top" data-to-top type="button">
+      Back to top
+      <svg
+        aria-hidden="true"
+        fill="none"
+        height="12"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        width="12"
+      >
+        <path d="M12 19V5M6 11l6-6 6 6"></path>
+      </svg>
+    </button>
+  </div>
+</footer>
+
+<style>
+  .closing {
+    margin-top: 104px;
+    text-align: center;
+  }
+
+  .orbs {
+    position: relative;
+    width: 220px;
+    height: 72px;
+    margin: 0 auto;
+  }
+
+  .slot {
+    position: absolute;
+    top: 24px;
+    width: 24px;
+    height: 24px;
+  }
+
+  .slot-0 {
+    left: 26px;
+  }
+
+  .slot-1 {
+    left: 74px;
+  }
+
+  .slot-2 {
+    left: 122px;
+  }
+
+  .slot-3 {
+    left: 170px;
+  }
+
+  .fly-x {
+    display: block;
+    width: 24px;
+    height: 24px;
+  }
+
+  .fly-y {
+    opacity: 0;
+  }
+
+  .is-flying .fly-y,
+  .is-merged .fly-y {
+    opacity: 1;
+  }
+
+  .is-merged .slot-0 .fly-y {
+    animation: converge-0 0.75s cubic-bezier(0.65, 0, 0.25, 1) forwards;
+  }
+
+  .is-merged .slot-1 .fly-y {
+    animation: converge-1 0.75s cubic-bezier(0.65, 0, 0.25, 1) 0.06s forwards;
+  }
+
+  .is-merged .slot-2 .fly-y {
+    animation: converge-2 0.75s cubic-bezier(0.65, 0, 0.25, 1) 0.06s forwards;
+  }
+
+  .is-merged .slot-3 .fly-y {
+    animation: converge-3 0.75s cubic-bezier(0.65, 0, 0.25, 1) forwards;
+  }
+
+  .merged,
+  .ripple {
+    position: absolute;
+    top: 12px;
+    left: 86px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    opacity: 0;
+  }
+
+  .merged {
+    background: var(--orb-merged);
+    box-shadow:
+      inset 0 0 0 1px rgb(255 255 255 / 35%),
+      0 10px 30px -10px rgb(0 0 0 / 35%);
+    transform: scale(0.3);
+  }
+
+  .merged::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+    background: radial-gradient(
+      circle at 32% 26%,
+      rgb(255 255 255 / 80%),
+      rgb(255 255 255 / 0%) 55%
+    );
+    border-radius: 50%;
+  }
+
+  .ripple {
+    border: 1px solid var(--underline);
+  }
+
+  .is-merged .merged {
+    animation:
+      merge 0.9s var(--ease-spring) 0.55s forwards,
+      breathe 4.5s ease-in-out 1.6s infinite;
+  }
+
+  .is-merged .ripple {
+    animation: ripple 1.4s var(--ease-out) 0.95s forwards;
+  }
+
+  .end-line,
+  .end-sub {
+    opacity: 0;
+    filter: blur(4px);
+    transform: translateY(8px);
+    transition:
+      opacity 0.25s ease,
+      transform 0.25s ease,
+      filter 0.25s ease;
+  }
+
+  .end-line {
+    margin-top: 22px;
+    font-size: 20px;
+    letter-spacing: -0.015em;
+  }
+
+  .end-sub {
+    margin-top: 6px;
+    font-size: 14px;
+  }
+
+  .is-merged .end-line,
+  .is-merged .end-sub {
+    transition:
+      opacity 0.8s var(--ease-out),
+      transform 0.8s var(--ease-out),
+      filter 0.8s ease;
+  }
+
+  .is-merged .end-line {
+    transition-delay: 1.1s;
+  }
+
+  .is-merged .end-sub {
+    transition-delay: 1.3s;
+  }
+
+  .is-merged .end-line,
+  .is-merged .end-sub,
+  :global(:root:not(.js)) .end-line,
+  :global(:root:not(.js)) .end-sub {
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+
+  :global(:root:not(.js)) .merged {
+    opacity: 1;
+    transform: none;
+  }
+
+  :global(.orb-return) {
+    position: fixed;
+    z-index: 26;
+    width: 24px;
+    height: 24px;
+    pointer-events: none;
+  }
+
+  .end-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    padding: 48px 0 calc(56px + env(safe-area-inset-bottom));
+    font-size: 13px;
+  }
+
+  .to-top {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 12px;
+    font: inherit;
+    font-size: 13px;
+    color: var(--fg);
+    cursor: pointer;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    transition:
+      border-color 0.2s ease,
+      transform 0.15s ease;
+  }
+
+  .to-top:hover {
+    border-color: var(--underline);
+  }
+
+  .to-top:active {
+    transform: scale(0.96);
+  }
+
+  .to-top svg {
+    transition: transform 0.3s var(--ease-out);
+  }
+
+  .to-top:hover svg {
+    transform: translateY(-2px);
+  }
+
+  @media (min-width: 640px) {
+    .closing {
+      margin-top: 136px;
+    }
+
+    .end-line {
+      margin-top: 24px;
+      font-size: 22px;
+    }
+
+    .end-meta {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 4px 18px;
+      justify-content: center;
+      padding-top: 72px;
+    }
+  }
+
+  @keyframes converge-0 {
+    to {
+      opacity: 0;
+      transform: translateX(72px) scale(0.5);
+    }
+  }
+
+  @keyframes converge-1 {
+    to {
+      opacity: 0;
+      transform: translateX(24px) scale(0.5);
+    }
+  }
+
+  @keyframes converge-2 {
+    to {
+      opacity: 0;
+      transform: translateX(-24px) scale(0.5);
+    }
+  }
+
+  @keyframes converge-3 {
+    to {
+      opacity: 0;
+      transform: translateX(-72px) scale(0.5);
+    }
+  }
+
+  @keyframes merge {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes breathe {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
+  @keyframes ripple {
+    0% {
+      opacity: 0.9;
+      transform: scale(1);
+    }
+
+    100% {
+      opacity: 0;
+      transform: scale(2.8);
+    }
+  }
+</style>
+
+<script>
+  import { onPage } from "~/scripts/lifecycle";
+  import { prefersReducedMotion } from "~/scripts/motion";
+  import { scrollToTarget } from "~/scripts/smooth-scroll";
+
+  const FLIGHT_MS = 1050;
+  const RETURN_MS = 760;
+  const STAGGER_MS = 60;
+  const MERGE_AFTER_MS = FLIGHT_MS + STAGGER_MS * 3 + 60;
+  const PILL_START_SCALE = 0.55;
+  const PLAY_RATIO = 0.6;
+  const ORB_SIZE = 24;
+  const RETURN_REACH_PX = 240;
+
+  interface Point {
+    x: number;
+    y: number;
+  }
+
+  onPage(() => {
+    const root = document.documentElement;
+    const closing = document.querySelector<HTMLElement>("[data-closing]");
+    const merged = closing?.querySelector<HTMLElement>(".merged");
+    const flyX = [...document.querySelectorAll<HTMLElement>("[data-fly-x]")];
+    const flyY = [...document.querySelectorAll<HTMLElement>("[data-fly-y]")];
+    const orbNames = flyY.map(
+      (element) =>
+        [...element.classList].find((name) => name.startsWith("orb-")) ?? ""
+    );
+    let phase: "idle" | "flying" | "merged" = "idle";
+    let mergeTimer = 0;
+    let returning: HTMLElement[] = [];
+    let returnToNav = true;
+
+    const centerOf = (element: Element): Point => {
+      const rect = element.getBoundingClientRect();
+      return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+    };
+
+    // The dock and the pill are position: fixed, so offsetParent can't tell whether they render.
+    const isShown = (element: HTMLElement | null): element is HTMLElement =>
+      Boolean(
+        element?.classList.contains("is-visible") &&
+          element.getClientRects().length > 0
+      );
+
+    // Where the orbs fly from: the desktop dock, the mobile pill, or nowhere (they merge in place).
+    const flightOrigins = ():
+      | { x: number; y: number; scale: number; fade: boolean }[]
+      | null => {
+      const dock = document.querySelector<HTMLElement>("[data-dock]");
+      if (isShown(dock)) {
+        const dockOrbs = [...dock.querySelectorAll("[data-dock-orb]")];
+        if (dockOrbs.length === flyY.length) {
+          // Dock orbs sit at different depths, so each flight starts and lands at its scale.
+          return dockOrbs.map((orb) => ({
+            ...centerOf(orb),
+            fade: false,
+            scale: orb.getBoundingClientRect().width / ORB_SIZE,
+          }));
+        }
+      }
+      const pill = document.querySelector<HTMLElement>("[data-pill]");
+      const core = pill?.querySelector("[data-pill-core]");
+      if (isShown(pill) && core) {
+        const origin = centerOf(core);
+        return flyY.map(() => ({
+          ...origin,
+          fade: true,
+          scale: PILL_START_SCALE,
+        }));
+      }
+      return null;
+    };
+
+    const merge = () => {
+      phase = "merged";
+      closing?.classList.remove("is-flying");
+      closing?.classList.add("is-merged");
+    };
+
+    const clearReturn = () => {
+      for (const element of returning) {
+        element.remove();
+      }
+      returning = [];
+      root.classList.remove("is-orbs-returning");
+    };
+
+    const play = () => {
+      clearReturn();
+      const origins = prefersReducedMotion() ? null : flightOrigins();
+      root.classList.add("is-closing-page");
+      if (!(origins && closing)) {
+        merge();
+        return;
+      }
+      phase = "flying";
+      closing.classList.add("is-flying");
+      for (const [index, element] of flyY.entries()) {
+        const origin = origins[index];
+        const xWrapper = flyX[index];
+        if (!(origin && xWrapper)) {
+          continue;
+        }
+        const target = centerOf(element);
+        const delay = index * STAGGER_MS;
+        xWrapper.animate(
+          [
+            { transform: `translateX(${origin.x - target.x}px)` },
+            { transform: "translateX(0)" },
+          ],
+          {
+            delay,
+            duration: FLIGHT_MS,
+            easing: "cubic-bezier(0.45, 0, 0.2, 1)",
+            fill: "backwards",
+          }
+        );
+        element.animate(
+          [
+            {
+              transform: `translateY(${origin.y - target.y}px) scale(${origin.scale})`,
+            },
+            { transform: "translateY(0) scale(1)" },
+          ],
+          {
+            delay,
+            duration: FLIGHT_MS,
+            easing: "cubic-bezier(0.8, 0, 0.25, 1)",
+            fill: "backwards",
+          }
+        );
+      }
+      mergeTimer = window.setTimeout(merge, MERGE_AFTER_MS);
+    };
+
+    // Back to the initial state, so the next visit to the end plays it again.
+    const reset = () => {
+      window.clearTimeout(mergeTimer);
+      for (const element of [...flyX, ...flyY]) {
+        for (const animation of element.getAnimations()) {
+          animation.cancel();
+        }
+      }
+      closing?.classList.remove("is-flying", "is-merged");
+      phase = "idle";
+    };
+
+    const flyBackOne = (
+      start: Point,
+      target: Point & { scale: number; fade: boolean }
+    ) => {
+      const wrapper = document.createElement("span");
+      wrapper.className = "orb-return";
+      wrapper.setAttribute("aria-hidden", "true");
+      wrapper.style.left = `${target.x - ORB_SIZE / 2}px`;
+      wrapper.style.top = `${target.y - ORB_SIZE / 2}px`;
+      const orb = document.createElement("span");
+      orb.className = `orb ${orbNames[returning.length] ?? ""}`;
+      wrapper.append(orb);
+      document.body.append(wrapper);
+      const delay = returning.length * STAGGER_MS;
+      returning.push(wrapper);
+      // X eases in and out while Y rises fast, so the orbs arc up and back into place.
+      wrapper.animate(
+        [
+          { transform: `translateX(${start.x - target.x}px)` },
+          { transform: "translateX(0)" },
+        ],
+        {
+          delay,
+          duration: RETURN_MS,
+          easing: "cubic-bezier(0.5, 0, 0.3, 1)",
+          fill: "both",
+        }
+      );
+      return orb.animate(
+        [
+          { opacity: 1, transform: `translateY(${start.y - target.y}px)` },
+          { offset: 0.8, opacity: 1 },
+          {
+            opacity: target.fade ? 0 : 1,
+            transform: `translateY(0) scale(${target.scale})`,
+          },
+        ],
+        {
+          delay,
+          duration: RETURN_MS,
+          easing: "cubic-bezier(0.2, 0.8, 0.3, 1)",
+          fill: "both",
+        }
+      ).finished;
+    };
+
+    // Undo the closing: the orbs leave the footer and fly back to the dock or the pill.
+    const undo = () => {
+      if (phase === "idle") {
+        return;
+      }
+      const starts =
+        phase === "merged" && merged
+          ? flyY.map(() => centerOf(merged))
+          : flyY.map(centerOf);
+      reset();
+      const wantsFlight =
+        returnToNav &&
+        !root.classList.contains("is-leaving") &&
+        !prefersReducedMotion();
+      const targets = wantsFlight ? flightOrigins() : null;
+      returnToNav = true;
+      const isReachable = ({ y }: Point) =>
+        y > -RETURN_REACH_PX && y < window.innerHeight + RETURN_REACH_PX;
+      if (!(targets && starts.every(isReachable))) {
+        return;
+      }
+      clearReturn();
+      root.classList.add("is-orbs-returning");
+      const batch = returning;
+      const flights = starts.flatMap((start, index) => {
+        const target = targets[index];
+        return target ? [flyBackOne(start, target)] : [];
+      });
+      Promise.all(flights).then(
+        () => {
+          if (returning === batch) {
+            clearReturn();
+          }
+        },
+        () => undefined
+      );
+    };
+
+    let observer: IntersectionObserver | null = null;
+    if (closing) {
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          if (!entry) {
+            return;
+          }
+          // Play once the orbs are mostly in view, and undo only after they fully leave,
+          // so hovering around the edge doesn't replay it.
+          if (entry.intersectionRatio >= PLAY_RATIO - 0.01) {
+            if (phase === "idle" && !root.classList.contains("is-arriving")) {
+              play();
+            }
+          } else if (!entry.isIntersecting) {
+            root.classList.remove("is-closing-page");
+            undo();
+          }
+        },
+        { threshold: [0, PLAY_RATIO] }
+      );
+      observer.observe(closing.querySelector(".orbs") ?? closing);
+    }
+
+    document.querySelector("[data-to-top]")?.addEventListener("click", () => {
+      returnToNav = false;
+      scrollToTarget(0);
+      document
+        .querySelector<HTMLElement>("#main")
+        ?.focus({ preventScroll: true });
+    });
+
+    return () => {
+      observer?.disconnect();
+      window.clearTimeout(mergeTimer);
+      clearReturn();
+      root.classList.remove("is-closing-page");
+    };
+  });
+</script>

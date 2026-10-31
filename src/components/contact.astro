@@ -1,0 +1,135 @@
+---
+import { profile, socials } from "~/data/profile";
+import CopyButton from "./copy-button.astro";
+import SectionTitle from "./section-title.astro";
+---
+
+<section
+  aria-labelledby="contact-title"
+  class="section"
+  data-reveal
+  data-section="contact"
+  id="contact"
+>
+  <SectionTitle id="contact-title" orb="peach" title="Contact" />
+  <div class="email">
+    <a class="email-link" href={`mailto:${profile.email}`}>{profile.email}</a>
+    <CopyButton
+      accessibleLabel="Copy email address"
+      label="Copy"
+      showIcon={false}
+      size="small"
+      text={profile.email}
+    />
+  </div>
+  <p class="note muted">{profile.freelance}</p>
+  <ul class="list">
+    {socials.map((social) => (
+      <li class="channel">
+        <span class="channel-label muted">{social.label}</span>
+        <a
+          class="channel-link"
+          href={social.href}
+          rel="me noopener noreferrer"
+          target="_blank"
+        >
+          {social.handle}
+        </a>
+        <span aria-hidden="true" class="channel-icon muted">
+          ↗
+        </span>
+      </li>
+    ))}
+    <li class="channel">
+      <span class="channel-label muted">CV</span>
+      <a
+        class="channel-link"
+        download={profile.cv.filename}
+        href={profile.cv.href}
+        >Download the PDF</a
+      >
+      <span aria-hidden="true" class="channel-icon muted">↓</span>
+    </li>
+  </ul>
+</section>
+
+<style>
+  .email {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 4px 4px;
+    border-top: 1px solid var(--line);
+  }
+
+  .email-link {
+    min-width: 0;
+    font-size: 22px;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    overflow-wrap: anywhere;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 5px;
+  }
+
+  .email :global(.btn) {
+    flex: none;
+    min-width: 76px;
+  }
+
+  .note {
+    margin: 8px 4px 20px;
+    font-size: 14px;
+  }
+
+  .channel {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr) auto;
+    gap: 12px;
+    align-items: center;
+    min-height: 52px;
+    padding: 2px 4px;
+  }
+
+  .channel-label,
+  .channel-icon {
+    font-size: 14px;
+  }
+
+  .channel-link {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-decoration: none;
+  }
+
+  .channel-link:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--underline);
+  }
+
+  @media (min-width: 640px) {
+    .email {
+      gap: 16px;
+      padding-top: 18px;
+    }
+
+    .email-link {
+      font-size: 30px;
+      line-height: 1.2;
+      letter-spacing: -0.025em;
+      text-underline-offset: 6px;
+    }
+
+    .note {
+      max-width: 480px;
+      margin-bottom: 22px;
+    }
+
+    .channel {
+      grid-template-columns: 96px minmax(0, 1fr) auto;
+      gap: 16px;
+    }
+  }
+</style>

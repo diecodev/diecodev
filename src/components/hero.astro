@@ -1,0 +1,113 @@
+---
+import { profile, socials } from "~/data/profile";
+import CopyButton from "./copy-button.astro";
+import CvButton from "./cv-button.astro";
+
+const profileLinks = socials.filter((social) => social.label !== "X");
+---
+
+<section aria-labelledby="hero-statement" class="hero" id="top">
+  <p class="name enter" style="--delay: 80ms">{profile.name}</p>
+  <p class="role muted enter" style="--delay: 140ms">{profile.role}</p>
+  <h1 class="statement enter" id="hero-statement" style="--delay: 220ms">
+    {profile.statement}
+  </h1>
+  <p class="context muted enter" style="--delay: 320ms">{profile.context}</p>
+  <div class="actions enter" style="--delay: 420ms">
+    <CopyButton
+      accessibleLabel={`Copy email address ${profile.email}`}
+      label="Copy email"
+      text={profile.email}
+      variant="primary"
+    />
+    <CvButton />
+    {profileLinks.map((social) => (
+      <a class="btn" href={social.href} rel="me noopener" target="_blank">
+        {social.label}
+      </a>
+    ))}
+  </div>
+  <p class="recently enter" style="--delay: 520ms">
+    <b>Recently</b>{` · ${profile.recently}`}
+  </p>
+</section>
+
+<style>
+  .hero {
+    padding-top: 56px;
+    text-align: center;
+  }
+
+  .name {
+    font-weight: 500;
+  }
+
+  .role {
+    margin-top: 2px;
+  }
+
+  .statement {
+    max-width: 540px;
+    margin: 28px auto 0;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+  }
+
+  .context {
+    max-width: 470px;
+    margin: 16px auto 0;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 28px;
+  }
+
+  .recently {
+    margin-top: 40px;
+    font-size: 14px;
+    color: var(--fg-2);
+  }
+
+  .recently b {
+    font-weight: 500;
+    color: var(--fg);
+  }
+
+  @media (min-width: 640px) {
+    .hero {
+      padding-top: 84px;
+    }
+
+    .statement {
+      margin-top: 36px;
+      font-size: 28px;
+      letter-spacing: -0.022em;
+    }
+
+    .context {
+      margin-top: 18px;
+    }
+
+    .actions {
+      margin-top: 32px;
+    }
+
+    .recently {
+      margin-top: 56px;
+    }
+  }
+
+  @supports (text-wrap: balance) {
+    .statement,
+    .context,
+    .recently {
+      text-wrap: balance;
+    }
+  }
+</style>

@@ -1,0 +1,74 @@
+---
+import { experience } from "~/data/experience";
+import { profile } from "~/data/profile";
+import SectionTitle from "./section-title.astro";
+---
+
+<section
+  aria-labelledby="experience-title"
+  class="section"
+  data-cursor-area
+  data-reveal
+  data-section="experience"
+  id="experience"
+>
+  <SectionTitle id="experience-title" orb="rose" title="Experience" />
+  <ol class="list">
+    {experience.map((job) => (
+      <li class="job" data-visit>
+        <div class="job-head">
+          <h3 class="job-title">
+            <a
+              class="visit-link"
+              href={job.website}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              {job.company}
+              <span class="sr-only"> (opens in a new tab)</span>
+            </a>
+            <span class="muted">{` · ${job.role}`}</span>
+          </h3>
+          <span class="muted num">{job.period}</span>
+        </div>
+        <p class="job-summary">{job.summary}</p>
+      </li>
+    ))}
+  </ol>
+  <p class="more">
+    <a download={profile.cv.filename} href={profile.cv.href}
+      >Full history in the CV</a
+    >
+  </p>
+</section>
+
+<style>
+  .job {
+    position: relative;
+    padding: 16px 4px;
+  }
+
+  .job-head {
+    display: flex;
+    gap: 16px;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+
+  .job-title {
+    font-size: inherit;
+    font-weight: 400;
+  }
+
+  .job-summary {
+    max-width: 520px;
+    margin-top: 6px;
+    font-size: 14px;
+    color: var(--fg-2);
+  }
+
+  .more {
+    margin: 14px 4px 0;
+    font-size: 14px;
+  }
+</style>

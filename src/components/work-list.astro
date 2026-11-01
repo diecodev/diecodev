@@ -1,10 +1,10 @@
 ---
 import { getCollection } from "astro:content";
+
 import SectionTitle from "./section-title.astro";
 
-const projects = (await getCollection("work")).sort(
-  (a, b) => a.data.order - b.data.order
-);
+const entries = await getCollection("work");
+const projects = entries.toSorted((a, b) => a.data.order - b.data.order);
 const DEFAULT_OPEN = 0;
 ---
 
@@ -403,29 +403,30 @@ const DEFAULT_OPEN = 0;
 </style>
 
 <script>
-  import { type Cleanup, onPage } from "~/scripts/lifecycle";
+  import type { Cleanup } from "~/scripts/lifecycle";
+  import { onPage } from "~/scripts/lifecycle";
   import { prefersReducedMotion } from "~/scripts/motion";
 
   const PREVIEW_OFFSET_X = 28;
   const PREVIEW_OFFSET_Y = -84;
   const FOLLOW_EASING = 0.2;
 
+  const setOpen = (item: HTMLElement, open: boolean) => {
+    const trigger = item.querySelector<HTMLButtonElement>(
+      "[data-accordion-trigger]"
+    );
+    const panel = item.querySelector<HTMLElement>("[data-accordion-panel]");
+    item.classList.toggle("is-open", open);
+    trigger?.setAttribute("aria-expanded", String(open));
+    if (panel) {
+      panel.inert = !open;
+    }
+  };
+
   const setupAccordion = () => {
     const items = document.querySelectorAll<HTMLElement>(
       "[data-accordion-item]"
     );
-
-    const setOpen = (item: HTMLElement, open: boolean) => {
-      const trigger = item.querySelector<HTMLButtonElement>(
-        "[data-accordion-trigger]"
-      );
-      const panel = item.querySelector<HTMLElement>("[data-accordion-panel]");
-      item.classList.toggle("is-open", open);
-      trigger?.setAttribute("aria-expanded", String(open));
-      if (panel) {
-        panel.inert = !open;
-      }
-    };
 
     for (const item of items) {
       const trigger = item.querySelector<HTMLButtonElement>(
@@ -463,10 +464,10 @@ const DEFAULT_OPEN = 0;
     }
   };
 
-  const setupPreview = (): Cleanup => {
+  const setupPreview = (): Cleanup | null => {
     const preview = document.querySelector<HTMLElement>("[data-preview]");
     if (!preview) {
-      return () => undefined;
+      return null;
     }
     const canHover = window.matchMedia(
       "(hover: hover) and (pointer: fine) and (min-width: 960px)"

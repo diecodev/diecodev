@@ -1,6 +1,7 @@
 ---
-import { getCollection, render } from "astro:content";
 import type { GetStaticPaths } from "astro";
+import { getCollection, render } from "astro:content";
+
 import Aurora from "~/components/aurora.astro";
 import Closing from "~/components/closing.astro";
 import SectionTitle from "~/components/section-title.astro";
@@ -9,9 +10,8 @@ import { caseSections } from "~/data/sections";
 import BaseLayout from "~/layouts/base-layout.astro";
 
 export const getStaticPaths = (async () => {
-  const projects = (await getCollection("work")).sort(
-    (a, b) => a.data.order - b.data.order
-  );
+  const entries = await getCollection("work");
+  const projects = entries.toSorted((a, b) => a.data.order - b.data.order);
   return projects.map((entry, index) => ({
     params: { slug: entry.id },
     props: { next: projects[(index + 1) % projects.length], project: entry },
@@ -31,19 +31,25 @@ const nextProject = next ?? project;
 >
   <Aurora slot="background" />
   <main class="layer container" id="main" tabindex="-1">
-    <a class="back enter" href="/#work" style="--delay: 60ms"
-      ><span aria-hidden="true">←</span>
-      All work</a
-    >
+    <a class="back enter" href="/#work" style="--delay: 60ms">
+      <span aria-hidden="true">←</span>
+      All work
+    </a>
 
     <header class="case-head">
       <p class="kicker muted enter" style="--delay: 120ms">
         Case study · {data.company} · {data.period}
       </p>
-      <h1 class="enter" style="--delay: 180ms">{data.name}</h1>
-      <p class="tagline muted enter" style="--delay: 260ms">{data.tagline}</p>
+      <h1 class="enter" style="--delay: 180ms">
+        {data.name}
+      </h1>
+      <p class="tagline muted enter" style="--delay: 260ms">
+        {data.tagline}
+      </p>
       <ul aria-label="Stack" class="tags enter" style="--delay: 340ms">
-        {data.stack.slice(0, 4).map((item) => <li>{item}</li>)}
+        {data.stack.slice(0, 4).map((item) => (
+          <li>{item}</li>
+        ))}
       </ul>
     </header>
 
@@ -161,16 +167,18 @@ const nextProject = next ?? project;
       <SectionTitle id="more-title" orb="peach" title="More" />
       <h3 class="stack-title muted">Built with</h3>
       <ul class="tags tags-left">
-        {data.stack.map((item) => <li>{item}</li>)}
+        {data.stack.map((item) => (
+          <li>{item}</li>
+        ))}
       </ul>
       <a class="next" data-astro-prefetch href={`/work/${nextProject.id}/`}>
         <span>
           <span class="next-kicker muted">Next case</span>
-          <span class="next-title"
-            >{`${nextProject.data.name} · ${nextProject.data.summary}`}</span
-          >
+          <span class="next-title">{`${nextProject.data.name} · ${nextProject.data.summary}`}</span>
         </span>
-        <span aria-hidden="true" class="next-arrow">→</span>
+        <span aria-hidden="true" class="next-arrow">
+          →
+        </span>
       </a>
     </section>
   </main>

@@ -22,14 +22,16 @@ const year = new Date().getFullYear();
     <span class="ripple"></span>
     <span class="merged"></span>
   </div>
-  <p class="end-line" id="closing-title">That’s everything.</p>
+  <p class="end-line" id="closing-title">
+    That’s everything.
+  </p>
   <p class="end-sub muted">Thanks for scrolling all the way down.</p>
   <div class="end-meta muted">
     <span>
       {`© ${year} ${profile.name} · Built with Astro · `}
-      <a href={profile.source} rel="noopener noreferrer" target="_blank"
-        >Source</a
-      >
+      <a href={profile.source} rel="noopener noreferrer" target="_blank">
+        Source
+      </a>
     </span>
     <button class="to-top" data-to-top type="button">
       Back to top
@@ -362,6 +364,21 @@ const year = new Date().getFullYear();
     y: number;
   }
 
+  const centerOf = (element: Element): Point => {
+    const rect = element.getBoundingClientRect();
+    return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+  };
+
+  // The dock and the pill are position: fixed, so offsetParent can't tell whether they render.
+  const isShown = (element: HTMLElement | null): element is HTMLElement =>
+    Boolean(
+      element?.classList.contains("is-visible") &&
+      element.getClientRects().length > 0
+    );
+
+  const isReachable = ({ y }: Point) =>
+    y > -RETURN_REACH_PX && y < window.innerHeight + RETURN_REACH_PX;
+
   onPage(() => {
     const root = document.documentElement;
     const closing = document.querySelector<HTMLElement>("[data-closing]");
@@ -376,18 +393,6 @@ const year = new Date().getFullYear();
     let mergeTimer = 0;
     let returning: HTMLElement[] = [];
     let returnToNav = true;
-
-    const centerOf = (element: Element): Point => {
-      const rect = element.getBoundingClientRect();
-      return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
-    };
-
-    // The dock and the pill are position: fixed, so offsetParent can't tell whether they render.
-    const isShown = (element: HTMLElement | null): element is HTMLElement =>
-      Boolean(
-        element?.classList.contains("is-visible") &&
-          element.getClientRects().length > 0
-      );
 
     // Where the orbs fly from: the desktop dock, the mobile pill, or nowhere (they merge in place).
     const flightOrigins = ():
@@ -538,6 +543,22 @@ const year = new Date().getFullYear();
       ).finished;
     };
 
+    // Removes the returning orbs once they land, unless a newer flight replaced them.
+    const clearWhenLanded = async (
+      flights: Promise<Animation>[],
+      batch: HTMLElement[]
+    ) => {
+      try {
+        await Promise.all(flights);
+      } catch {
+        // A cancelled flight was already cleared by whatever cancelled it.
+        return;
+      }
+      if (returning === batch) {
+        clearReturn();
+      }
+    };
+
     // Undo the closing: the orbs leave the footer and fly back to the dock or the pill.
     const undo = () => {
       if (phase === "idle") {
@@ -554,8 +575,6 @@ const year = new Date().getFullYear();
         !prefersReducedMotion();
       const targets = wantsFlight ? flightOrigins() : null;
       returnToNav = true;
-      const isReachable = ({ y }: Point) =>
-        y > -RETURN_REACH_PX && y < window.innerHeight + RETURN_REACH_PX;
       if (!(targets && starts.every(isReachable))) {
         return;
       }
@@ -566,14 +585,7 @@ const year = new Date().getFullYear();
         const target = targets[index];
         return target ? [flyBackOne(start, target)] : [];
       });
-      Promise.all(flights).then(
-        () => {
-          if (returning === batch) {
-            clearReturn();
-          }
-        },
-        () => undefined
-      );
+      clearWhenLanded(flights, batch);
     };
 
     let observer: IntersectionObserver | null = null;

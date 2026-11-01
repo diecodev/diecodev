@@ -66,7 +66,9 @@ const RING_CIRCUMFERENCE = 87.96;
         data-pill-core
       ></span>
     </span>
-    <span class="pill-label" data-pill-label>Sections</span>
+    <span class="pill-label" data-pill-label>
+      Sections
+    </span>
     <span class="pill-count num" data-pill-count></span>
     <span class="sr-only">Show sections</span>
     <svg
@@ -447,6 +449,7 @@ const RING_CIRCUMFERENCE = 87.96;
 </style>
 
 <script>
+  import { px } from "~/scripts/css";
   import { onPage } from "~/scripts/lifecycle";
   import { subscribeToScroll } from "~/scripts/scroll-state";
 
@@ -471,7 +474,18 @@ const RING_CIRCUMFERENCE = 87.96;
   };
 
   const readPx = (styles: CSSStyleDeclaration, name: string) =>
-    Number.parseFloat(styles.getPropertyValue(name)) || 0;
+    px(styles.getPropertyValue(name));
+
+  const dockItemFrom = (target: EventTarget | null) =>
+    target instanceof Element
+      ? target.closest<HTMLAnchorElement>("[data-dock-item]")
+      : null;
+
+  // Labels measured before the web font loads are off, so lay out again once it has.
+  const afterFonts = async (layout: () => void) => {
+    await document.fonts.ready;
+    layout();
+  };
 
   interface DockState {
     // The item that shows its label: the pointed one, or the selected one just after
@@ -519,8 +533,7 @@ const RING_CIRCUMFERENCE = 87.96;
     }
     const top =
       items.indexOf(target) *
-        (readPx(styles, "--dock-item-compact") +
-          (Number.parseFloat(styles.rowGap) || 0)) +
+        (readPx(styles, "--dock-item-compact") + px(styles.rowGap)) +
       readPx(styles, "--dock-target-space");
     const pad = readPx(styles, "--dock-pad");
     const orbSize =
@@ -649,11 +662,6 @@ const RING_CIRCUMFERENCE = 87.96;
       }, ANNOUNCE_MS);
     };
 
-    const dockItemFrom = (target: EventTarget | null) =>
-      target instanceof Element
-        ? target.closest<HTMLAnchorElement>("[data-dock-item]")
-        : null;
-
     dock?.addEventListener("pointerover", (event) => {
       const item = dockItemFrom(event.target);
       if (item && item !== hoveredItem) {
@@ -686,7 +694,7 @@ const RING_CIRCUMFERENCE = 87.96;
     });
 
     placeIndicator();
-    document.fonts.ready.then(placeIndicator);
+    afterFonts(placeIndicator);
     window.addEventListener("resize", placeIndicator, { passive: true });
 
     const isSheetOpen = () => button?.getAttribute("aria-expanded") === "true";

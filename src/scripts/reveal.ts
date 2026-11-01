@@ -6,7 +6,7 @@ onPage(() => {
     for (const target of targets) {
       target.classList.add("is-visible");
     }
-    return () => undefined;
+    return null;
   }
 
   const observer = new IntersectionObserver(

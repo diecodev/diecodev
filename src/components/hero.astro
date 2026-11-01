@@ -1,5 +1,6 @@
 ---
 import { profile, socials } from "~/data/profile";
+
 import CopyButton from "./copy-button.astro";
 import CvButton from "./cv-button.astro";
 
@@ -7,12 +8,18 @@ const profileLinks = socials.filter((social) => social.label !== "X");
 ---
 
 <section aria-labelledby="hero-statement" class="hero" id="top">
-  <p class="name enter" style="--delay: 80ms">{profile.name}</p>
-  <p class="role muted enter" style="--delay: 140ms">{profile.role}</p>
+  <p class="name enter" style="--delay: 80ms">
+    {profile.name}
+  </p>
+  <p class="role muted enter" style="--delay: 140ms">
+    {profile.role}
+  </p>
   <h1 class="statement enter" id="hero-statement" style="--delay: 220ms">
     {profile.statement}
   </h1>
-  <p class="context muted enter" style="--delay: 320ms">{profile.context}</p>
+  <p class="context muted enter" style="--delay: 320ms">
+    {profile.context}
+  </p>
   <div class="actions enter" style="--delay: 420ms">
     <CopyButton
       accessibleLabel={`Copy email address ${profile.email}`}
@@ -28,7 +35,8 @@ const profileLinks = socials.filter((social) => social.label !== "X");
     ))}
   </div>
   <p class="recently enter" style="--delay: 520ms">
-    <b>Recently</b>{` · ${profile.recently}`}
+    <b>Recently</b>
+    {` · ${profile.recently}`}
   </p>
 </section>
 

@@ -1,5 +1,6 @@
 ---
 import { profile, socials } from "~/data/profile";
+
 import CopyButton from "./copy-button.astro";
 import SectionTitle from "./section-title.astro";
 ---
@@ -13,7 +14,9 @@ import SectionTitle from "./section-title.astro";
 >
   <SectionTitle id="contact-title" orb="peach" title="Contact" />
   <div class="email">
-    <a class="email-link" href={`mailto:${profile.email}`}>{profile.email}</a>
+    <a class="email-link" href={`mailto:${profile.email}`}>
+      {profile.email}
+    </a>
     <CopyButton
       accessibleLabel="Copy email address"
       label="Copy"
@@ -46,9 +49,12 @@ import SectionTitle from "./section-title.astro";
         class="channel-link"
         download={profile.cv.filename}
         href={profile.cv.href}
-        >Download the PDF</a
       >
-      <span aria-hidden="true" class="channel-icon muted">↓</span>
+        Download the PDF
+      </a>
+      <span aria-hidden="true" class="channel-icon muted">
+        ↓
+      </span>
     </li>
   </ul>
 </section>

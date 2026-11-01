@@ -1,4 +1,6 @@
 import Lenis from "lenis";
+
+import { px } from "./css";
 import { prefersReducedMotion, scrollBehavior } from "./motion";
 
 // Inertial wheel scrolling with Lenis' defaults. Touch keeps the native scroll, and
@@ -10,9 +12,7 @@ interface ScrollOptions {
 }
 
 const scrollPadding = () =>
-  Number.parseFloat(
-    getComputedStyle(document.documentElement).scrollPaddingTop
-  ) || 0;
+  px(getComputedStyle(document.documentElement).scrollPaddingTop);
 
 export const startSmoothScroll = () => {
   if (lenis || prefersReducedMotion()) {

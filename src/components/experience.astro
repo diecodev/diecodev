@@ -1,6 +1,7 @@
 ---
 import { experience } from "~/data/experience";
 import { profile } from "~/data/profile";
+
 import SectionTitle from "./section-title.astro";
 ---
 
@@ -36,9 +37,9 @@ import SectionTitle from "./section-title.astro";
     ))}
   </ol>
   <p class="more">
-    <a download={profile.cv.filename} href={profile.cv.href}
-      >Full history in the CV</a
-    >
+    <a download={profile.cv.filename} href={profile.cv.href}>
+      Full history in the CV
+    </a>
   </p>
 </section>
 

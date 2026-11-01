@@ -105,7 +105,8 @@
 </style>
 
 <script>
-  import { type Cleanup, onPage } from "~/scripts/lifecycle";
+  import type { Cleanup } from "~/scripts/lifecycle";
+  import { onPage } from "~/scripts/lifecycle";
   import { prefersReducedMotion } from "~/scripts/motion";
 
   // A critically damped spring: the cursor trails the pointer smoothly, no wobble.
@@ -131,6 +132,12 @@
     Math.abs(axis.target - axis.position) < 0.2 &&
     Math.abs(axis.velocity) < 0.2;
 
+  // Text measured before the web font loads is off, so measure again once it has.
+  const afterFonts = async (measure: () => void) => {
+    await document.fonts.ready;
+    measure();
+  };
+
   const snapAxis = (axis: Axis, value: number) => {
     axis.position = value;
     axis.target = value;
@@ -139,14 +146,14 @@
 
   // Inside a [data-cursor-area] the pointer becomes a small dot; over a [data-visit]
   // row it stretches into a "Visit" pill. Other links keep the system cursor.
-  const setupCursor = (): Cleanup => {
+  const setupCursor = (): Cleanup | null => {
     const areas = [
       ...document.querySelectorAll<HTMLElement>("[data-cursor-area]"),
     ];
     const cursor = document.querySelector<HTMLElement>("[data-cursor]");
     const label = cursor?.querySelector<HTMLElement>("[data-cursor-label]");
     if (!(areas.length > 0 && cursor && label)) {
-      return () => undefined;
+      return null;
     }
     const canHover = window.matchMedia("(hover: hover) and (pointer: fine)");
     const x: Axis = { position: 0, target: 0, velocity: 0 };
@@ -244,7 +251,7 @@
     };
 
     measure();
-    document.fonts.ready.then(measure);
+    afterFonts(measure);
     for (const area of areas) {
       area.addEventListener("pointermove", onMove);
       area.addEventListener("pointerleave", onLeave);

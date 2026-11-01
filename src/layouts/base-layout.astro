@@ -2,8 +2,9 @@
 import "@fontsource-variable/geist";
 import "lenis/dist/lenis.css";
 import "~/styles/global.css";
-import { ClientRouter } from "astro:transitions";
 import Analytics from "@vercel/analytics/astro";
+import { ClientRouter } from "astro:transitions";
+
 import Grain from "~/components/grain.astro";
 import Header from "~/components/header.astro";
 import SectionNav from "~/components/section-nav.astro";
@@ -25,48 +26,46 @@ const ogImage = new URL("/og.jpg", Astro.site);
 <!doctype html>
 <html lang="en" transition:animate="none">
   <head>
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
     <title>{title}</title>
-    <meta content={description} name="description">
-    <link href={canonical} rel="canonical">
-    <link href="/favicon.ico" rel="icon" sizes="any">
-    <link href="/sitemap-index.xml" rel="sitemap">
+    <meta content={description} name="description" />
+    <link href={canonical} rel="canonical" />
+    <link href="/favicon.ico" rel="icon" sizes="any" />
+    <link href="/sitemap-index.xml" rel="sitemap" />
     <meta
       content="#fdfdfc"
       media="(prefers-color-scheme: light)"
       name="theme-color"
-    >
+    />
     <meta
       content="#0b0b0c"
       media="(prefers-color-scheme: dark)"
       name="theme-color"
-    >
-    <meta content="website" property="og:type">
-    <meta content={profile.name} property="og:site_name">
-    <meta content={title} property="og:title">
-    <meta content={description} property="og:description">
-    <meta content={canonical} property="og:url">
-    <meta content={ogImage} property="og:image">
-    <meta content="1200" property="og:image:width">
-    <meta content="630" property="og:image:height">
+    />
+    <meta content="website" property="og:type" />
+    <meta content={profile.name} property="og:site_name" />
+    <meta content={title} property="og:title" />
+    <meta content={description} property="og:description" />
+    <meta content={canonical} property="og:url" />
+    <meta content={ogImage} property="og:image" />
+    <meta content="1200" property="og:image:width" />
+    <meta content="630" property="og:image:height" />
     <meta
       content={`${profile.name}, ${profile.role}: ${profile.statement}`}
       property="og:image:alt"
-    >
-    <meta content="summary_large_image" name="twitter:card">
+    />
+    <meta content="summary_large_image" name="twitter:card" />
     <script is:inline>
       (() => {
         const root = document.documentElement;
         root.classList.add("js");
-        const readStoredTheme = () => {
-          try {
-            return localStorage.getItem("theme");
-          } catch {
-            return "";
-          }
-        };
-        const stored = readStoredTheme();
+        let stored = "";
+        try {
+          stored = localStorage.getItem("theme") ?? "";
+        } catch {
+          // Storage can be blocked; fall back to the system theme.
+        }
         const prefersDark = window.matchMedia(
           "(prefers-color-scheme: dark)"
         ).matches;
@@ -90,7 +89,9 @@ const ogImage = new URL("/og.jpg", Astro.site);
     <ClientRouter />
   </head>
   <body>
-    <a class="skip-link" href="#main">Skip to content</a>
+    <a class="skip-link" href="#main">
+      Skip to content
+    </a>
     <slot name="background" />
     <div aria-hidden="true" class="page-texture">
       <Grain id="page-grain" />

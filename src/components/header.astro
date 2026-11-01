@@ -1,6 +1,7 @@
 ---
 import { profile } from "~/data/profile";
 import type { PageSection } from "~/data/sections";
+
 import Grain from "./grain.astro";
 
 interface Props {
@@ -34,7 +35,9 @@ const themes = [
 <header class="site-header" data-header transition:persist="site-header">
   <div class="bar" data-header-bar>
     <Grain class="bar-grain" id="header-grain" />
-    <a class="brand" href="/">{profile.name}</a>
+    <a class="brand" href="/">
+      {profile.name}
+    </a>
     <nav aria-label="Sections" class="nav">
       <ul>
         {sections.map((section) => (

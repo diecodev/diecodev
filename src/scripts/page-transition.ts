@@ -3,33 +3,50 @@ import { isGliding, scrollToTarget } from "./smooth-scroll";
 
 // Leaving a scrolled page: scroll back to the top to reset the header while the next
 // page loads, and swap the content mid-scroll so it arrives while the scroll finishes.
-const FADE_OUT_MS = 220;
 const MAX_SCROLL_WAIT_MS = 1800;
 
 const root = document.documentElement;
 let leftFrom: number | null = null;
 let arriveFrom: number | null = null;
 
-const delay = (ms: number) =>
-  new Promise<void>((resolve) => {
-    window.setTimeout(resolve, ms);
-  });
-
-const waitForTop = () =>
-  new Promise<void>((resolve) => {
-    const startedAt = performance.now();
-    const check = () => {
-      if (
-        window.scrollY <= 0 ||
-        performance.now() - startedAt > MAX_SCROLL_WAIT_MS
-      ) {
-        resolve();
-        return;
-      }
-      window.requestAnimationFrame(check);
-    };
+const whenAtTop = (onTop: () => void) => {
+  const startedAt = performance.now();
+  const check = () => {
+    if (
+      window.scrollY <= 0 ||
+      performance.now() - startedAt > MAX_SCROLL_WAIT_MS
+    ) {
+      onTop();
+      return;
+    }
     window.requestAnimationFrame(check);
+  };
+  window.requestAnimationFrame(check);
+};
+
+// The content fades out through CSS; the swap waits for that fade, not a fixed delay.
+const fadeOut = () => {
+  const fading = document.querySelector("main")?.getAnimations() ?? [];
+  return Promise.allSettled(fading.map((animation) => animation.finished));
+};
+
+const finishArrival = () => {
+  // Lenis keeps gliding through the swap; the native scroll was cancelled by it.
+  if (!isGliding()) {
+    scrollToTarget(0);
+  }
+  whenAtTop(() => {
+    root.classList.remove("is-arriving");
   });
+};
+
+const resumeAfter = async (transition: ViewTransition) => {
+  try {
+    await transition.finished;
+  } finally {
+    finishArrival();
+  }
+};
 
 document.addEventListener("astro:before-preparation", (event) => {
   // A link with a hash lands the next page scrolled to it, so there is nothing to reset.
@@ -46,7 +63,7 @@ document.addEventListener("astro:before-preparation", (event) => {
   scrollToTarget(0, { lock: true });
   const loadPage = event.loader;
   event.loader = async () => {
-    await Promise.all([loadPage(), delay(FADE_OUT_MS)]);
+    await Promise.all([loadPage(), fadeOut()]);
   };
 });
 
@@ -61,18 +78,10 @@ document.addEventListener("astro:before-swap", (event) => {
   }
   leftFrom = null;
   arriveFrom = window.scrollY > 0 ? window.scrollY : null;
-  if (arriveFrom === null) {
-    return;
+  if (arriveFrom !== null) {
+    // Scrolling inside the swap gets cancelled, so the scroll resumes once it has finished.
+    resumeAfter(event.viewTransition);
   }
-  event.viewTransition.finished.finally(() => {
-    // Lenis keeps gliding through the swap; the native scroll was cancelled by it.
-    if (!isGliding()) {
-      scrollToTarget(0);
-    }
-    waitForTop().then(() => {
-      root.classList.remove("is-arriving");
-    });
-  });
 });
 
 // The router jumps fresh pages to the top; keep the scroll where it was instead.

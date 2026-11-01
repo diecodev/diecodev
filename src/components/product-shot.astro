@@ -1,0 +1,336 @@
+---
+import type { ImageMetadata } from "astro";
+import { Image } from "astro:assets";
+
+import Grain from "./grain.astro";
+
+interface ShotVideo {
+  height: number;
+  poster: string;
+  src: string;
+  width: number;
+}
+
+interface Props {
+  alt: string;
+  chip?: string;
+  image: ImageMetadata;
+  loading?: "eager" | "lazy";
+  // Unique per page: it names the shot's grain filter.
+  name: string;
+  tone: "lavender" | "rose" | "mint" | "peach";
+  video?: ShotVideo;
+}
+
+const { alt, chip, image, loading = "eager", name, tone, video } = Astro.props;
+---
+
+<div class:list={["shot", `shot-${tone}`]}>
+  <Grain class="shot-grain" id={`shot-grain-${name}`} />
+  {chip && (
+    <span class="shot-chip">
+      <span aria-hidden="true" class={`orb shot-orb orb-${tone}`} />
+      {chip}
+    </span>
+  )}
+  {video ? (
+    <div class="shot-media" data-shot-video>
+      <video
+        aria-label={alt}
+        class="shot-image"
+        height={video.height}
+        loop
+        muted
+        playsinline
+        poster={video.poster}
+        preload="metadata"
+        width={video.width}
+      >
+        <source src={video.src} type="video/mp4" />
+      </video>
+      <button
+        aria-label="Pause video"
+        class="shot-toggle"
+        data-shot-toggle
+        type="button"
+      >
+        <svg
+          aria-hidden="true"
+          class="icon-pause"
+          fill="currentColor"
+          height="12"
+          viewBox="0 0 24 24"
+          width="12"
+        >
+          <path d="M7 4h3.5v16H7zM13.5 4H17v16h-3.5z" />
+        </svg>
+        <svg
+          aria-hidden="true"
+          class="icon-play"
+          fill="currentColor"
+          height="12"
+          viewBox="0 0 24 24"
+          width="12"
+        >
+          <path d="M8 4.5v15l12-7.5z" />
+        </svg>
+      </button>
+    </div>
+  ) : (
+    <Image
+      alt={alt}
+      class="shot-image"
+      loading={loading}
+      sizes="(min-width: 640px) 600px, 100vw"
+      src={image}
+      width={1200}
+      widths={[600, 900, 1200]}
+    />
+  )}
+</div>
+
+<style>
+  /* Product shots: the screenshot sits on its orb's gradient like a card, cut off at
+     the bottom, with the case's key figure floating on top. */
+  .shot {
+    --shot-base: #ece8fb;
+    --shot-a: #d9d3f5;
+    --shot-b: #f3d9ee;
+    position: relative;
+    padding: 9% 8% 0;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 12% 0%, var(--shot-a), transparent 62%),
+      radial-gradient(circle at 100% 100%, var(--shot-b), transparent 66%),
+      var(--shot-base);
+    border-radius: 18px;
+    box-shadow: inset 0 0 0 1px var(--raised-edge);
+  }
+
+  .shot-rose {
+    --shot-base: #f8e5ec;
+    --shot-a: #f6c4dc;
+    --shot-b: #f9d7ae;
+  }
+
+  .shot-mint {
+    --shot-base: #e2f2e7;
+    --shot-a: #f3e7c9;
+    --shot-b: #b9e5c8;
+  }
+
+  .shot-peach {
+    --shot-base: #fbe8d9;
+    --shot-a: #f9d2b6;
+    --shot-b: #f2cbe0;
+  }
+
+  :global([data-theme="dark"]) .shot {
+    --shot-base: #17142b;
+    --shot-a: #2b2350;
+    --shot-b: #3a1f3c;
+  }
+
+  :global([data-theme="dark"]) .shot-rose {
+    --shot-base: #221420;
+    --shot-a: #4a1f38;
+    --shot-b: #4d2b19;
+  }
+
+  :global([data-theme="dark"]) .shot-mint {
+    --shot-base: #0f1d18;
+    --shot-a: #2c2c16;
+    --shot-b: #0e4637;
+  }
+
+  :global([data-theme="dark"]) .shot-peach {
+    --shot-base: #21160f;
+    --shot-a: #4d2b19;
+    --shot-b: #3a1f3c;
+  }
+
+  .shot :global(.shot-grain) {
+    z-index: 0;
+  }
+
+  .shot-image {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 10px 10px 0 0;
+    box-shadow:
+      0 0 0 1px rgb(17 17 17 / 6%),
+      0 1px 2px rgb(17 17 17 / 6%),
+      0 24px 48px -24px rgb(17 17 17 / 35%);
+  }
+
+  .shot-media {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Looping clips can be paused: anything moving for more than five seconds needs a way
+     to stop it. */
+  .shot-toggle {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    color: var(--fg);
+    cursor: pointer;
+    background: var(--raised-glass);
+    border: 0;
+    border-radius: 999px;
+    box-shadow:
+      inset 0 0 0 1px var(--raised-edge),
+      var(--shadow);
+    transition: transform 0.15s ease;
+  }
+
+  .shot-toggle:active {
+    transform: scale(0.92);
+  }
+
+  .shot-toggle .icon-play,
+  .is-paused .shot-toggle .icon-pause {
+    display: none;
+  }
+
+  .is-paused .shot-toggle .icon-play {
+    display: block;
+  }
+
+  :global(:root:not(.js)) .shot-toggle {
+    display: none;
+  }
+
+  .shot-chip {
+    position: absolute;
+    top: 4%;
+    left: 5%;
+    z-index: 2;
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    height: 32px;
+    padding: 0 12px 0 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--fg);
+    white-space: nowrap;
+    background: var(--raised-glass);
+    border-radius: 999px;
+    box-shadow:
+      inset 0 0 0 1px var(--raised-edge),
+      var(--shadow);
+  }
+
+  .shot-orb {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Narrow panels are short, so the chip gets its own band instead of covering the
+     product's header. */
+  @media (max-width: 639px) {
+    .shot:has(.shot-chip) {
+      padding-top: 56px;
+    }
+
+    .shot-chip {
+      top: 12px;
+      left: 12px;
+    }
+  }
+
+  @supports (backdrop-filter: blur(1px)) {
+    .shot-chip {
+      backdrop-filter: blur(12px) saturate(1.4);
+    }
+  }
+</style>
+
+<script>
+  import { onPage } from "~/scripts/lifecycle";
+  import { prefersReducedMotion } from "~/scripts/motion";
+
+  const playQuietly = async (video: HTMLVideoElement) => {
+    try {
+      await video.play();
+    } catch {
+      // The browser can refuse to play; the poster stays in place.
+    }
+  };
+
+  const setPaused = (media: HTMLElement, paused: boolean) => {
+    media.classList.toggle("is-paused", paused);
+    media
+      .querySelector("[data-shot-toggle]")
+      ?.setAttribute("aria-label", paused ? "Play video" : "Pause video");
+  };
+
+  // Clips play only while on screen, and never on their own with reduced motion.
+  const syncPlayback = (media: HTMLElement, isVisible: boolean) => {
+    const video = media.querySelector("video");
+    if (!video) {
+      return;
+    }
+    const wantsPlay = isVisible && media.dataset.userPaused !== "true";
+    if (wantsPlay) {
+      playQuietly(video);
+    } else {
+      video.pause();
+    }
+  };
+
+  const onToggle = (event: Event) => {
+    const media =
+      event.currentTarget instanceof HTMLElement
+        ? event.currentTarget.closest<HTMLElement>("[data-shot-video]")
+        : null;
+    const video = media?.querySelector("video");
+    if (!(media && video)) {
+      return;
+    }
+    const pause = !video.paused;
+    media.dataset.userPaused = String(pause);
+    setPaused(media, pause);
+    syncPlayback(media, true);
+  };
+
+  onPage(() => {
+    const clips = [
+      ...document.querySelectorAll<HTMLElement>("[data-shot-video]"),
+    ];
+    if (clips.length === 0) {
+      return null;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.target instanceof HTMLElement) {
+            syncPlayback(entry.target, entry.isIntersecting);
+          }
+        }
+      },
+      { threshold: 0.25 }
+    );
+    for (const media of clips) {
+      const startPaused = prefersReducedMotion();
+      media.dataset.userPaused = String(startPaused);
+      setPaused(media, startPaused);
+      media
+        .querySelector("[data-shot-toggle]")
+        ?.addEventListener("click", onToggle);
+      observer.observe(media);
+    }
+    return () => observer.disconnect();
+  });
+</script>

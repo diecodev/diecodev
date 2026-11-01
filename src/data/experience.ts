@@ -4,7 +4,7 @@ export const experience = [
     period: "Nov 2025 — now",
     role: "Senior Full Stack Developer",
     summary:
-      "Sole engineer of Echo, part of the team behind PMG’s 2026 campaign hub, performance and Okta work on PMG’s content hubs, and the Sancrisoft website redesign.",
+      "Sole engineer of Echo, part of the two-person team behind pmg.com and PMG’s 2026 brand campaign, and the Sancrisoft website redesign.",
     website: "https://www.sancrisoft.com",
   },
   {

@@ -4,6 +4,7 @@ import { getCollection, render } from "astro:content";
 
 import Aurora from "~/components/aurora.astro";
 import Closing from "~/components/closing.astro";
+import ProductShot from "~/components/product-shot.astro";
 import SectionTitle from "~/components/section-title.astro";
 import { profile } from "~/data/profile";
 import { caseSections } from "~/data/sections";
@@ -22,6 +23,8 @@ const { project, next } = Astro.props;
 const { data } = project;
 const { Content } = await render(project);
 const nextProject = next ?? project;
+// A clip replaces the still cover on the case page; lists keep the still.
+const coverCaption = data.video ? data.video.caption : data.coverCaption;
 ---
 
 <BaseLayout
@@ -52,6 +55,22 @@ const nextProject = next ?? project;
         ))}
       </ul>
     </header>
+
+    {data.cover && (
+      <figure class="cover enter" style="--delay: 420ms">
+        <ProductShot
+          alt={data.video?.alt ?? data.coverAlt ?? ""}
+          chip={data.highlight}
+          image={data.cover}
+          name="cover"
+          tone={data.tone}
+          video={data.video}
+        />
+        {coverCaption && (
+          <figcaption class="cover-caption muted">{coverCaption}</figcaption>
+        )}
+      </figure>
+    )}
 
     <section
       aria-labelledby="overview-title"
@@ -97,6 +116,20 @@ const nextProject = next ?? project;
         <h3>What I did</h3>
         <Content />
       </div>
+      {data.gallery.map((shot, index) => (
+        <figure class="gallery-shot">
+          <ProductShot
+            alt={shot.alt}
+            image={shot.image}
+            loading="lazy"
+            name={`gallery-${index}`}
+            tone={data.tone}
+          />
+          {shot.caption && (
+            <figcaption class="cover-caption muted">{shot.caption}</figcaption>
+          )}
+        </figure>
+      ))}
     </section>
 
     <section
@@ -231,6 +264,20 @@ const nextProject = next ?? project;
     margin: 12px auto 0;
     font-size: 17px;
     line-height: 1.45;
+  }
+
+  .cover {
+    margin: 40px 0 0;
+  }
+
+  .gallery-shot {
+    margin: 32px 0 0;
+  }
+
+  .cover-caption {
+    padding: 0 4px;
+    margin-top: 10px;
+    font-size: 13px;
   }
 
   .tags {

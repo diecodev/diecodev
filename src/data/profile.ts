@@ -6,10 +6,11 @@ export const profile = {
     href: "/diecodev_cv.pdf",
   },
   description:
-    "Diego Díaz is a senior software engineer who builds and maintains production web apps end to end with TypeScript, React, Next.js and Node.js.",
+    "Diego Díaz (diecodev) is a senior software engineer in Colombia who builds and maintains production web apps end to end with TypeScript, React, Next.js and Node.js.",
   email: "diegoddiaz05@gmail.com",
   freelance:
     "Email is the best way to reach me. I also take on freelance projects: the same full-stack TypeScript work.",
+  handle: "diecodev",
   name: "Diego Díaz",
   recently:
     "shipped the CreatorSnap app redesign and the qwik-date and qwik-sonner 2.0 betas",
@@ -33,3 +34,7 @@ export const socials = [
   },
   { handle: "x.com/diecodev", href: "https://x.com/diecodev", label: "X" },
 ] as const;
+
+// Profiles of the same person that the site doesn't list; search engines use them to
+// tie the site to the name.
+export const otherProfiles = ["https://www.chess.com/member/diecodev"] as const;

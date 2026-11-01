@@ -4,7 +4,11 @@ import { homeSections } from "~/data/sections";
 import BaseLayout from "~/layouts/base-layout.astro";
 ---
 
-<BaseLayout sections={homeSections} title={`Page not found · ${profile.name}`}>
+<BaseLayout
+  noindex
+  sections={homeSections}
+  title={`Page not found · ${profile.name}`}
+>
   <main class="layer not-found container" id="main" tabindex="-1">
     <p class="muted enter">404</p>
     <h1 class="enter" style="--delay: 80ms">

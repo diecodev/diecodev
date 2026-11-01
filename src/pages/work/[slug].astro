@@ -10,6 +10,7 @@ import SectionTitle from "~/components/section-title.astro";
 import WorkPreview from "~/components/work-preview.astro";
 import { profile } from "~/data/profile";
 import { caseSections } from "~/data/sections";
+import { caseSchema } from "~/data/seo";
 import BaseLayout from "~/layouts/base-layout.astro";
 
 export const getStaticPaths = (async () => {
@@ -28,12 +29,28 @@ const nextProject = next ?? project;
 const nextPreview = await previewImage(nextProject.data.cover);
 // A clip replaces the still cover on the case page; lists keep the still.
 const coverCaption = data.video ? data.video.caption : data.coverCaption;
+const title = `${data.name} — Case study · ${profile.name}`;
+const description = `${data.tagline} Case study by ${profile.name}.`;
+const ogSrc = `/og/${project.id}.jpg`;
+const schema = caseSchema({
+  description,
+  image: new URL(ogSrc, Astro.site).href,
+  name: data.name,
+  title,
+  url: new URL(Astro.url.pathname, Astro.site).href,
+});
 ---
 
 <BaseLayout
-  description={data.tagline}
+  description={description}
+  og={{
+    alt: `${data.name} case study by ${profile.name}: ${data.summary}.`,
+    src: ogSrc,
+  }}
+  ogType="article"
+  schema={schema}
   sections={caseSections}
-  title={`${data.name} — Case study · ${profile.name}`}
+  title={title}
 >
   <Aurora slot="background" />
   <main class="layer container" id="main" tabindex="-1">

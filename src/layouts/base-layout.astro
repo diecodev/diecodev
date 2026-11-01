@@ -12,15 +12,41 @@ import { profile } from "~/data/profile";
 import type { PageSection } from "~/data/sections";
 import { homeSections } from "~/data/sections";
 
+interface OgImage {
+  alt: string;
+  // A path under public/, 1200×630.
+  src: string;
+}
+
 interface Props {
   description?: string;
+  // Pages that shouldn't appear in search results, such as the 404.
+  noindex?: boolean;
+  og?: OgImage;
+  ogType?: "article" | "profile" | "website";
+  // schema.org JSON-LD for the page, from ~/data/seo.
+  schema?: Record<string, unknown>;
   sections: PageSection[];
   title: string;
 }
 
-const { title, description = profile.description, sections } = Astro.props;
+const defaultOg: OgImage = {
+  alt: `${profile.name}, Senior Software Engineer. I build and maintain production web apps, end to end.`,
+  src: "/og.jpg",
+};
+
+const {
+  title,
+  description = profile.description,
+  noindex = false,
+  og = defaultOg,
+  ogType = "website",
+  schema,
+  sections,
+} = Astro.props;
+const [firstName, ...lastNames] = profile.name.split(" ");
 const canonical = new URL(Astro.url.pathname, Astro.site);
-const ogImage = new URL("/og.jpg", Astro.site);
+const ogImage = new URL(og.src, Astro.site);
 ---
 
 <!doctype html>
@@ -30,6 +56,7 @@ const ogImage = new URL("/og.jpg", Astro.site);
     <meta content="width=device-width, initial-scale=1" name="viewport" />
     <title>{title}</title>
     <meta content={description} name="description" />
+    {noindex && <meta content="noindex" name="robots" />}
     <link href={canonical} rel="canonical" />
     <link href="/favicon.ico" rel="icon" sizes="32x32" />
     <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
@@ -45,7 +72,15 @@ const ogImage = new URL("/og.jpg", Astro.site);
       media="(prefers-color-scheme: dark)"
       name="theme-color"
     />
-    <meta content="website" property="og:type" />
+    <meta content={ogType} property="og:type" />
+    {ogType === "profile" && (
+      <>
+        <meta content={firstName} property="profile:first_name" />
+        <meta content={lastNames.join(" ")} property="profile:last_name" />
+        <meta content={profile.handle} property="profile:username" />
+      </>
+    )}
+    <meta content="en_US" property="og:locale" />
     <meta content={profile.name} property="og:site_name" />
     <meta content={title} property="og:title" />
     <meta content={description} property="og:description" />
@@ -53,11 +88,17 @@ const ogImage = new URL("/og.jpg", Astro.site);
     <meta content={ogImage} property="og:image" />
     <meta content="1200" property="og:image:width" />
     <meta content="630" property="og:image:height" />
-    <meta
-      content={`${profile.name}, ${profile.role}: ${profile.statement}`}
-      property="og:image:alt"
-    />
+    <meta content={og.alt} property="og:image:alt" />
     <meta content="summary_large_image" name="twitter:card" />
+    <meta content={`@${profile.handle}`} name="twitter:site" />
+    <meta content={`@${profile.handle}`} name="twitter:creator" />
+    {schema && (
+      <script
+        is:inline
+        set:html={JSON.stringify(schema)}
+        type="application/ld+json"
+      />
+    )}
     <script is:inline>
       (() => {
         const root = document.documentElement;

@@ -9,10 +9,18 @@ import VisitCursor from "~/components/visit-cursor.astro";
 import WorkList from "~/components/work-list.astro";
 import { profile } from "~/data/profile";
 import { homeSections } from "~/data/sections";
+import { homeSchema } from "~/data/seo";
 import BaseLayout from "~/layouts/base-layout.astro";
+
+const title = `${profile.name} (${profile.handle}) — ${profile.role}`;
 ---
 
-<BaseLayout sections={homeSections} title={`${profile.name} — ${profile.role}`}>
+<BaseLayout
+  ogType="profile"
+  schema={homeSchema(title)}
+  sections={homeSections}
+  title={title}
+>
   <Aurora slot="background" />
   <main class="layer container" id="main" tabindex="-1">
     <Hero />

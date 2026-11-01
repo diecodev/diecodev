@@ -15,16 +15,16 @@ const marks: Record<string, string> = {
 };
 ---
 
-<section aria-labelledby="hero-statement" class="hero" id="top">
-  <p class="name enter" style="--delay: 80ms">
+<section aria-labelledby="hero-name" class="hero" id="top">
+  <h1 class="name enter" id="hero-name" style="--delay: 80ms">
     {profile.name}
-  </p>
+  </h1>
   <p class="role muted enter" style="--delay: 140ms">
     {profile.role}
   </p>
-  <h1 class="statement enter" id="hero-statement" style="--delay: 220ms">
+  <p class="statement enter" style="--delay: 220ms">
     {profile.statement}
-  </h1>
+  </p>
   <p class="context muted enter" style="--delay: 320ms">
     {profile.context}
   </p>
@@ -73,6 +73,7 @@ const marks: Record<string, string> = {
   }
 
   .name {
+    font-size: inherit;
     font-weight: 500;
   }
 

@@ -12,6 +12,17 @@
   --raised: #ffffff;
   --raised-edge: rgb(17 17 17 / 5%);
   --raised-glass: rgb(255 255 255 / 82%);
+  --btn-glass: rgb(255 255 255 / 52%);
+  --btn-edge: rgb(17 17 17 / 8%);
+  --btn-highlight: rgb(255 255 255 / 85%);
+  --btn-shadow:
+    0 1px 2px rgb(17 17 17 / 6%), 0 6px 16px -10px rgb(17 17 17 / 28%);
+  --btn-shadow-hover:
+    0 2px 4px rgb(17 17 17 / 7%), 0 12px 24px -12px rgb(17 17 17 / 36%);
+  --btn-primary-bg: linear-gradient(180deg, #2b2b2e, #111113);
+  --btn-primary-ink: #fafafa;
+  --btn-primary-edge: rgb(0 0 0 / 70%);
+  --btn-primary-highlight: rgb(255 255 255 / 16%);
   --aurora-1: #bfe6d3;
   --aurora-2: #f9d2b6;
   --aurora-3: #d9d3f5;
@@ -66,6 +77,16 @@
   --raised: #242427;
   --raised-edge: rgb(255 255 255 / 9%);
   --raised-glass: rgb(36 36 39 / 86%);
+  --btn-glass: rgb(36 36 39 / 70%);
+  --btn-edge: rgb(255 255 255 / 9%);
+  --btn-highlight: rgb(255 255 255 / 7%);
+  --btn-shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 8px 20px -12px rgb(0 0 0 / 80%);
+  --btn-shadow-hover:
+    0 2px 4px rgb(0 0 0 / 45%), 0 14px 28px -14px rgb(0 0 0 / 90%);
+  --btn-primary-bg: linear-gradient(180deg, #ffffff, #dedee0);
+  --btn-primary-ink: #111113;
+  --btn-primary-edge: rgb(255 255 255 / 60%);
+  --btn-primary-highlight: rgb(255 255 255 / 100%);
   --aurora-1: #0e4637;
   --aurora-2: #4d2b19;
   --aurora-3: #272052;
@@ -90,6 +111,16 @@
     --raised: #242427;
     --raised-edge: rgb(255 255 255 / 9%);
     --raised-glass: rgb(36 36 39 / 86%);
+    --btn-glass: rgb(36 36 39 / 70%);
+    --btn-edge: rgb(255 255 255 / 9%);
+    --btn-highlight: rgb(255 255 255 / 7%);
+    --btn-shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 8px 20px -12px rgb(0 0 0 / 80%);
+    --btn-shadow-hover:
+      0 2px 4px rgb(0 0 0 / 45%), 0 14px 28px -14px rgb(0 0 0 / 90%);
+    --btn-primary-bg: linear-gradient(180deg, #ffffff, #dedee0);
+    --btn-primary-ink: #111113;
+    --btn-primary-edge: rgb(255 255 255 / 60%);
+    --btn-primary-highlight: rgb(255 255 255 / 100%);
     --aurora-1: #0e4637;
     --aurora-2: #4d2b19;
     --aurora-3: #272052;
@@ -227,7 +258,13 @@ svg {
 }
 
 /* Buttons */
+/* Buttons share the header's glass: translucent, a hairline edge, a lit top edge and a
+   soft shadow that grows as the button lifts on hover. */
 .btn {
+  --btn-bg: var(--btn-glass);
+  --btn-ring: var(--btn-edge);
+  --btn-lit: var(--btn-highlight);
+  --btn-drop: var(--btn-shadow);
   position: relative;
   display: inline-flex;
   gap: 8px;
@@ -242,18 +279,22 @@ svg {
   color: var(--fg);
   text-decoration: none;
   cursor: pointer;
-  background: var(--card);
-  border: 1px solid var(--line);
+  background: var(--btn-bg);
+  border: 0;
   border-radius: 10px;
+  box-shadow:
+    inset 0 0 0 1px var(--btn-ring),
+    inset 0 1px 0 var(--btn-lit),
+    var(--btn-drop);
   transition:
-    transform 0.15s ease,
-    border-color 0.2s ease,
-    background-color 0.2s ease,
+    transform 0.25s var(--ease-out),
+    box-shadow 0.25s ease,
     color 0.2s ease;
 }
 
 .btn:hover {
-  border-color: var(--underline);
+  --btn-drop: var(--btn-shadow-hover);
+  transform: translateY(-1px);
 }
 
 .btn:active {
@@ -261,13 +302,16 @@ svg {
 }
 
 .btn-primary {
-  color: var(--bg);
-  background: var(--fg);
-  border-color: var(--fg);
+  --btn-bg: var(--btn-primary-bg);
+  --btn-ring: var(--btn-primary-edge);
+  --btn-lit: var(--btn-primary-highlight);
+  color: var(--btn-primary-ink);
 }
 
-.btn-primary:hover {
-  border-color: var(--fg);
+@supports (backdrop-filter: blur(1px)) {
+  .btn:not(.btn-primary) {
+    backdrop-filter: blur(12px) saturate(1.4);
+  }
 }
 
 .btn-small {
@@ -378,6 +422,21 @@ svg {
 
 .is-done.press {
   animation: press 0.5s var(--ease-out);
+}
+
+.btn-icon {
+  width: 44px;
+  padding: 0;
+}
+
+.btn-icon svg {
+  width: 17px;
+  height: 17px;
+  transition: transform 0.25s var(--ease-out);
+}
+
+.btn-icon:hover svg {
+  transform: scale(1.08);
 }
 
 /* Sections and lists */

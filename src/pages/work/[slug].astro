@@ -4,8 +4,10 @@ import { getCollection, render } from "astro:content";
 
 import Aurora from "~/components/aurora.astro";
 import Closing from "~/components/closing.astro";
+import { previewImage } from "~/components/preview-image";
 import ProductShot from "~/components/product-shot.astro";
 import SectionTitle from "~/components/section-title.astro";
+import WorkPreview from "~/components/work-preview.astro";
 import { profile } from "~/data/profile";
 import { caseSections } from "~/data/sections";
 import BaseLayout from "~/layouts/base-layout.astro";
@@ -23,6 +25,7 @@ const { project, next } = Astro.props;
 const { data } = project;
 const { Content } = await render(project);
 const nextProject = next ?? project;
+const nextPreview = await previewImage(nextProject.data.cover);
 // A clip replaces the still cover on the case page; lists keep the still.
 const coverCaption = data.video ? data.video.caption : data.coverCaption;
 ---
@@ -204,17 +207,47 @@ const coverCaption = data.video ? data.video.caption : data.coverCaption;
           <li>{item}</li>
         ))}
       </ul>
-      <a class="next" data-astro-prefetch href={`/work/${nextProject.id}/`}>
-        <span>
-          <span class="next-kicker muted">Next case</span>
-          <span class="next-title">{`${nextProject.data.name} · ${nextProject.data.summary}`}</span>
-        </span>
-        <span aria-hidden="true" class="next-arrow">
-          →
-        </span>
-      </a>
+      <h3 class="stack-title next-label muted" id="next-title">
+        Next case
+      </h3>
+      <ul aria-labelledby="next-title" class="list">
+        <li>
+          <a
+            class="next"
+            data-astro-prefetch
+            data-preview-image={nextPreview}
+            data-preview-label={nextProject.data.previewLabel}
+            data-preview-metric={nextProject.data.highlight}
+            data-preview-name={nextProject.data.name}
+            data-preview-tone={nextProject.data.tone}
+            data-preview-trigger
+            href={`/work/${nextProject.id}/`}
+          >
+            <span class="next-text">
+              <span class="next-name">{nextProject.data.name}</span>
+              <span class="next-summary">{nextProject.data.summary}</span>
+            </span>
+            <span class="next-highlight num">{nextProject.data.highlight}</span>
+            <svg
+              aria-hidden="true"
+              class="next-icon"
+              fill="none"
+              height="16"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.8"
+              viewBox="0 0 24 24"
+              width="16"
+            >
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </a>
+        </li>
+      </ul>
     </section>
   </main>
+  <WorkPreview />
   <Closing orbs={caseSections.map((section) => section.orb)} />
 </BaseLayout>
 
@@ -393,41 +426,52 @@ const coverCaption = data.video ? data.video.caption : data.coverCaption;
     line-height: 1.4;
   }
 
+  /* The next case reads like a row of Selected work on the home page. */
+  .next-label {
+    padding: 0 4px;
+    margin-top: 40px;
+  }
+
   .next {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 16px;
+    grid-template-columns: minmax(0, 1fr) auto 18px;
+    gap: 12px;
     align-items: center;
-    padding: 20px 4px;
-    margin-top: 40px;
+    padding: 14px 4px;
+    margin: 2px 0;
     text-decoration: none;
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-    transition: background-color 0.2s ease;
+    border-radius: 10px;
   }
 
-  .next:hover {
-    background: var(--hover);
+  .next-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
   }
 
-  .next-kicker,
-  .next-title {
-    display: block;
-  }
-
-  .next-kicker {
-    font-size: 13px;
-  }
-
-  .next-title {
+  .next-name {
     font-weight: 500;
   }
 
-  .next-arrow {
-    transition: transform 0.25s var(--ease-out);
+  .next-summary,
+  .next-highlight {
+    font-size: 14px;
+    color: var(--fg-2);
   }
 
-  .next:hover .next-arrow {
+  .next-highlight {
+    white-space: nowrap;
+  }
+
+  .next-icon {
+    color: var(--fg-2);
+    transition:
+      transform 0.25s var(--ease-out),
+      color 0.2s ease;
+  }
+
+  .next:hover .next-icon {
+    color: var(--fg);
     transform: translateX(3px);
   }
 
@@ -458,6 +502,11 @@ const coverCaption = data.video ? data.video.caption : data.coverCaption;
 
     .stats {
       grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .next {
+      grid-template-columns: minmax(0, 1fr) auto 20px;
+      gap: 16px;
     }
   }
 

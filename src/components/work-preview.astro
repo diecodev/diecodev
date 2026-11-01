@@ -1,0 +1,261 @@
+---
+// A small card that follows the pointer over rows that lead to a case. A row opts in
+// with data-preview-trigger and fills the card through its data-preview-* fields.
+---
+
+<div aria-hidden="true" class="preview" data-preview>
+  <div class="preview-card">
+    <div class="preview-thumb" data-preview-thumb>
+      <span class="preview-shot" data-preview-shot></span>
+      <span class="preview-name" data-preview-name></span>
+      <span class="preview-metric num" data-preview-metric></span>
+    </div>
+  </div>
+  <span class="preview-pill" data-preview-pill></span>
+</div>
+
+<style>
+  .preview {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 40;
+    display: none;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    will-change: transform;
+  }
+
+  .preview.is-visible {
+    opacity: 1;
+  }
+
+  .preview-card {
+    width: 236px;
+    padding: 5px;
+    background: var(--card);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    transform: scale(0.86) rotate(-2deg);
+    transition: transform 0.4s var(--ease-out);
+  }
+
+  .preview.is-visible .preview-card {
+    transform: none;
+  }
+
+  .preview-thumb {
+    position: relative;
+    display: flex;
+    overflow: hidden;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 150px;
+    padding: 12px;
+    color: #111111;
+    background: var(--orb-lavender);
+    border-radius: 10px;
+  }
+
+  .preview-thumb[data-tone="rose"] {
+    background: radial-gradient(
+      circle at 70% 30%,
+      #ffeaf4,
+      #f6c4dc 45%,
+      #f9d7ae
+    );
+  }
+
+  .preview-thumb[data-tone="mint"] {
+    background: radial-gradient(
+      circle at 30% 70%,
+      #ebfbec,
+      #aee3b8 50%,
+      #8ccfa2
+    );
+  }
+
+  .preview-thumb[data-tone="peach"] {
+    background: radial-gradient(
+      circle at 60% 60%,
+      #fff2e4,
+      #f7cfae 45%,
+      #d8cbf2
+    );
+  }
+
+  /* With a screenshot, the thumb becomes a small product shot: the page sits on the
+     orb's gradient as a card cut off at the bottom. */
+  .preview-shot {
+    position: absolute;
+    top: 16px;
+    right: 9%;
+    bottom: 0;
+    left: 9%;
+    display: none;
+    background-position: top center;
+    background-size: cover;
+    border-radius: 6px 6px 0 0;
+    box-shadow:
+      0 0 0 1px rgb(17 17 17 / 6%),
+      0 10px 20px -10px rgb(17 17 17 / 35%);
+  }
+
+  .preview-thumb.has-image .preview-shot {
+    display: block;
+  }
+
+  .preview-thumb.has-image .preview-name,
+  .preview-thumb.has-image .preview-metric {
+    display: none;
+  }
+
+  .preview-name {
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  .preview-metric {
+    font-size: 22px;
+    letter-spacing: -0.02em;
+  }
+
+  .preview-pill {
+    position: absolute;
+    bottom: -14px;
+    left: -12px;
+    padding: 6px 10px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--bg);
+    white-space: nowrap;
+    background: var(--fg);
+    border-radius: 9px;
+    opacity: 0;
+    transform: scale(0.8) translateY(4px);
+    transition:
+      transform 0.4s 0.05s var(--ease-out),
+      opacity 0.25s 0.05s ease;
+  }
+
+  .preview.is-visible .preview-pill {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (hover: hover) and (pointer: fine) and (min-width: 960px) {
+    .preview {
+      display: block;
+    }
+  }
+</style>
+
+<script>
+  import type { Cleanup } from "~/scripts/lifecycle";
+  import { onPage } from "~/scripts/lifecycle";
+  import { prefersReducedMotion } from "~/scripts/motion";
+
+  const PREVIEW_OFFSET_X = 28;
+  const PREVIEW_OFFSET_Y = -84;
+  const FOLLOW_EASING = 0.2;
+
+  const fillPreview = (preview: HTMLElement, trigger: HTMLElement) => {
+    const {
+      previewImage,
+      previewLabel,
+      previewMetric,
+      previewName,
+      previewTone,
+    } = trigger.dataset;
+    const thumb = preview.querySelector<HTMLElement>("[data-preview-thumb]");
+    if (thumb) {
+      thumb.dataset.tone = previewTone;
+      thumb.classList.toggle("has-image", Boolean(previewImage));
+      const shot = thumb.querySelector<HTMLElement>("[data-preview-shot]");
+      if (shot) {
+        shot.style.backgroundImage = previewImage
+          ? `url("${previewImage}")`
+          : "";
+      }
+    }
+    const fields: [string, string | undefined][] = [
+      ["[data-preview-name]", previewName],
+      ["[data-preview-metric]", previewMetric],
+      ["[data-preview-pill]", previewLabel],
+    ];
+    for (const [selector, text] of fields) {
+      const field = preview.querySelector<HTMLElement>(selector);
+      if (field) {
+        field.textContent = text ?? "";
+      }
+    }
+  };
+
+  const setupPreview = (): Cleanup | null => {
+    const preview = document.querySelector<HTMLElement>("[data-preview]");
+    if (!preview) {
+      return null;
+    }
+    const canHover = window.matchMedia(
+      "(hover: hover) and (pointer: fine) and (min-width: 960px)"
+    );
+    const target = { x: 0, y: 0 };
+    const current = { x: 0, y: 0 };
+    let frame = 0;
+
+    const render = () => {
+      const easing = prefersReducedMotion() ? 1 : FOLLOW_EASING;
+      current.x += (target.x - current.x) * easing;
+      current.y += (target.y - current.y) * easing;
+      preview.style.transform = `translate3d(${current.x}px, ${current.y}px, 0)`;
+      const settled =
+        Math.abs(target.x - current.x) < 0.5 &&
+        Math.abs(target.y - current.y) < 0.5;
+      frame = settled ? 0 : window.requestAnimationFrame(render);
+    };
+
+    const follow = (event: MouseEvent) => {
+      target.x = event.clientX + PREVIEW_OFFSET_X;
+      target.y = event.clientY + PREVIEW_OFFSET_Y;
+      if (frame === 0) {
+        frame = window.requestAnimationFrame(render);
+      }
+    };
+
+    const hide = () => preview.classList.remove("is-visible");
+
+    for (const trigger of document.querySelectorAll<HTMLElement>(
+      "[data-preview-trigger]"
+    )) {
+      trigger.addEventListener("mouseenter", (event) => {
+        // An open accordion row already shows its screenshot in the panel.
+        if (
+          !canHover.matches ||
+          trigger.getAttribute("aria-expanded") === "true"
+        ) {
+          return;
+        }
+        fillPreview(preview, trigger);
+        if (!preview.classList.contains("is-visible")) {
+          current.x = event.clientX + PREVIEW_OFFSET_X;
+          current.y = event.clientY + PREVIEW_OFFSET_Y;
+        }
+        follow(event);
+        preview.classList.add("is-visible");
+      });
+      trigger.addEventListener("mousemove", follow);
+      trigger.addEventListener("click", hide);
+      trigger.addEventListener("mouseleave", hide);
+    }
+
+    window.addEventListener("scroll", hide, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", hide);
+      window.cancelAnimationFrame(frame);
+    };
+  };
+
+  onPage(setupPreview);
+</script>

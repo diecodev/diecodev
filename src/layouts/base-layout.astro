@@ -31,7 +31,9 @@ const ogImage = new URL("/og.jpg", Astro.site);
     <title>{title}</title>
     <meta content={description} name="description" />
     <link href={canonical} rel="canonical" />
-    <link href="/favicon.ico" rel="icon" sizes="any" />
+    <link href="/favicon.ico" rel="icon" sizes="32x32" />
+    <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
+    <link href="/apple-touch-icon.png" rel="apple-touch-icon" />
     <link href="/sitemap-index.xml" rel="sitemap" />
     <meta
       content="#fdfdfc"

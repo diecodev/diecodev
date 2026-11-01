@@ -1,0 +1,643 @@
+:root {
+  --bg: #fdfdfc;
+  --fg: #111111;
+  --fg-2: #5e5e5e;
+  --underline: #c4c4c1;
+  --line: #ececea;
+  --hover: rgb(17 17 17 / 4.5%);
+  --chip: #efefed;
+  --card: #ffffff;
+  --glass: rgb(253 253 252 / 72%);
+  --shadow: 0 1px 2px rgb(0 0 0 / 5%), 0 12px 32px -14px rgb(0 0 0 / 24%);
+  --raised: #ffffff;
+  --raised-edge: rgb(17 17 17 / 5%);
+  --raised-glass: rgb(255 255 255 / 82%);
+  --btn-glass: rgb(255 255 255 / 52%);
+  --btn-edge: rgb(17 17 17 / 8%);
+  --btn-highlight: rgb(255 255 255 / 85%);
+  --btn-shadow:
+    0 1px 2px rgb(17 17 17 / 6%), 0 6px 16px -10px rgb(17 17 17 / 28%);
+  --btn-shadow-hover:
+    0 2px 4px rgb(17 17 17 / 7%), 0 12px 24px -12px rgb(17 17 17 / 36%);
+  --btn-primary-bg: linear-gradient(180deg, #2b2b2e, #111113);
+  --btn-primary-ink: #fafafa;
+  --btn-primary-edge: rgb(0 0 0 / 70%);
+  --btn-primary-highlight: rgb(255 255 255 / 16%);
+  --aurora-1: #bfe6d3;
+  --aurora-2: #f9d2b6;
+  --aurora-3: #d9d3f5;
+  --blob-opacity: 0.55;
+  --grain-opacity: 0.18;
+  --grain-blend: multiply;
+
+  --orb-lavender: radial-gradient(
+    circle at 30% 25%,
+    #f5e6ff,
+    #c9d6fd 55%,
+    #b6c3f2
+  );
+  --orb-rose: radial-gradient(circle at 30% 25%, #ffeaf4, #f6c4dc 50%, #f9d7ae);
+  --orb-mint: radial-gradient(circle at 30% 25%, #ebfbec, #aee3b8 55%, #8ccfa2);
+  --orb-peach: radial-gradient(
+    circle at 30% 25%,
+    #fff2e4,
+    #f7cfae 50%,
+    #d8cbf2
+  );
+  --orb-merged: conic-gradient(
+    from 200deg,
+    #c9d6fd,
+    #f6c4dc,
+    #f9d7ae,
+    #aee3b8,
+    #c9d6fd
+  );
+
+  --font-sans:
+    "Geist Variable", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-spring: cubic-bezier(0.3, 1.45, 0.5, 1);
+  --content: 552px;
+  --gutter: 20px;
+  --nav-breakpoint: 960px;
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --bg: #0b0b0c;
+  --fg: #ededed;
+  --fg-2: #9a9a9a;
+  --underline: #4a4a4d;
+  --line: #222224;
+  --hover: rgb(255 255 255 / 5.5%);
+  --chip: #1c1c1f;
+  --card: #151517;
+  --glass: rgb(18 18 20 / 62%);
+  --shadow: 0 1px 2px rgb(0 0 0 / 50%), 0 12px 32px -14px rgb(0 0 0 / 90%);
+  --raised: #242427;
+  --raised-edge: rgb(255 255 255 / 9%);
+  --raised-glass: rgb(36 36 39 / 86%);
+  --btn-glass: rgb(36 36 39 / 70%);
+  --btn-edge: rgb(255 255 255 / 9%);
+  --btn-highlight: rgb(255 255 255 / 7%);
+  --btn-shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 8px 20px -12px rgb(0 0 0 / 80%);
+  --btn-shadow-hover:
+    0 2px 4px rgb(0 0 0 / 45%), 0 14px 28px -14px rgb(0 0 0 / 90%);
+  --btn-primary-bg: linear-gradient(180deg, #ffffff, #dedee0);
+  --btn-primary-ink: #111113;
+  --btn-primary-edge: rgb(255 255 255 / 60%);
+  --btn-primary-highlight: rgb(255 255 255 / 100%);
+  --aurora-1: #0e4637;
+  --aurora-2: #4d2b19;
+  --aurora-3: #272052;
+  --blob-opacity: 0.5;
+  --grain-opacity: 0.1;
+  --grain-blend: soft-light;
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --bg: #0b0b0c;
+    --fg: #ededed;
+    --fg-2: #9a9a9a;
+    --underline: #4a4a4d;
+    --line: #222224;
+    --hover: rgb(255 255 255 / 5.5%);
+    --chip: #1c1c1f;
+    --card: #151517;
+    --glass: rgb(18 18 20 / 62%);
+    --shadow: 0 1px 2px rgb(0 0 0 / 50%), 0 12px 32px -14px rgb(0 0 0 / 90%);
+    --raised: #242427;
+    --raised-edge: rgb(255 255 255 / 9%);
+    --raised-glass: rgb(36 36 39 / 86%);
+    --btn-glass: rgb(36 36 39 / 70%);
+    --btn-edge: rgb(255 255 255 / 9%);
+    --btn-highlight: rgb(255 255 255 / 7%);
+    --btn-shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 8px 20px -12px rgb(0 0 0 / 80%);
+    --btn-shadow-hover:
+      0 2px 4px rgb(0 0 0 / 45%), 0 14px 28px -14px rgb(0 0 0 / 90%);
+    --btn-primary-bg: linear-gradient(180deg, #ffffff, #dedee0);
+    --btn-primary-ink: #111113;
+    --btn-primary-edge: rgb(255 255 255 / 60%);
+    --btn-primary-highlight: rgb(255 255 255 / 100%);
+    --aurora-1: #0e4637;
+    --aurora-2: #4d2b19;
+    --aurora-3: #272052;
+    --blob-opacity: 0.5;
+    --grain-opacity: 0.1;
+    --grain-blend: soft-light;
+    color-scheme: dark;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  overscroll-behavior: none;
+  scroll-behavior: smooth;
+  scroll-padding-top: 88px;
+}
+
+/* Lenis drives the scroll; native smooth scrolling would fight it. */
+html.lenis {
+  scroll-behavior: auto;
+}
+
+[tabindex="-1"]:focus {
+  outline: none;
+}
+
+body {
+  min-height: 100dvh;
+  margin: 0;
+  overflow-x: clip;
+  font: 15px / 1.6 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--fg);
+  background: var(--bg);
+  transition:
+    background-color 0.4s ease,
+    color 0.4s ease;
+}
+
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--underline);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.2s ease;
+}
+
+a:hover {
+  text-decoration-color: var(--fg);
+}
+
+:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+h1,
+h2,
+h3,
+p,
+ul,
+ol,
+dl,
+dd,
+figure {
+  margin: 0;
+}
+
+ul,
+ol {
+  padding: 0;
+}
+
+img,
+svg {
+  display: block;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  white-space: nowrap;
+  border: 0;
+  clip-path: inset(50%);
+}
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 100;
+  padding: 10px 14px;
+  font-weight: 500;
+  color: var(--bg);
+  text-decoration: none;
+  background: var(--fg);
+  border-radius: 10px;
+  transform: translateY(-160%);
+  transition: transform 0.2s var(--ease-out);
+}
+
+.skip-link:focus-visible {
+  transform: none;
+}
+
+.container {
+  width: min(100% - var(--gutter) * 2, var(--content));
+  margin-inline: auto;
+}
+
+.layer {
+  position: relative;
+  z-index: 1;
+}
+
+.muted {
+  color: var(--fg-2);
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Buttons */
+/* Buttons share the header's glass: translucent, a hairline edge, a lit top edge and a
+   soft shadow that grows as the button lifts on hover. */
+.btn {
+  --btn-bg: var(--btn-glass);
+  --btn-ring: var(--btn-edge);
+  --btn-lit: var(--btn-highlight);
+  --btn-drop: var(--btn-shadow);
+  position: relative;
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 16px;
+  overflow: hidden;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--fg);
+  text-decoration: none;
+  cursor: pointer;
+  background: var(--btn-bg);
+  border: 0;
+  border-radius: 10px;
+  box-shadow:
+    inset 0 0 0 1px var(--btn-ring),
+    inset 0 1px 0 var(--btn-lit),
+    var(--btn-drop);
+  transition:
+    transform 0.25s var(--ease-out),
+    box-shadow 0.25s ease,
+    color 0.2s ease;
+}
+
+.btn:hover {
+  --btn-drop: var(--btn-shadow-hover);
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-primary {
+  --btn-bg: var(--btn-primary-bg);
+  --btn-ring: var(--btn-primary-edge);
+  --btn-lit: var(--btn-primary-highlight);
+  color: var(--btn-primary-ink);
+}
+
+@supports (backdrop-filter: blur(1px)) {
+  .btn:not(.btn-primary) {
+    backdrop-filter: blur(12px) saturate(1.4);
+  }
+}
+
+.btn-small {
+  min-height: 36px;
+  padding: 0 12px;
+  font-size: 13px;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  color: var(--fg-2);
+  cursor: pointer;
+  background: none;
+  border: 0;
+  border-radius: 10px;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    transform 0.15s ease;
+}
+
+.icon-btn:hover {
+  color: var(--fg);
+  background: var(--hover);
+}
+
+.icon-btn:active {
+  transform: scale(0.92);
+}
+
+/* Animated button feedback (copy, download) */
+.swap-icon {
+  display: grid;
+  width: 16px;
+  height: 16px;
+}
+
+.swap-icon svg {
+  grid-area: 1 / 1;
+  transition:
+    opacity 0.25s ease,
+    transform 0.4s var(--ease-out);
+}
+
+.swap-icon .icon-done {
+  opacity: 0;
+  transform: scale(0.4) rotate(-40deg);
+}
+
+.is-done .swap-icon .icon-idle {
+  opacity: 0;
+  transform: scale(0.4) rotate(40deg);
+}
+
+.is-done .swap-icon .icon-done {
+  opacity: 1;
+  transform: none;
+}
+
+.is-loading .swap-icon .icon-idle {
+  animation: nudge 0.6s ease-in-out infinite;
+}
+
+.swap-label {
+  display: grid;
+  height: 22px;
+  overflow: hidden;
+  line-height: 22px;
+}
+
+.swap-label > span {
+  grid-area: 1 / 1;
+  transition:
+    transform 0.45s var(--ease-out),
+    opacity 0.3s ease;
+}
+
+.swap-label > span:not(:first-child) {
+  opacity: 0;
+  transform: translateY(110%);
+}
+
+.is-loading .swap-label > span:first-child,
+.is-done .swap-label > span:first-child {
+  opacity: 0;
+  transform: translateY(-110%);
+}
+
+.is-loading .swap-label > .label-loading {
+  opacity: 1;
+  transform: none;
+}
+
+.is-done .swap-label > .label-loading {
+  opacity: 0;
+  transform: translateY(-110%);
+}
+
+.is-done .swap-label > .label-done {
+  opacity: 1;
+  transform: none;
+}
+
+.is-done.press {
+  animation: press 0.5s var(--ease-out);
+}
+
+.btn-icon {
+  width: 44px;
+  padding: 0;
+}
+
+.btn-icon svg {
+  width: 17px;
+  height: 17px;
+  transition: transform 0.25s var(--ease-out);
+}
+
+.btn-icon:hover svg {
+  transform: scale(1.08);
+}
+
+/* Sections and lists */
+.section {
+  margin-top: 104px;
+}
+
+.section-title {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 0 4px;
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--fg-2);
+}
+
+.list {
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.list > li {
+  border-bottom: 1px solid var(--line);
+}
+
+/* Rows that open a page: the title link's ::after stretches over the whole row, which
+   needs position: relative. */
+.visit-link {
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.visit-link::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  border-radius: 10px;
+}
+
+.visit-link:focus-visible {
+  outline: none;
+}
+
+.visit-link:focus-visible::after {
+  outline: 2px solid var(--fg);
+  outline-offset: 2px;
+}
+
+/* While the Visit cursor is out, the system cursor steps aside. */
+.has-cursor,
+.has-cursor .visit-link {
+  cursor: none;
+}
+
+/* Orbs */
+.orb {
+  display: block;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 45%),
+    0 1px 2px rgb(0 0 0 / 8%);
+}
+
+.dot {
+  display: block;
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 35%);
+}
+
+.orb-lavender {
+  background: var(--orb-lavender);
+}
+
+.orb-rose {
+  background: var(--orb-rose);
+}
+
+.orb-mint {
+  background: var(--orb-mint);
+}
+
+.orb-peach {
+  background: var(--orb-peach);
+}
+
+/* Entrance on load and on reveal */
+.enter {
+  animation: enter 0.8s var(--ease-out) both;
+  animation-delay: var(--delay, 0ms);
+}
+
+/* Arriving from another page mid-scroll: the new content enters sooner to meet it. */
+.is-handoff .enter {
+  animation-duration: 0.5s;
+  animation-delay: calc(var(--delay, 0ms) * 0.4);
+}
+
+.js [data-reveal] {
+  opacity: 0;
+  filter: blur(6px);
+  transform: translateY(10px);
+  transition:
+    opacity 0.8s var(--ease-out),
+    transform 0.8s var(--ease-out),
+    filter 0.8s var(--ease-out);
+}
+
+.js [data-reveal].is-visible {
+  opacity: 1;
+  filter: none;
+  transform: none;
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    filter: blur(6px);
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes press {
+  0% {
+    transform: scale(1);
+  }
+
+  35% {
+    transform: scale(0.95);
+  }
+
+  70% {
+    transform: scale(1.02);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes nudge {
+  0%,
+  100% {
+    transform: translateY(-1px);
+  }
+
+  50% {
+    transform: translateY(2px);
+  }
+}
+
+/* Page changes: the current content fades while the page scrolls back up. */
+.is-leaving main,
+.is-leaving [data-closing] {
+  opacity: 0;
+  transition: opacity 0.22s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  .js [data-reveal] {
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+}

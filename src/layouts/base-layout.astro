@@ -1,0 +1,165 @@
+---
+import "@fontsource-variable/geist";
+import "lenis/dist/lenis.css";
+import "~/styles/global.css";
+import Analytics from "@vercel/analytics/astro";
+import { ClientRouter } from "astro:transitions";
+
+import Grain from "~/components/grain.astro";
+import Header from "~/components/header.astro";
+import SectionNav from "~/components/section-nav.astro";
+import { profile } from "~/data/profile";
+import type { PageSection } from "~/data/sections";
+import { homeSections } from "~/data/sections";
+
+interface OgImage {
+  alt: string;
+  // A path under public/, 1200×630.
+  src: string;
+}
+
+interface Props {
+  description?: string;
+  // Pages that shouldn't appear in search results, such as the 404.
+  noindex?: boolean;
+  og?: OgImage;
+  ogType?: "article" | "profile" | "website";
+  // schema.org JSON-LD for the page, from ~/data/seo.
+  schema?: Record<string, unknown>;
+  sections: PageSection[];
+  title: string;
+}
+
+const defaultOg: OgImage = {
+  alt: `${profile.name}, Senior Software Engineer. I build and maintain production web apps, end to end.`,
+  src: "/og.jpg",
+};
+
+const {
+  title,
+  description = profile.description,
+  noindex = false,
+  og = defaultOg,
+  ogType = "website",
+  schema,
+  sections,
+} = Astro.props;
+const [firstName, ...lastNames] = profile.name.split(" ");
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(og.src, Astro.site);
+---
+
+<!doctype html>
+<html lang="en" transition:animate="none">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <title>{title}</title>
+    <meta content={description} name="description" />
+    {noindex && <meta content="noindex" name="robots" />}
+    <link href={canonical} rel="canonical" />
+    <link href="/favicon.ico" rel="icon" sizes="32x32" />
+    <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
+    <link href="/apple-touch-icon.png" rel="apple-touch-icon" />
+    <link href="/sitemap-index.xml" rel="sitemap" />
+    <meta
+      content="#fdfdfc"
+      media="(prefers-color-scheme: light)"
+      name="theme-color"
+    />
+    <meta
+      content="#0b0b0c"
+      media="(prefers-color-scheme: dark)"
+      name="theme-color"
+    />
+    <meta content={ogType} property="og:type" />
+    {ogType === "profile" && (
+      <>
+        <meta content={firstName} property="profile:first_name" />
+        <meta content={lastNames.join(" ")} property="profile:last_name" />
+        <meta content={profile.handle} property="profile:username" />
+      </>
+    )}
+    <meta content="en_US" property="og:locale" />
+    <meta content={profile.name} property="og:site_name" />
+    <meta content={title} property="og:title" />
+    <meta content={description} property="og:description" />
+    <meta content={canonical} property="og:url" />
+    <meta content={ogImage} property="og:image" />
+    <meta content="1200" property="og:image:width" />
+    <meta content="630" property="og:image:height" />
+    <meta content={og.alt} property="og:image:alt" />
+    <meta content="summary_large_image" name="twitter:card" />
+    <meta content={`@${profile.handle}`} name="twitter:site" />
+    <meta content={`@${profile.handle}`} name="twitter:creator" />
+    {schema && (
+      <script
+        is:inline
+        set:html={JSON.stringify(schema)}
+        type="application/ld+json"
+      />
+    )}
+    <script is:inline>
+      (() => {
+        const root = document.documentElement;
+        root.classList.add("js");
+        let stored = "";
+        try {
+          stored = localStorage.getItem("theme") ?? "";
+        } catch {
+          // Storage can be blocked; fall back to the system theme.
+        }
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+        const systemTheme = prefersDark ? "dark" : "light";
+        const isExplicit = stored === "light" || stored === "dark";
+        root.dataset.themePref = isExplicit ? stored : "system";
+        root.dataset.theme = isExplicit ? stored : systemTheme;
+        // The router replaces <html> attributes with the next page's; carry the theme and state classes over.
+        document.addEventListener("astro:before-swap", (event) => {
+          const next = event.newDocument.documentElement;
+          for (const name of root.classList) {
+            if (name === "js" || name.startsWith("lenis")) {
+              next.classList.add(name);
+            }
+          }
+          next.dataset.theme = root.dataset.theme;
+          next.dataset.themePref = root.dataset.themePref;
+        });
+      })();
+    </script>
+    <ClientRouter />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">
+      Skip to content
+    </a>
+    <slot name="background" />
+    <div aria-hidden="true" class="page-texture">
+      <Grain id="page-grain" />
+    </div>
+    <Header sections={homeSections} />
+    <slot />
+    <SectionNav sections={sections} />
+    <Analytics />
+    <script>
+      import { startSmoothScroll } from "~/scripts/smooth-scroll";
+      import "~/scripts/reveal";
+      import "~/scripts/page-transition";
+      import "~/scripts/tab-title";
+      import "~/scripts/analytics";
+
+      startSmoothScroll();
+    </script>
+  </body>
+</html>
+
+<style>
+  .page-texture {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+</style>

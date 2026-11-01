@@ -1,0 +1,535 @@
+---
+import type { GetStaticPaths } from "astro";
+import { getCollection, render } from "astro:content";
+
+import Aurora from "~/components/aurora.astro";
+import Closing from "~/components/closing.astro";
+import { previewImage } from "~/components/preview-image";
+import ProductShot from "~/components/product-shot.astro";
+import SectionTitle from "~/components/section-title.astro";
+import WorkPreview from "~/components/work-preview.astro";
+import { profile } from "~/data/profile";
+import { caseSections } from "~/data/sections";
+import { caseSchema } from "~/data/seo";
+import BaseLayout from "~/layouts/base-layout.astro";
+
+export const getStaticPaths = (async () => {
+  const entries = await getCollection("work");
+  const projects = entries.toSorted((a, b) => a.data.order - b.data.order);
+  return projects.map((entry, index) => ({
+    params: { slug: entry.id },
+    props: { next: projects[(index + 1) % projects.length], project: entry },
+  }));
+}) satisfies GetStaticPaths;
+
+const { project, next } = Astro.props;
+const { data } = project;
+const { Content } = await render(project);
+const nextProject = next ?? project;
+const nextPreview = await previewImage(nextProject.data.cover);
+// A clip replaces the still cover on the case page; lists keep the still.
+const coverCaption = data.video ? data.video.caption : data.coverCaption;
+const title = `${data.name} — Case study · ${profile.name}`;
+const description = `${data.tagline} Case study by ${profile.name}.`;
+const ogSrc = `/og/${project.id}.jpg`;
+const schema = caseSchema({
+  description,
+  image: new URL(ogSrc, Astro.site).href,
+  name: data.name,
+  title,
+  url: new URL(Astro.url.pathname, Astro.site).href,
+});
+---
+
+<BaseLayout
+  description={description}
+  og={{
+    alt: `${data.name} case study by ${profile.name}: ${data.summary}.`,
+    src: ogSrc,
+  }}
+  ogType="article"
+  schema={schema}
+  sections={caseSections}
+  title={title}
+>
+  <Aurora slot="background" />
+  <main class="layer container" id="main" tabindex="-1">
+    <a class="back enter" href="/#work" style="--delay: 60ms">
+      <span aria-hidden="true">←</span>
+      All work
+    </a>
+
+    <header class="case-head">
+      <p class="kicker muted enter" style="--delay: 120ms">
+        Case study · {data.company} · {data.period}
+      </p>
+      <h1 class="enter" style="--delay: 180ms">
+        {data.name}
+      </h1>
+      <p class="tagline muted enter" style="--delay: 260ms">
+        {data.tagline}
+      </p>
+      <ul aria-label="Stack" class="tags enter" style="--delay: 340ms">
+        {data.stack.slice(0, 4).map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    </header>
+
+    {data.cover && (
+      <figure class="cover enter" style="--delay: 420ms">
+        <ProductShot
+          alt={data.video?.alt ?? data.coverAlt ?? ""}
+          chip={data.highlight}
+          image={data.cover}
+          name="cover"
+          tone={data.tone}
+          video={data.video}
+        />
+        {coverCaption && (
+          <figcaption class="cover-caption muted">{coverCaption}</figcaption>
+        )}
+      </figure>
+    )}
+
+    <section
+      aria-labelledby="overview-title"
+      class="section"
+      data-reveal
+      data-section="overview"
+      id="overview"
+    >
+      <SectionTitle id="overview-title" orb="lavender" title="Overview" />
+      <dl class="glance">
+        <div>
+          <dt class="muted">Role</dt>
+          <dd>{data.role}</dd>
+        </div>
+        <div>
+          <dt class="muted">Company</dt>
+          <dd>{data.company}</dd>
+        </div>
+        <div>
+          <dt class="muted">When</dt>
+          <dd class="num">{data.period}</dd>
+        </div>
+        {data.links.length > 0 && (
+          <div>
+            <dt class="muted">Links</dt>
+            <dd class="glance-links">
+              {data.links.map((link) => (
+                <a href={link.href} rel="noopener noreferrer" target="_blank">
+                  {link.label} <span aria-hidden="true">↗</span>
+                </a>
+              ))}
+            </dd>
+          </div>
+        )}
+      </dl>
+      {data.problem && (
+        <div class="prose">
+          <h3>The problem</h3>
+          <p>{data.problem}</p>
+        </div>
+      )}
+      <div class="prose">
+        <h3>What I did</h3>
+        <Content />
+      </div>
+      {data.gallery.map((shot, index) => (
+        <figure class="gallery-shot">
+          <ProductShot
+            alt={shot.alt}
+            image={shot.image}
+            loading="lazy"
+            name={`gallery-${index}`}
+            tone={data.tone}
+          />
+          {shot.caption && (
+            <figcaption class="cover-caption muted">{shot.caption}</figcaption>
+          )}
+        </figure>
+      ))}
+    </section>
+
+    <section
+      aria-labelledby="decisions-title"
+      class="section"
+      data-reveal
+      data-section="decisions"
+      id="decisions"
+    >
+      <SectionTitle id="decisions-title" orb="rose" title="Decisions" />
+      <ol class="list decisions">
+        {data.decisions.map((decision, index) => (
+          <li class="decision">
+            <h3>
+              <span class="decision-number muted num">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              {decision.title}
+            </h3>
+            <dl>
+              <div>
+                <dt class="muted">Chose</dt>
+                <dd>{decision.choice}</dd>
+              </div>
+              {decision.alternatives && (
+                <div>
+                  <dt class="muted">Instead of</dt>
+                  <dd>{decision.alternatives}</dd>
+                </div>
+              )}
+              {decision.tradeoff && (
+                <div>
+                  <dt class="muted">Trade-off</dt>
+                  <dd>{decision.tradeoff}</dd>
+                </div>
+              )}
+            </dl>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section
+      aria-labelledby="results-title"
+      class="section"
+      data-reveal
+      data-section="results"
+      id="results"
+    >
+      <SectionTitle id="results-title" orb="mint" title="Results" />
+      <dl class="stats">
+        {data.results.map((result) => (
+          <div class="stat">
+            <dt class="num">{result.value}</dt>
+            <dd class="muted">{result.label}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section
+      aria-labelledby="more-title"
+      class="section"
+      data-reveal
+      data-section="more"
+      id="more"
+    >
+      <SectionTitle id="more-title" orb="peach" title="More" />
+      <h3 class="stack-title muted">Built with</h3>
+      <ul class="tags tags-left">
+        {data.stack.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+      <h3 class="stack-title next-label muted" id="next-title">
+        Next case
+      </h3>
+      <ul aria-labelledby="next-title" class="list">
+        <li>
+          <a
+            class="next"
+            data-astro-prefetch
+            data-preview-image={nextPreview}
+            data-preview-label={nextProject.data.previewLabel}
+            data-preview-metric={nextProject.data.highlight}
+            data-preview-name={nextProject.data.name}
+            data-preview-tone={nextProject.data.tone}
+            data-preview-trigger
+            href={`/work/${nextProject.id}/`}
+          >
+            <span class="next-text">
+              <span class="next-name">{nextProject.data.name}</span>
+              <span class="next-summary">{nextProject.data.summary}</span>
+            </span>
+            <span class="next-highlight num">{nextProject.data.highlight}</span>
+            <svg
+              aria-hidden="true"
+              class="next-icon"
+              fill="none"
+              height="16"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.8"
+              viewBox="0 0 24 24"
+              width="16"
+            >
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </a>
+        </li>
+      </ul>
+    </section>
+  </main>
+  <WorkPreview />
+  <Closing orbs={caseSections.map((section) => section.orb)} />
+</BaseLayout>
+
+<style>
+  main:focus {
+    outline: none;
+  }
+
+  .back {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    min-height: 44px;
+    margin-top: 32px;
+    font-size: 14px;
+    color: var(--fg-2);
+    text-decoration: none;
+    transition:
+      color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .back:hover {
+    color: var(--fg);
+    transform: translateX(-2px);
+  }
+
+  .case-head {
+    padding-top: 32px;
+    text-align: center;
+  }
+
+  .kicker {
+    font-size: 14px;
+  }
+
+  h1 {
+    margin-top: 10px;
+    font-size: 34px;
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .tagline {
+    max-width: 460px;
+    margin: 12px auto 0;
+    font-size: 17px;
+    line-height: 1.45;
+  }
+
+  .cover {
+    margin: 40px 0 0;
+  }
+
+  .gallery-shot {
+    margin: 32px 0 0;
+  }
+
+  .cover-caption {
+    padding: 0 4px;
+    margin-top: 10px;
+    font-size: 13px;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+    margin-top: 24px;
+    list-style: none;
+  }
+
+  .tags li {
+    padding: 3px 10px;
+    font-size: 13px;
+    background: var(--chip);
+    border-radius: 999px;
+  }
+
+  .tags-left {
+    justify-content: flex-start;
+    padding: 0 4px;
+    margin-top: 10px;
+  }
+
+  .section {
+    margin-top: 72px;
+  }
+
+  .glance {
+    border-top: 1px solid var(--line);
+  }
+
+  .glance > div {
+    padding: 11px 4px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .glance dt {
+    font-size: 13px;
+  }
+
+  .glance-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 16px;
+  }
+
+  .prose {
+    padding: 0 4px;
+    margin-top: 28px;
+  }
+
+  .prose h3,
+  .stack-title {
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .prose :global(p + p) {
+    margin-top: 12px;
+  }
+
+  .decision {
+    padding: 20px 4px;
+  }
+
+  .decision h3 {
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+    margin-bottom: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  .decision-number {
+    font-size: 13px;
+    font-weight: 400;
+  }
+
+  .decision dl > div + div {
+    margin-top: 6px;
+  }
+
+  .decision dt {
+    font-size: 13px;
+  }
+
+  .stats {
+    display: grid;
+    gap: 12px;
+  }
+
+  .stat {
+    padding: 18px 16px;
+    text-align: center;
+    background: var(--chip);
+    border-radius: 14px;
+  }
+
+  .stat dt {
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .stat dd {
+    margin-top: 6px;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  /* The next case reads like a row of Selected work on the home page. */
+  .next-label {
+    padding: 0 4px;
+    margin-top: 40px;
+  }
+
+  .next {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto 18px;
+    gap: 12px;
+    align-items: center;
+    padding: 14px 4px;
+    margin: 2px 0;
+    text-decoration: none;
+    border-radius: 10px;
+  }
+
+  .next-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .next-name {
+    font-weight: 500;
+  }
+
+  .next-summary,
+  .next-highlight {
+    font-size: 14px;
+    color: var(--fg-2);
+  }
+
+  .next-highlight {
+    white-space: nowrap;
+  }
+
+  .next-icon {
+    color: var(--fg-2);
+    transition:
+      transform 0.25s var(--ease-out),
+      color 0.2s ease;
+  }
+
+  .next:hover .next-icon {
+    color: var(--fg);
+    transform: translateX(3px);
+  }
+
+  @media (min-width: 640px) {
+    .case-head {
+      padding-top: 40px;
+    }
+
+    h1 {
+      font-size: 40px;
+    }
+
+    .tagline {
+      font-size: 19px;
+    }
+
+    .glance > div,
+    .decision dl > div {
+      display: grid;
+      grid-template-columns: 110px minmax(0, 1fr);
+      gap: 16px;
+    }
+
+    .glance dt,
+    .decision dt {
+      font-size: 14px;
+    }
+
+    .stats {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .next {
+      grid-template-columns: minmax(0, 1fr) auto 20px;
+      gap: 16px;
+    }
+  }
+
+  @supports (text-wrap: balance) {
+    .tagline {
+      text-wrap: balance;
+    }
+  }
+</style>

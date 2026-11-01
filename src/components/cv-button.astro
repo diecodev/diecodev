@@ -1,0 +1,115 @@
+---
+import { profile } from "~/data/profile";
+---
+
+<a
+  class="btn press cv"
+  data-cv
+  download={profile.cv.filename}
+  href={profile.cv.href}
+>
+  <span aria-hidden="true" class="swap-icon">
+    <svg
+      aria-hidden="true"
+      class="icon-idle"
+      fill="none"
+      height="16"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="1.8"
+      viewBox="0 0 24 24"
+      width="16"
+    >
+      <path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 20h14"></path>
+    </svg>
+    <svg
+      aria-hidden="true"
+      class="icon-done"
+      fill="none"
+      height="16"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      width="16"
+    >
+      <path d="M5 12.5l4.5 4.5L19 7.5"></path>
+    </svg>
+  </span>
+  <span class="swap-label">
+    <span>Download CV</span>
+    <span aria-hidden="true" class="label-loading">
+      Downloading
+    </span>
+    <span aria-hidden="true" class="label-done">
+      Downloaded
+    </span>
+  </span>
+</a>
+
+<style>
+  .cv::after {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    content: "";
+    background: currentColor;
+    opacity: 0.45;
+  }
+
+  .cv.is-loading::after {
+    animation: progress 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  @keyframes progress {
+    to {
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  import { onPage } from "~/scripts/lifecycle";
+
+  const DONE_AFTER_MS = 900;
+  const RESET_AFTER_MS = 2700;
+
+  const timers = new Set<number>();
+
+  onPage(() => {
+    for (const link of document.querySelectorAll<HTMLAnchorElement>(
+      "[data-cv]"
+    )) {
+      let doneTimer = 0;
+      let resetTimer = 0;
+      link.addEventListener("click", () => {
+        if (link.classList.contains("is-loading")) {
+          return;
+        }
+        window.clearTimeout(doneTimer);
+        window.clearTimeout(resetTimer);
+        link.classList.remove("is-done");
+        link.classList.add("is-loading");
+        doneTimer = window.setTimeout(() => {
+          link.classList.remove("is-loading");
+          link.classList.add("is-done");
+        }, DONE_AFTER_MS);
+        resetTimer = window.setTimeout(() => {
+          link.classList.remove("is-done");
+        }, RESET_AFTER_MS);
+        timers.add(doneTimer);
+        timers.add(resetTimer);
+      });
+    }
+
+    return () => {
+      for (const timer of timers) {
+        window.clearTimeout(timer);
+      }
+    };
+  });
+</script>

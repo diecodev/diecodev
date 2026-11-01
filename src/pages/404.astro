@@ -1,0 +1,36 @@
+---
+import { profile } from "~/data/profile";
+import { homeSections } from "~/data/sections";
+import BaseLayout from "~/layouts/base-layout.astro";
+---
+
+<BaseLayout
+  noindex
+  sections={homeSections}
+  title={`Page not found · ${profile.name}`}
+>
+  <main class="layer not-found container" id="main" tabindex="-1">
+    <p class="muted enter">404</p>
+    <h1 class="enter" style="--delay: 80ms">
+      This page doesn’t exist.
+    </h1>
+    <p class="enter" style="--delay: 160ms">
+      <a href="/">Back to the home page</a>
+    </p>
+  </main>
+</BaseLayout>
+
+<style>
+  .not-found {
+    min-height: 70dvh;
+    padding-top: 120px;
+    text-align: center;
+  }
+
+  h1 {
+    margin: 12px 0 20px;
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+</style>

@@ -1,0 +1,40 @@
+---
+import Aurora from "~/components/aurora.astro";
+import Closing from "~/components/closing.astro";
+import Contact from "~/components/contact.astro";
+import Experience from "~/components/experience.astro";
+import Hero from "~/components/hero.astro";
+import OpenSource from "~/components/open-source.astro";
+import VisitCursor from "~/components/visit-cursor.astro";
+import WorkList from "~/components/work-list.astro";
+import { profile } from "~/data/profile";
+import { homeSections } from "~/data/sections";
+import { homeSchema } from "~/data/seo";
+import BaseLayout from "~/layouts/base-layout.astro";
+
+const title = `${profile.name} (${profile.handle}) — ${profile.role}`;
+---
+
+<BaseLayout
+  ogType="profile"
+  schema={homeSchema(title)}
+  sections={homeSections}
+  title={title}
+>
+  <Aurora slot="background" />
+  <main class="layer container" id="main" tabindex="-1">
+    <Hero />
+    <WorkList />
+    <Experience />
+    <OpenSource />
+    <Contact />
+  </main>
+  <VisitCursor />
+  <Closing orbs={homeSections.map((section) => section.orb)} />
+</BaseLayout>
+
+<style>
+  main:focus {
+    outline: none;
+  }
+</style>

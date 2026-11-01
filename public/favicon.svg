@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <radialGradient id="rose" cx="22%" cy="26%" r="62%">
+      <stop offset="0" stop-color="#f3b3d2"/>
+      <stop offset="1" stop-color="#f3b3d2" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="peach" cx="80%" cy="20%" r="62%">
+      <stop offset="0" stop-color="#f7c99a"/>
+      <stop offset="1" stop-color="#f7c99a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="mint" cx="82%" cy="78%" r="62%">
+      <stop offset="0" stop-color="#97d8ab"/>
+      <stop offset="1" stop-color="#97d8ab" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="lavender" cx="26%" cy="80%" r="62%">
+      <stop offset="0" stop-color="#b3c2f7"/>
+      <stop offset="1" stop-color="#b3c2f7" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="light" cx="34%" cy="28%" r="42%">
+      <stop offset="0" stop-color="#fff" stop-opacity=".9"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="orb">
+      <circle cx="32" cy="32" r="30"/>
+    </clipPath>
+  </defs>
+  <g clip-path="url(#orb)">
+    <rect width="64" height="64" fill="#e4def4"/>
+    <rect width="64" height="64" fill="url(#lavender)"/>
+    <rect width="64" height="64" fill="url(#mint)"/>
+    <rect width="64" height="64" fill="url(#peach)"/>
+    <rect width="64" height="64" fill="url(#rose)"/>
+    <rect width="64" height="64" fill="url(#light)"/>
+  </g>
+  <circle cx="32" cy="32" r="29.25" fill="none" stroke="#1a1730" stroke-opacity=".18" stroke-width="1.5"/>
+</svg>

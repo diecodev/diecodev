@@ -1,0 +1,33 @@
+---
+interface Props {
+  class?: string;
+  id: string;
+}
+
+const { id, class: className } = Astro.props;
+---
+
+<svg aria-hidden="true" focusable="false" class:list={["grain", className]}>
+  <filter id={id}>
+    <feTurbulence
+      baseFrequency="0.85"
+      numOctaves="3"
+      stitchTiles="stitch"
+      type="fractalNoise"
+    ></feTurbulence>
+    <feColorMatrix type="saturate" values="0"></feColorMatrix>
+  </filter>
+  <rect filter={`url(#${id})`} height="100%" width="100%"></rect>
+</svg>
+
+<style>
+  .grain {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    mix-blend-mode: var(--grain-blend);
+    opacity: var(--grain-opacity);
+  }
+</style>

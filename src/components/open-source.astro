@@ -1,0 +1,59 @@
+---
+import { openSource } from "~/data/open-source";
+
+import SectionTitle from "./section-title.astro";
+---
+
+<section
+  aria-labelledby="open-source-title"
+  class="section"
+  data-cursor-area
+  data-reveal
+  data-section="open-source"
+  id="open-source"
+>
+  <SectionTitle id="open-source-title" orb="mint" title="Open source" />
+  <ul class="list">
+    {openSource.map((project) => (
+      <li class="project" data-visit>
+        <h3 class="project-name">
+          <a
+            class="visit-link"
+            href={project.href}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            {project.name}
+            <span class="sr-only"> (opens in a new tab)</span>
+          </a>
+        </h3>
+        <p class="project-description">{project.description}</p>
+        <p class="project-meta muted num">{project.meta}</p>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .project {
+    position: relative;
+    padding: 16px 4px;
+  }
+
+  .project-name {
+    font-size: inherit;
+    font-weight: 500;
+  }
+
+  .project-description {
+    max-width: 520px;
+    margin-top: 6px;
+    font-size: 14px;
+    color: var(--fg-2);
+  }
+
+  .project-meta {
+    margin-top: 4px;
+    font-size: 13px;
+  }
+</style>

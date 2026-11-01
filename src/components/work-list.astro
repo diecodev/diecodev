@@ -1,0 +1,374 @@
+---
+import { getCollection } from "astro:content";
+
+import { previewImage } from "./preview-image";
+import ProductShot from "./product-shot.astro";
+import SectionTitle from "./section-title.astro";
+import WorkPreview from "./work-preview.astro";
+
+const entries = await getCollection("work");
+const projects = entries.toSorted((a, b) => a.data.order - b.data.order);
+const DEFAULT_OPEN = 0;
+// The panel is a glance; the case study lists every decision.
+const PANEL_DECISIONS = 3;
+
+const thumbs = new Map(
+  await Promise.all(
+    projects.map(
+      async (project) =>
+        [project.id, await previewImage(project.data.cover)] as const
+    )
+  )
+);
+---
+
+<section
+  aria-labelledby="work-title"
+  class="section"
+  data-reveal
+  data-section="work"
+  id="work"
+>
+  <SectionTitle id="work-title" orb="lavender" title="Selected work" />
+  <ul class="list">
+    {projects.map((project, index) => {
+      const isOpen = index === DEFAULT_OPEN;
+      const triggerId = `work-trigger-${project.id}`;
+      const panelId = `work-panel-${project.id}`;
+      return (
+        <li class:list={["item", { "is-open": isOpen }]} data-accordion-item>
+          <h3 class="item-heading">
+            <button
+              aria-controls={panelId}
+              aria-expanded={isOpen ? "true" : "false"}
+              class="row"
+              data-accordion-trigger
+              data-preview-image={thumbs.get(project.id)}
+              data-preview-label={project.data.previewLabel}
+              data-preview-metric={project.data.highlight}
+              data-preview-name={project.data.name}
+              data-preview-tone={project.data.tone}
+              data-preview-trigger
+              id={triggerId}
+              type="button"
+            >
+              <span class="row-text">
+                <span class="row-name">{project.data.name}</span>
+                <span class="row-summary">{project.data.summary}</span>
+              </span>
+              <span class="row-highlight num">{project.data.highlight}</span>
+              <svg
+                aria-hidden="true"
+                class="row-icon"
+                fill="none"
+                height="16"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-width="1.8"
+                viewBox="0 0 24 24"
+                width="16"
+              >
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+            </button>
+          </h3>
+          <section
+            aria-labelledby={triggerId}
+            class="panel"
+            data-accordion-panel
+            id={panelId}
+            inert={!isOpen}
+          >
+            <div class="panel-inner">
+              {project.data.cover && (
+                <div class="panel-shot">
+                  <ProductShot
+                    alt={project.data.coverAlt ?? ""}
+                    image={project.data.cover}
+                    loading={isOpen ? "eager" : "lazy"}
+                    name={`panel-${project.id}`}
+                    tone={project.data.tone}
+                  />
+                </div>
+              )}
+              <dl class="facts">
+                <div class="fact">
+                  <dt>Role</dt>
+                  <dd>{project.data.role}</dd>
+                </div>
+                {project.data.problem && (
+                  <div class="fact">
+                    <dt>Problem</dt>
+                    <dd>{project.data.problem}</dd>
+                  </div>
+                )}
+                <div class="fact">
+                  <dt>Decisions</dt>
+                  <dd>
+                    <ul class="decisions">
+                      {project.data.decisions
+                        .slice(0, PANEL_DECISIONS)
+                        .map((decision) => (
+                          <li>{decision.choice}</li>
+                        ))}
+                    </ul>
+                  </dd>
+                </div>
+                <div class="fact">
+                  <dt>Result</dt>
+                  <dd>{project.data.outcome}</dd>
+                </div>
+                <div class="fact fact-links">
+                  <dt class="sr-only">Links</dt>
+                  <dd class="links">
+                    <a data-astro-prefetch href={`/work/${project.id}/`}>
+                      Read the case study <span aria-hidden="true">→</span>
+                    </a>
+                    {project.data.links.map((link) => (
+                      <a
+                        href={link.href}
+                        rel="noopener noreferrer"
+                        target="_blank"
+                      >
+                        {link.label} <span aria-hidden="true">↗</span>
+                      </a>
+                    ))}
+                  </dd>
+                </div>
+              </dl>
+            </div>
+          </section>
+        </li>
+      );
+    })}
+  </ul>
+</section>
+
+<WorkPreview />
+
+<style>
+  .item-heading {
+    font: inherit;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto 18px;
+    gap: 12px;
+    align-items: center;
+    width: 100%;
+    padding: 14px 4px;
+    margin: 2px 0;
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    background: none;
+    border: 0;
+    border-radius: 10px;
+  }
+
+  .row-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .row-name {
+    font-weight: 500;
+  }
+
+  .row-summary,
+  .row-highlight {
+    font-size: 14px;
+    color: var(--fg-2);
+  }
+
+  .row-highlight {
+    white-space: nowrap;
+  }
+
+  .row-icon {
+    color: var(--fg-2);
+    transition:
+      transform 0.45s var(--ease-out),
+      color 0.2s ease;
+  }
+
+  .is-open .row-icon {
+    color: var(--fg);
+    transform: rotate(45deg);
+  }
+
+  .panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.5s var(--ease-out);
+  }
+
+  .is-open .panel {
+    grid-template-rows: 1fr;
+  }
+
+  .panel-inner {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .panel-shot {
+    padding: 4px 0 14px;
+    opacity: 0;
+    transform: translateY(-6px) scale(0.985);
+    transition:
+      opacity 0.2s ease,
+      transform 0.3s var(--ease-out);
+  }
+
+  .is-open .panel-shot {
+    opacity: 1;
+    transform: none;
+    transition-duration: 0.5s;
+    transition-delay: 0.05s;
+  }
+
+  .facts {
+    padding: 2px 4px 22px;
+  }
+
+  .fact {
+    padding: 6px 0;
+    opacity: 0;
+    filter: blur(2px);
+    transform: translateY(-4px);
+    transition:
+      opacity 0.2s ease,
+      transform 0.3s var(--ease-out),
+      filter 0.3s ease;
+  }
+
+  .is-open .fact {
+    opacity: 1;
+    filter: none;
+    transform: none;
+    transition-duration: 0.45s;
+  }
+
+  .is-open .fact:nth-child(1) {
+    transition-delay: 0.08s;
+  }
+
+  .is-open .fact:nth-child(2) {
+    transition-delay: 0.13s;
+  }
+
+  .is-open .fact:nth-child(3) {
+    transition-delay: 0.18s;
+  }
+
+  .is-open .fact:nth-child(4) {
+    transition-delay: 0.23s;
+  }
+
+  .is-open .fact:nth-child(5) {
+    transition-delay: 0.28s;
+  }
+
+  dt {
+    font-size: 13px;
+    color: var(--fg-2);
+  }
+
+  .decisions {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-left: 18px;
+    margin-top: 2px;
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 20px;
+  }
+
+  .links a {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+    min-height: 40px;
+    font-weight: 500;
+  }
+
+  @media (min-width: 640px) {
+    .row {
+      grid-template-columns: minmax(0, 1fr) auto 20px;
+      gap: 16px;
+    }
+
+    .fact {
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr);
+      gap: 16px;
+      padding: 7px 0;
+    }
+
+    dt {
+      font-size: 14px;
+    }
+
+    .decisions {
+      margin-top: 0;
+    }
+
+    .fact-links .links {
+      grid-column: 2;
+    }
+
+    .facts {
+      padding-bottom: 24px;
+    }
+  }
+</style>
+
+<script>
+  import { onPage } from "~/scripts/lifecycle";
+
+  const setOpen = (item: HTMLElement, open: boolean) => {
+    const trigger = item.querySelector<HTMLButtonElement>(
+      "[data-accordion-trigger]"
+    );
+    const panel = item.querySelector<HTMLElement>("[data-accordion-panel]");
+    item.classList.toggle("is-open", open);
+    trigger?.setAttribute("aria-expanded", String(open));
+    if (panel) {
+      panel.inert = !open;
+    }
+  };
+
+  const setupAccordion = () => {
+    const items = document.querySelectorAll<HTMLElement>(
+      "[data-accordion-item]"
+    );
+
+    for (const item of items) {
+      const trigger = item.querySelector<HTMLButtonElement>(
+        "[data-accordion-trigger]"
+      );
+      trigger?.addEventListener("click", () => {
+        const willOpen = !item.classList.contains("is-open");
+        for (const other of items) {
+          if (other !== item) {
+            setOpen(other, false);
+          }
+        }
+        setOpen(item, willOpen);
+      });
+    }
+  };
+
+  onPage(() => {
+    setupAccordion();
+    return null;
+  });
+</script>

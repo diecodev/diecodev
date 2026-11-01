@@ -1,5 +1,5 @@
 ---
-import { experience } from "~/data/experience";
+import { certifications, experience } from "~/data/experience";
 import { profile } from "~/data/profile";
 
 import SectionTitle from "./section-title.astro";
@@ -30,12 +30,28 @@ import SectionTitle from "./section-title.astro";
             </a>
             <span class="muted">{` · ${job.role}`}</span>
           </h3>
-          <span class="muted num">{job.period}</span>
+          <span class="job-period muted num">{job.period}</span>
         </div>
         <p class="job-summary">{job.summary}</p>
       </li>
     ))}
   </ol>
+  <h3 class="subhead" id="certifications-title">
+    Certifications
+  </h3>
+  <ul aria-labelledby="certifications-title" class="list">
+    {certifications.map((certification) => (
+      <li class="cert">
+        <p class="job-head">
+          <span>
+            <b class="cert-issuer">{certification.issuer}</b>
+            <span class="muted">{` · ${certification.names}`}</span>
+          </span>
+          <span class="job-period muted num">{certification.year}</span>
+        </p>
+      </li>
+    ))}
+  </ul>
   <p class="more">
     <a download={profile.cv.filename} href={profile.cv.href}>
       Full history in the CV
@@ -49,11 +65,15 @@ import SectionTitle from "./section-title.astro";
     padding: 16px 4px;
   }
 
+  /* Narrow screens put the dates under the title; wider ones keep them on the right. */
   .job-head {
     display: flex;
-    gap: 16px;
-    align-items: baseline;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .job-period {
+    font-size: 13px;
   }
 
   .job-title {
@@ -68,8 +88,40 @@ import SectionTitle from "./section-title.astro";
     color: var(--fg-2);
   }
 
+  .subhead {
+    padding: 0 4px;
+    margin: 28px 0 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--fg-2);
+  }
+
+  .cert {
+    padding: 12px 4px;
+    font-size: 15px;
+  }
+
+  .cert-issuer {
+    font-weight: 500;
+  }
+
   .more {
     margin: 14px 4px 0;
     font-size: 14px;
+  }
+
+  @media (min-width: 640px) {
+    .job-head {
+      flex-direction: row;
+      gap: 16px;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+
+    .job-period {
+      flex: none;
+      font-size: inherit;
+      white-space: nowrap;
+    }
   }
 </style>

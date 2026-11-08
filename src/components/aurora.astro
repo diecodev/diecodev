@@ -13,43 +13,51 @@
     pointer-events: none;
   }
 
+  /* Each blob is its rounded shape blurred by 64px (48px on narrow screens), rendered once
+     into a mask (src/assets/aurora) instead of drawn with a live blur filter: to tint its
+     status bar, Safari on iOS redraws the top of the page without the GPU, and a live blur
+     there froze every animation. Each box grows by three blur radii (--pad) on every side
+     to hold the soft edge, so its centre, and the drift around it, stay where they were. */
   .blob {
+    --pad: 192px;
     position: absolute;
     display: block;
     opacity: var(--blob-opacity);
-    filter: blur(64px);
+    mask-position: center;
+    mask-repeat: no-repeat;
+    mask-size: 100% 100%;
     transition:
       opacity 0.4s ease,
       background-color 0.5s ease;
   }
 
   .blob-1 {
-    top: -150px;
-    left: calc(50% - 300px);
-    width: 560px;
-    height: 440px;
+    top: calc(-150px - var(--pad));
+    left: calc(50% - 300px - var(--pad));
+    width: calc(560px + var(--pad) * 2);
+    height: calc(440px + var(--pad) * 2);
     background-color: var(--aurora-1);
-    border-radius: 42% 58% 63% 37% / 41% 44% 56% 59%;
+    mask-image: url("../assets/aurora/blob-wide-1.webp");
     animation: drift-1 26s ease-in-out infinite alternate;
   }
 
   .blob-2 {
-    top: -40px;
-    left: calc(50% - 15px);
-    width: 480px;
-    height: 400px;
+    top: calc(-40px - var(--pad));
+    left: calc(50% - 15px - var(--pad));
+    width: calc(480px + var(--pad) * 2);
+    height: calc(400px + var(--pad) * 2);
     background-color: var(--aurora-2);
-    border-radius: 58% 42% 38% 62% / 53% 39% 61% 47%;
+    mask-image: url("../assets/aurora/blob-wide-2.webp");
     animation: drift-2 30s ease-in-out infinite alternate;
   }
 
   .blob-3 {
-    top: 210px;
-    left: calc(50% - 190px);
-    width: 460px;
-    height: 300px;
+    top: calc(210px - var(--pad));
+    left: calc(50% - 190px - var(--pad));
+    width: calc(460px + var(--pad) * 2);
+    height: calc(300px + var(--pad) * 2);
     background-color: var(--aurora-3);
-    border-radius: 46% 54% 50% 50% / 60% 40% 60% 40%;
+    mask-image: url("../assets/aurora/blob-wide-3.webp");
     animation: drift-3 34s ease-in-out infinite alternate;
   }
 
@@ -59,29 +67,39 @@
     }
 
     .blob {
-      filter: blur(48px);
+      --pad: 144px;
     }
 
     .blob-1 {
-      top: -120px;
-      left: -60px;
-      width: 300px;
-      height: 280px;
+      top: calc(-120px - var(--pad));
+      left: calc(-60px - var(--pad));
+      width: calc(300px + var(--pad) * 2);
+      height: calc(280px + var(--pad) * 2);
+      mask-image: url("../assets/aurora/blob-narrow-1.webp");
     }
 
     .blob-2 {
-      top: -40px;
-      right: -80px;
+      top: calc(-40px - var(--pad));
+      right: calc(-80px - var(--pad));
       left: auto;
-      width: 280px;
-      height: 260px;
+      width: calc(280px + var(--pad) * 2);
+      height: calc(260px + var(--pad) * 2);
+      mask-image: url("../assets/aurora/blob-narrow-2.webp");
     }
 
     .blob-3 {
-      top: 200px;
-      left: 60px;
-      width: 260px;
-      height: 200px;
+      top: calc(200px - var(--pad));
+      left: calc(60px - var(--pad));
+      width: calc(260px + var(--pad) * 2);
+      height: calc(200px + var(--pad) * 2);
+      mask-image: url("../assets/aurora/blob-narrow-3.webp");
+    }
+  }
+
+  /* Without masks the blobs would be solid boxes. */
+  @supports not (mask-image: linear-gradient(#000, transparent)) {
+    .blob {
+      display: none;
     }
   }
 
@@ -100,6 +118,39 @@
   @keyframes drift-3 {
     to {
       transform: translate(40px, -30px) rotate(12deg);
+    }
+  }
+
+  /* Above the page, Safari fills its status bar (and its top bar on the Mac) with the root
+     background, which can't be a gradient. While the page is at its top (is-top, set in
+     the layout), that background takes the aurora's average top colour, so the bar reads
+     as part of it instead of a black or white strip. Further down it goes back to the page
+     colour, which is also what shows under the bottom bar at the end of the page. */
+  :global(:root.is-top:has(.aurora)) {
+    background-color: var(--aurora-top);
+  }
+
+  @media (min-width: 640px) {
+    :global(:root.is-top:has(.aurora)) {
+      background-color: var(--aurora-top-wide);
+    }
+  }
+
+  /* That bar is a solid strip, and the aurora under it changes colour from side to side.
+     So the aurora starts from the same colour and fades into itself over its first 72px:
+     the bar and the page read as one gradient instead of meeting at an edge. */
+  .aurora::after {
+    position: absolute;
+    inset: 0 0 auto;
+    height: 72px;
+    pointer-events: none;
+    content: "";
+    background: linear-gradient(var(--aurora-top), transparent);
+  }
+
+  @media (min-width: 640px) {
+    .aurora::after {
+      background: linear-gradient(var(--aurora-top-wide), transparent);
     }
   }
 

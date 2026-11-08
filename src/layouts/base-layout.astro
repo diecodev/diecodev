@@ -53,7 +53,12 @@ const ogImage = new URL(og.src, Astro.site);
 <html lang="en" transition:animate="none">
   <head>
     <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    {/* viewport-fit=cover lets the page run under Safari's toolbars on iOS instead of
+         stopping at their edge; anything pinned to an edge pads itself by the safe area. */}
+    <meta
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+      name="viewport"
+    />
     <title>{title}</title>
     <meta content={description} name="description" />
     {noindex && <meta content="noindex" name="robots" />}
@@ -102,7 +107,8 @@ const ogImage = new URL(og.src, Astro.site);
     <script is:inline>
       (() => {
         const root = document.documentElement;
-        root.classList.add("js");
+        // is-top: the page is near its top (see aurora.astro); kept in sync on scroll.
+        root.classList.add("js", "is-top");
         let stored = "";
         try {
           stored = localStorage.getItem("theme") ?? "";
@@ -116,11 +122,35 @@ const ogImage = new URL(og.src, Astro.site);
         const isExplicit = stored === "light" || stored === "dark";
         root.dataset.themePref = isExplicit ? stored : "system";
         root.dataset.theme = isExplicit ? stored : systemTheme;
+        // Entrances wait until frames flow (is-ready). On a reload, iOS Safari keeps showing
+        // the old page for a moment after the first paint, so an entrance started then played
+        // unseen. Two frames back to back mean the page is on screen; after a second of
+        // frames it goes anyway. A page loaded out of sight waits until it is shown.
+        let firstFrame = 0;
+        let lastFrame = 0;
+        const waitForFrames = (time) => {
+          firstFrame ||= time;
+          if (
+            (lastFrame && time - lastFrame < 50) ||
+            time - firstFrame > 1000
+          ) {
+            root.classList.add("is-ready");
+            return;
+          }
+          lastFrame = time;
+          requestAnimationFrame(waitForFrames);
+        };
+        requestAnimationFrame(waitForFrames);
         // The router replaces <html> attributes with the next page's; carry the theme and state classes over.
         document.addEventListener("astro:before-swap", (event) => {
           const next = event.newDocument.documentElement;
           for (const name of root.classList) {
-            if (name === "js" || name.startsWith("lenis")) {
+            if (
+              name === "js" ||
+              name === "is-ready" ||
+              name === "is-top" ||
+              name.startsWith("lenis")
+            ) {
               next.classList.add(name);
             }
           }
@@ -137,29 +167,52 @@ const ogImage = new URL(og.src, Astro.site);
     </a>
     <slot name="background" />
     <div aria-hidden="true" class="page-texture">
-      <Grain id="page-grain" />
+      <Grain />
     </div>
     <Header sections={homeSections} />
     <slot />
     <SectionNav sections={sections} />
     <Analytics />
     <script>
-      import { startSmoothScroll } from "~/scripts/smooth-scroll";
+      import { subscribeToScroll } from "~/scripts/scroll-state";
       import "~/scripts/reveal";
       import "~/scripts/page-transition";
       import "~/scripts/tab-title";
       import "~/scripts/analytics";
+      import { startSmoothScroll } from "~/scripts/smooth-scroll";
 
       startSmoothScroll();
+      subscribeToScroll(({ far }) => {
+        document.documentElement.classList.toggle("is-top", !far);
+      });
     </script>
   </body>
 </html>
 
 <style>
+  /* The grain stays on screen while the page scrolls under it. As a layer the height of
+     the whole page, Safari on iPhone kept painting it while scrolling and dropped the
+     header's animation. */
   .page-texture {
     position: fixed;
     inset: 0;
     z-index: 0;
     pointer-events: none;
+  }
+
+  /* iOS Safari paints its top and bottom bars a solid colour when a full-width fixed layer
+     with a background reaches the screen edge, instead of showing the page under them. So
+     there the grain stops 8px short of both edges and fades in over the next 32px: it
+     also shifts the page's brightness a little, and a hard stop would show as a band. */
+  @supports (-webkit-touch-callout: none) {
+    .page-texture {
+      inset: 8px 0;
+      mask-image: linear-gradient(
+        transparent,
+        #000 32px,
+        #000 calc(100% - 32px),
+        transparent
+      );
+    }
   }
 </style>

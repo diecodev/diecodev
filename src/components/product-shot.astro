@@ -16,17 +16,15 @@ interface Props {
   chip?: string;
   image: ImageMetadata;
   loading?: "eager" | "lazy";
-  // Unique per page: it names the shot's grain filter.
-  name: string;
   tone: "lavender" | "rose" | "mint" | "peach";
   video?: ShotVideo;
 }
 
-const { alt, chip, image, loading = "eager", name, tone, video } = Astro.props;
+const { alt, chip, image, loading = "eager", tone, video } = Astro.props;
 ---
 
 <div class:list={["shot", `shot-${tone}`]}>
-  <Grain class="shot-grain" id={`shot-grain-${name}`} />
+  <Grain class="shot-grain" />
   {chip && (
     <span class="shot-chip">
       <span aria-hidden="true" class={`orb shot-orb orb-${tone}`} />

@@ -1,32 +1,27 @@
 ---
 interface Props {
   class?: string;
-  id: string;
 }
 
-const { id, class: className } = Astro.props;
+const { class: className } = Astro.props;
 ---
 
-<svg aria-hidden="true" focusable="false" class:list={["grain", className]}>
-  <filter id={id}>
-    <feTurbulence
-      baseFrequency="0.85"
-      numOctaves="3"
-      stitchTiles="stitch"
-      type="fractalNoise"
-    ></feTurbulence>
-    <feColorMatrix type="saturate" values="0"></feColorMatrix>
-  </filter>
-  <rect filter={`url(#${id})`} height="100%" width="100%"></rect>
-</svg>
+<div aria-hidden="true" class:list={["grain", className]}></div>
 
 <style>
+  /* A tile rendered once from the original feTurbulence filter (fractal noise, base
+     frequency 0.85, 3 octaves, desaturated). A live SVG filter is drawn on the CPU every
+     time its area repaints: on an iPhone that blocked Safari for up to 800 ms, and every
+     animation running at the time finished without a single frame. */
+  /* Rounded like its container: Safari doesn't always clip this layer to a rounded
+     overflow, and the grain then showed as a square in the corners. */
   .grain {
     position: absolute;
     inset: 0;
-    width: 100%;
-    height: 100%;
     pointer-events: none;
+    border-radius: inherit;
+    background-image: url("../assets/grain.webp");
+    background-size: 96px;
     mix-blend-mode: var(--grain-blend);
     opacity: var(--grain-opacity);
   }

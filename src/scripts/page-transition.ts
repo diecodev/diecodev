@@ -68,6 +68,10 @@ document.addEventListener("astro:before-preparation", (event) => {
 });
 
 document.addEventListener("astro:before-swap", (event) => {
+  // The next page's <html> attributes replace the current ones, so the mark goes there.
+  if (event.navigationType === "traverse") {
+    event.newDocument.documentElement.classList.add("is-restoring");
+  }
   if (leftFrom === null) {
     arriveFrom = null;
     return;

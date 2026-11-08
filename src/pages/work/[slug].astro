@@ -82,7 +82,6 @@ const schema = caseSchema({
           alt={data.video?.alt ?? data.coverAlt ?? ""}
           chip={data.highlight}
           image={data.cover}
-          name="cover"
           tone={data.tone}
           video={data.video}
         />
@@ -142,7 +141,6 @@ const schema = caseSchema({
             alt={shot.alt}
             image={shot.image}
             loading="lazy"
-            name={`gallery-${index}`}
             tone={data.tone}
           />
           {shot.caption && (

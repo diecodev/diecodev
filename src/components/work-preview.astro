@@ -193,6 +193,11 @@
     }
   };
 
+  const triggerFrom = (element: EventTarget | null) =>
+    element instanceof Element
+      ? element.closest<HTMLElement>("[data-preview-trigger]")
+      : null;
+
   const setupPreview = (): Cleanup | null => {
     const preview = document.querySelector<HTMLElement>("[data-preview]");
     if (!preview) {
@@ -216,44 +221,99 @@
       frame = settled ? 0 : window.requestAnimationFrame(render);
     };
 
-    const follow = (event: MouseEvent) => {
-      target.x = event.clientX + PREVIEW_OFFSET_X;
-      target.y = event.clientY + PREVIEW_OFFSET_Y;
+    const follow = (x: number, y: number) => {
+      target.x = x + PREVIEW_OFFSET_X;
+      target.y = y + PREVIEW_OFFSET_Y;
       if (frame === 0) {
         frame = window.requestAnimationFrame(render);
       }
     };
 
-    const hide = () => preview.classList.remove("is-visible");
+    let pointer: { x: number; y: number } | null = null;
+    let shown: HTMLElement | null = null;
+    // A clicked row stays without its card until the pointer moves to another row.
+    let dismissed: HTMLElement | null = null;
 
-    for (const trigger of document.querySelectorAll<HTMLElement>(
-      "[data-preview-trigger]"
-    )) {
-      trigger.addEventListener("mouseenter", (event) => {
-        // An open accordion row already shows its screenshot in the panel.
-        if (
-          !canHover.matches ||
-          trigger.getAttribute("aria-expanded") === "true"
-        ) {
-          return;
-        }
+    const hide = () => {
+      shown = null;
+      preview.classList.remove("is-visible");
+    };
+
+    // Shows the card for the row under the pointer, or hides it.
+    const update = (trigger: HTMLElement | null, x: number, y: number) => {
+      if (trigger !== dismissed) {
+        dismissed = null;
+      }
+      // An open accordion row already shows its screenshot in the panel, and a page on its
+      // way out scrolls rows past the pointer.
+      if (
+        !trigger ||
+        trigger === dismissed ||
+        trigger.getAttribute("aria-expanded") === "true" ||
+        document.documentElement.classList.contains("is-leaving")
+      ) {
+        hide();
+        return;
+      }
+      if (trigger !== shown) {
         fillPreview(preview, trigger);
-        if (!preview.classList.contains("is-visible")) {
-          current.x = event.clientX + PREVIEW_OFFSET_X;
-          current.y = event.clientY + PREVIEW_OFFSET_Y;
-        }
-        follow(event);
-        preview.classList.add("is-visible");
-      });
-      trigger.addEventListener("mousemove", follow);
-      trigger.addEventListener("click", hide);
-      trigger.addEventListener("mouseleave", hide);
-    }
+        shown = trigger;
+      }
+      if (!preview.classList.contains("is-visible")) {
+        // Appear at the pointer instead of gliding in from the last spot.
+        current.x = x + PREVIEW_OFFSET_X;
+        current.y = y + PREVIEW_OFFSET_Y;
+      }
+      follow(x, y);
+      preview.classList.add("is-visible");
+    };
 
-    window.addEventListener("scroll", hide, { passive: true });
+    const onMove = (event: PointerEvent) => {
+      if (!canHover.matches || event.pointerType !== "mouse") {
+        pointer = null;
+        hide();
+        return;
+      }
+      pointer = { x: event.clientX, y: event.clientY };
+      update(triggerFrom(event.target), event.clientX, event.clientY);
+    };
+
+    // Rows move under a still pointer while scrolling, so the card follows whichever row
+    // is under it now.
+    const onScroll = () => {
+      if (pointer) {
+        const element = document.elementFromPoint(pointer.x, pointer.y);
+        update(triggerFrom(element), pointer.x, pointer.y);
+      }
+    };
+
+    const onClick = (event: MouseEvent) => {
+      const trigger = triggerFrom(event.target);
+      if (trigger) {
+        dismissed = trigger;
+        hide();
+      }
+    };
+
+    // Leaving the window.
+    const onOut = (event: PointerEvent) => {
+      if (!event.relatedTarget) {
+        pointer = null;
+        hide();
+      }
+    };
+
+    document.addEventListener("pointermove", onMove, { passive: true });
+    document.addEventListener("pointerout", onOut, { passive: true });
+    document.addEventListener("click", onClick);
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
-      window.removeEventListener("scroll", hide);
+      document.removeEventListener("pointermove", onMove);
+      document.removeEventListener("pointerout", onOut);
+      document.removeEventListener("click", onClick);
+      window.removeEventListener("scroll", onScroll);
       window.cancelAnimationFrame(frame);
+      hide();
     };
   };
 

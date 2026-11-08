@@ -306,12 +306,20 @@ const RING_CIRCUMFERENCE = 87.96;
     transform-origin: bottom center;
   }
 
+  /* The sheet never fades as a whole: while an element's opacity animates, Safari doesn't
+     draw its backdrop-filter, so on iOS the glass appeared all at once at the end and
+     vanished at once on closing. Its glass, edge and shadow come in instead, and the
+     options fade on their own. */
   .sheet.is-open {
-    animation: sheet-in 0.38s cubic-bezier(0.2, 0.9, 0.25, 1) both;
+    animation: sheet-in 0.38s cubic-bezier(0.2, 0.9, 0.25, 1) backwards;
   }
 
   .sheet.is-closing {
     animation: sheet-out 0.2s ease both;
+  }
+
+  .sheet.is-closing li {
+    animation: option-out 0.2s ease both;
   }
 
   .sheet.is-open li {
@@ -396,22 +404,31 @@ const RING_CIRCUMFERENCE = 87.96;
     }
   }
 
+  /* Only the start or the end is given: the other side is the sheet's own style, so the
+     glass follows the theme. */
   @keyframes sheet-in {
     from {
-      opacity: 0;
+      background-color: transparent;
+      border-color: transparent;
+      box-shadow: none;
       transform: translateY(8px) scale(0.96);
-    }
-
-    to {
-      opacity: 1;
-      transform: none;
+      backdrop-filter: blur(0) saturate(1);
     }
   }
 
   @keyframes sheet-out {
     to {
-      opacity: 0;
+      background-color: transparent;
+      border-color: transparent;
+      box-shadow: none;
       transform: translateY(6px) scale(0.97);
+      backdrop-filter: blur(0) saturate(1);
+    }
+  }
+
+  @keyframes option-out {
+    to {
+      opacity: 0;
     }
   }
 

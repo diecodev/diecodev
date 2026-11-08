@@ -26,6 +26,9 @@
   --aurora-1: #bfe6d3;
   --aurora-2: #f9d2b6;
   --aurora-3: #d9d3f5;
+  /* Average colour along the aurora's top edge, narrow and wide layouts. */
+  --aurora-top: #e7ebe2;
+  --aurora-top-wide: #eef0eb;
   --blob-opacity: 0.55;
   --grain-opacity: 0.18;
   --grain-blend: multiply;
@@ -90,6 +93,8 @@
   --aurora-1: #0e4637;
   --aurora-2: #4d2b19;
   --aurora-3: #272052;
+  --aurora-top: #1e2722;
+  --aurora-top-wide: #1a1f1c;
   --blob-opacity: 0.5;
   --grain-opacity: 0.1;
   --grain-blend: soft-light;
@@ -124,6 +129,8 @@
     --aurora-1: #0e4637;
     --aurora-2: #4d2b19;
     --aurora-3: #272052;
+    --aurora-top: #1e2722;
+    --aurora-top-wide: #1a1f1c;
     --blob-opacity: 0.5;
     --grain-opacity: 0.1;
     --grain-blend: soft-light;
@@ -137,11 +144,16 @@
   box-sizing: border-box;
 }
 
+/* The root's background is the colour the browser uses around the page, such as Safari's
+   status bar while the page is at its top. WebKit takes the body's colour over it when the
+   body has one, so the body stays transparent and the page paints its own background
+   (body::before). */
 html {
   -webkit-text-size-adjust: 100%;
   overscroll-behavior: none;
   scroll-behavior: smooth;
-  scroll-padding-top: 88px;
+  scroll-padding-top: calc(88px + env(safe-area-inset-top));
+  background-color: var(--bg);
 }
 
 /* Lenis drives the scroll; native smooth scrolling would fight it. */
@@ -154,6 +166,8 @@ html.lenis {
 }
 
 body {
+  /* The page's background layers (body::before, the aurora) span the body. */
+  position: relative;
   min-height: 100dvh;
   margin: 0;
   overflow-x: clip;
@@ -161,10 +175,17 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: var(--fg);
-  background: var(--bg);
-  transition:
-    background-color 0.4s ease,
-    color 0.4s ease;
+  transition: color 0.4s ease;
+}
+
+/* The page background, under the aurora and the grain. */
+body::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  content: "";
+  background-color: var(--bg);
+  transition: background-color 0.4s ease;
 }
 
 a {
@@ -222,8 +243,8 @@ svg {
 
 .skip-link {
   position: fixed;
-  top: 12px;
-  left: 12px;
+  top: calc(12px + env(safe-area-inset-top));
+  left: max(12px, env(safe-area-inset-left));
   z-index: 100;
   padding: 10px 14px;
   font-weight: 500;
@@ -457,11 +478,16 @@ svg {
 
 .list {
   list-style: none;
-  border-top: 1px solid var(--line);
 }
 
+/* The rows draw every rule, the top one included, so a list that reveals row by row
+   shows no line before its rows. */
 .list > li {
   border-bottom: 1px solid var(--line);
+}
+
+.list > li:first-child {
+  border-top: 1px solid var(--line);
 }
 
 /* Rows that open a page: the title link's ::after stretches over the whole row, which
@@ -542,7 +568,18 @@ svg {
   animation-delay: calc(var(--delay, 0ms) * 0.4);
 }
 
-.js [data-reveal] {
+/* Until frames flow (is-ready, set in the layout's head), entrances hold their first
+   frame and a block revealed during the load stays hidden, so neither plays unseen. */
+.js:not(.is-ready) .enter {
+  animation-play-state: paused;
+}
+
+/* A section reveals its blocks, not itself: each block blurs as its own small layer,
+   which Safari can animate. Blurring a whole section at once (images, video and grain
+   included) made Safari drop frames, so content popped in instead of fading. Lists
+   reveal their rows. */
+.js [data-reveal] > :not(.list),
+.js [data-reveal] > .list > li {
   opacity: 0;
   filter: blur(6px);
   transform: translateY(10px);
@@ -552,10 +589,32 @@ svg {
     filter 0.8s var(--ease-out);
 }
 
-.js [data-reveal].is-visible {
+.js [data-reveal].is-visible > :not(.list),
+.js [data-reveal].is-visible > .list > li {
   opacity: 1;
   filter: none;
   transform: none;
+}
+
+.js:not(.is-ready) [data-reveal].is-visible > :not(.list),
+.js:not(.is-ready) [data-reveal].is-visible > .list > li {
+  opacity: 0;
+  filter: blur(6px);
+  transform: translateY(10px);
+}
+
+/* Back and forward return to a page already seen, and Safari's swipe shows it as it was
+   left: it stays that way instead of hiding everything and entering again. */
+.is-restoring .enter {
+  animation: none;
+}
+
+.js.is-restoring [data-reveal] > :not(.list),
+.js.is-restoring [data-reveal] > .list > li {
+  opacity: 1;
+  filter: none;
+  transform: none;
+  transition: none;
 }
 
 @keyframes enter {
@@ -635,9 +694,25 @@ svg {
     animation-iteration-count: 1 !important;
   }
 
-  .js [data-reveal] {
-    opacity: 1;
+  /* Content still fades in, but without moving, blurring or scaling, as iOS itself does
+     with Reduce Motion. */
+  :root:not(.is-restoring) .enter {
+    animation-name: enter-fade !important;
+    animation-duration: 0.6s !important;
+    animation-timing-function: ease !important;
+    animation-delay: var(--delay, 0ms) !important;
+  }
+
+  .js [data-reveal] > :not(.list),
+  .js [data-reveal] > .list > li {
     filter: none;
     transform: none;
+    transition: opacity 0.6s ease !important;
+  }
+}
+
+@keyframes enter-fade {
+  from {
+    opacity: 0;
   }
 }

@@ -3,9 +3,13 @@ import Lenis from "lenis";
 import { px } from "./css";
 import { prefersReducedMotion, scrollBehavior } from "./motion";
 
-// Inertial wheel scrolling with Lenis' defaults. Touch keeps the native scroll, and
-// reduced motion keeps the browser's scrolling untouched.
+// Inertial wheel scrolling with Lenis' defaults. Reduced motion keeps the browser's
+// scrolling untouched, and so do touch-first devices: touch scrolls natively anyway, and
+// Lenis' non-passive touch listeners make iOS wait for the page before every scroll.
 let lenis: Lenis | null = null;
+
+const isTouchFirst = () =>
+  window.matchMedia("(hover: none), (pointer: coarse)").matches;
 
 interface ScrollOptions {
   lock?: boolean;
@@ -15,7 +19,7 @@ const scrollPadding = () =>
   px(getComputedStyle(document.documentElement).scrollPaddingTop);
 
 export const startSmoothScroll = () => {
-  if (lenis || prefersReducedMotion()) {
+  if (lenis || prefersReducedMotion() || isTouchFirst()) {
     return;
   }
   lenis = new Lenis({ autoRaf: true });

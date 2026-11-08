@@ -34,7 +34,7 @@ const themes = [
 
 <header class="site-header" data-header transition:persist="site-header">
   <div class="bar" data-header-bar>
-    <Grain class="bar-grain" id="header-grain" />
+    <Grain class="bar-grain" />
     <a class="brand" href="/">
       {profile.name}
     </a>
@@ -86,7 +86,9 @@ const themes = [
     z-index: 30;
     display: flex;
     justify-content: center;
-    padding: 12px 12px 0;
+    padding: calc(12px + env(safe-area-inset-top))
+      max(12px, env(safe-area-inset-right)) 0
+      max(12px, env(safe-area-inset-left));
     pointer-events: none;
   }
 
@@ -201,7 +203,7 @@ const themes = [
 
   @media (min-width: 960px) {
     .site-header {
-      padding-top: 14px;
+      padding-top: calc(14px + env(safe-area-inset-top));
     }
 
     .bar {

@@ -86,7 +86,6 @@ const thumbs = new Map(
                     alt={project.data.coverAlt ?? ""}
                     image={project.data.cover}
                     loading={isOpen ? "eager" : "lazy"}
-                    name={`panel-${project.id}`}
                     tone={project.data.tone}
                   />
                 </div>
@@ -367,8 +366,33 @@ const thumbs = new Map(
     }
   };
 
+  // Closed panels clip their shot to nothing, so lazy loading waited for a panel to open
+  // and the image popped in after the animation. They load once the list comes near.
+  const loadShotsAhead = () => {
+    const list = document.querySelector("[data-accordion-item]")?.parentElement;
+    if (!list) {
+      return null;
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) {
+          return;
+        }
+        for (const image of list.querySelectorAll<HTMLImageElement>(
+          "img[loading='lazy']"
+        )) {
+          image.loading = "eager";
+        }
+        observer.disconnect();
+      },
+      { rootMargin: "0px 0px 50% 0px" }
+    );
+    observer.observe(list);
+    return () => observer.disconnect();
+  };
+
   onPage(() => {
     setupAccordion();
-    return null;
+    return loadShotsAhead();
   });
 </script>

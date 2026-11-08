@@ -9,6 +9,8 @@ onPage(() => {
     return null;
   }
 
+  // Sections can be taller than a phone screen, so waiting for a share of their area left
+  // their top empty on screen; they fade in as soon as their top passes the bottom edge.
   const observer = new IntersectionObserver(
     (entries) => {
       for (const entry of entries) {
@@ -18,7 +20,7 @@ onPage(() => {
         }
       }
     },
-    { rootMargin: "0px 0px -12% 0px", threshold: 0.08 }
+    { rootMargin: "0px 0px -10% 0px", threshold: 0 }
   );
 
   for (const target of targets) {

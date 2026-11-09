@@ -326,6 +326,7 @@ const schema = caseSchema({
     padding: 0 4px;
     margin-top: 10px;
     font-size: 13px;
+    text-align: center;
   }
 
   .tags {
@@ -526,7 +527,8 @@ const schema = caseSchema({
   }
 
   @supports (text-wrap: balance) {
-    .tagline {
+    .tagline,
+    .cover-caption {
       text-wrap: balance;
     }
   }

@@ -7,7 +7,7 @@ highlight: 15 releases
 company: Sancrisoft
 period: "2026"
 role: Sole engineer at Sancrisoft. Architecture, implementation, tests and releases.
-problem: Sancrisoft paid for Notion’s enterprise plan mostly for its AI meeting notes. Echo had to write notes as good as Notion’s while keeping audio, transcripts and summaries on each person’s Mac, with no per-seat cost.
+problem: Sancrisoft wanted a tool of its own that records meetings, transcribes them and writes AI notes. The notes had to be as good as Notion’s, with audio, transcripts and summaries kept on each person’s Mac and no per-seat cost.
 decisions:
   - title: Process taps, not screen capture
     choice: The microphone and the Mac’s audio are recorded as two streams, with Core Audio process taps for the system side.
@@ -51,7 +51,7 @@ video:
   width: 1200
   height: 786
   alt: In Echo, a meeting’s summary and then its transcript, followed by a ⌘K search for “latency” that opens another meeting.
-  caption: A meeting’s summary and transcript, then search across every meeting.
+  caption: A meeting’s summary and transcript, then search across every meeting. Fictional data, not a real meeting.
 gallery:
   - image: ../../assets/work/echo-transcript.png
     alt: A meeting’s transcript in Echo, with timestamped turns for You and Others, the share of speaking time and the on-device speech model.
